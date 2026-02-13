@@ -5,7 +5,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
     <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-gray-200/50 dark:border-slate-700/50 no-print sticky top-0 z-40 animate-fadeInDown">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 group">
+          <div className="flex items-center gap-2 sm:gap-3 group">
             <div className="relative">
               <div className="absolute inset-0 bg-healthcare-600 rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity"></div>
               <div className="relative w-11 h-11 bg-gradient-to-br from-healthcare-500 to-healthcare-600 rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-105 transition-transform">
@@ -17,7 +17,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
                 DocDefend
                 <span className="text-red-500 text-sm">✚</span>
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide">CLINICAL DOCUMENTATION QA</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide hidden sm:block">CLINICAL DOCUMENTATION QA</p>
             </div>
           </div>
 
@@ -52,7 +52,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                Batch
+                <span className="hidden sm:inline">Batch</span>
               </span>
             </button>
 

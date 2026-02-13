@@ -278,9 +278,9 @@ function AppContent() {
             <div className="space-y-6 no-print min-w-0">
               {/* Clinical Note Card */}
               <div className="animate-fadeInUp stagger-1 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
-                <div className="flex items-center justify-between mb-5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-healthcare-500 to-healthcare-600 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30">
+                <div className="flex items-center justify-between gap-2 mb-5">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-healthcare-500 to-healthcare-600 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30 flex-shrink-0">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
@@ -292,12 +292,12 @@ function AppContent() {
                   </div>
                   <button
                     onClick={() => setTemplateLibraryOpen(true)}
-                    className="group px-4 py-2 text-sm bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 rounded-xl hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-900/50 dark:hover:to-purple-900/50 transition-all duration-300 flex items-center gap-2 font-medium border border-indigo-200/50 dark:border-indigo-800/50"
+                    className="group px-3 sm:px-4 py-2 text-xs sm:text-sm bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30 text-indigo-700 dark:text-indigo-300 rounded-xl hover:from-indigo-100 hover:to-purple-100 dark:hover:from-indigo-900/50 dark:hover:to-purple-900/50 transition-all duration-300 flex items-center gap-2 font-medium border border-indigo-200/50 dark:border-indigo-800/50 flex-shrink-0"
                   >
                     <svg className="w-4 h-4 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
                     </svg>
-                    Templates
+                    <span className="hidden sm:inline">Templates</span>
                   </button>
                 </div>
                 <NoteSelector value={note} onChange={setNote} />

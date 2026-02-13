@@ -199,7 +199,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
       {/* Panel */}
       <div className="absolute inset-y-0 right-0 w-full max-w-2xl bg-gray-50 dark:bg-slate-900 shadow-2xl animate-slideInRight overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-6 py-4">
+        <div className="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-healthcare-500 to-indigo-600 flex items-center justify-center text-white shadow-lg">
@@ -223,7 +223,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
           </div>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-4 sm:p-6 space-y-6">
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <StatCard
