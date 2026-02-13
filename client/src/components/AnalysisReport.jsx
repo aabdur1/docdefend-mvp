@@ -38,18 +38,18 @@ function CodeAnalysisCard({ analysis, index }) {
       className="border border-gray-200 dark:border-slate-600 rounded-xl p-5 print-friendly bg-white dark:bg-slate-800 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fadeInUp"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shadow-inner">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600 flex items-center justify-center shadow-inner flex-shrink-0">
             <span className="font-mono text-sm font-bold text-slate-700 dark:text-slate-200">
               {analysis.code}
             </span>
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="font-semibold text-slate-800 dark:text-white block">
               {analysis.code}
             </span>
-            <p className="text-sm text-slate-500 dark:text-slate-400">{analysis.codeDescription}</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 break-words">{analysis.codeDescription}</p>
           </div>
         </div>
         <RiskBadge level={analysis.status} />
@@ -167,7 +167,7 @@ export default function AnalysisReport({ report, note, selectedCptCodes }) {
 
   return (
     <div className="space-y-6 print-friendly animate-fadeIn">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 shadow-lg overflow-hidden relative">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-4 sm:p-6 shadow-lg overflow-hidden relative">
         {/* Decorative gradient header */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-healthcare-500 via-indigo-500 to-emerald-500"></div>
 

@@ -107,24 +107,24 @@ export default function FinancialImpact({ financialImpact, codeAnalysis }) {
             return (
               <div
                 key={idx}
-                className={`flex items-center justify-between p-2 rounded-lg text-sm ${
+                className={`flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 p-2 rounded-lg text-sm ${
                   isAtRisk
                     ? 'bg-red-50/80 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30'
                     : 'bg-green-50/80 dark:bg-green-900/20 border border-green-100 dark:border-green-800/30'
                 }`}
               >
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 flex-shrink-0">
                     {item.code}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 truncate max-w-[140px]">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
                     {item.reason}
                   </span>
                 </div>
                 <div className="flex items-center gap-3 flex-shrink-0">
                   <span className="text-xs text-slate-600 dark:text-slate-300">{item.estimatedReimbursement}</span>
                   {isAtRisk && (
-                    <span className="text-xs font-semibold text-red-600 dark:text-red-400">
+                    <span className="text-xs font-semibold text-red-600 dark:text-red-400 whitespace-nowrap">
                       -{item.atRisk} at risk
                     </span>
                   )}

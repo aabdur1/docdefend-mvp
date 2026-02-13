@@ -73,7 +73,7 @@ function ErrorMessage({ message, onDismiss }) {
 
 function EmptyState() {
   return (
-    <div className="animate-fadeIn bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-10 text-center shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50">
+    <div className="animate-fadeIn bg-white dark:bg-slate-800 rounded-2xl border border-gray-200 dark:border-slate-700 p-6 sm:p-10 text-center shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50">
       {/* Stethoscope icon */}
       <div className="relative w-24 h-24 mx-auto mb-6">
         <div className="absolute inset-0 bg-gradient-to-br from-healthcare-500/20 to-indigo-500/20 rounded-2xl animate-pulse"></div>
@@ -257,7 +257,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-mesh medical-pattern bg-gray-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-gradient-mesh medical-pattern bg-gray-50 dark:bg-slate-900 overflow-x-hidden">
       <Confetti active={showConfetti} duration={3000} />
 
       <Header
@@ -277,7 +277,7 @@ function AppContent() {
             {/* Left Column - Input */}
             <div className="space-y-6 no-print">
               {/* Clinical Note Card */}
-              <div className="animate-fadeInUp stagger-1 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
+              <div className="animate-fadeInUp stagger-1 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-healthcare-500 to-healthcare-600 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30">
@@ -311,7 +311,7 @@ function AppContent() {
               )}
 
               {/* Billing Codes Card */}
-              <div className="animate-fadeInUp stagger-2 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
+              <div className="animate-fadeInUp stagger-2 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

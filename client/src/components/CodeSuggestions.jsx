@@ -116,24 +116,24 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
                   {suggestions.cptCodes.map((code, idx) => (
                     <div
                       key={idx}
-                      className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
+                      className="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
                       style={{ animationDelay: `${idx * 50}ms` }}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
                             <span className="font-mono text-xs font-bold text-blue-600 dark:text-blue-400">CPT</span>
                           </span>
-                          <div>
+                          <div className="min-w-0">
                             <span className="font-mono font-semibold text-slate-800 dark:text-white">{code.code}</span>
-                            <span className="text-sm text-slate-500 dark:text-slate-400 ml-2">{code.description}</span>
+                            <span className="text-sm text-slate-500 dark:text-slate-400 ml-2 break-words">{code.description}</span>
                           </div>
                         </div>
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${confidenceColors[code.confidence]}`}>
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium flex-shrink-0 self-start ${confidenceColors[code.confidence]}`}>
                           {code.confidence}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 pl-10">{code.rationale}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 sm:pl-10">{code.rationale}</p>
                     </div>
                   ))}
                 </div>
@@ -146,24 +146,24 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
                   {suggestions.icd10Codes.map((code, idx) => (
                     <div
                       key={idx}
-                      className="bg-white dark:bg-slate-800 rounded-xl p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
+                      className="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
                       style={{ animationDelay: `${idx * 50}ms` }}
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
                             <span className="font-mono text-xs font-bold text-emerald-600 dark:text-emerald-400">ICD</span>
                           </span>
-                          <div>
+                          <div className="min-w-0">
                             <span className="font-mono font-semibold text-slate-800 dark:text-white">{code.code}</span>
-                            <span className="text-sm text-slate-500 dark:text-slate-400 ml-2">{code.description}</span>
+                            <span className="text-sm text-slate-500 dark:text-slate-400 ml-2 break-words">{code.description}</span>
                           </div>
                         </div>
-                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${confidenceColors[code.confidence]}`}>
+                        <span className={`text-xs px-2.5 py-1 rounded-full font-medium flex-shrink-0 self-start ${confidenceColors[code.confidence]}`}>
                           {code.confidence}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 pl-10">{code.rationale}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 sm:pl-10">{code.rationale}</p>
                     </div>
                   ))}
                 </div>
