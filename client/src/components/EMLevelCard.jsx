@@ -82,7 +82,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       </div>
 
       {/* Main recommendation */}
-      <div className="flex items-center gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 mb-4">
         <div className="flex-1 text-center p-3 rounded-lg bg-white/60 dark:bg-slate-800/60 border border-white/50 dark:border-slate-700/50">
           {selectedEM && (
             <>
@@ -111,7 +111,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
 
       {/* MDM Details */}
       {mdmDetails && methodology === 'MDM' && (
-        <div className="grid grid-cols-3 gap-2 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
           <div className={`text-center p-2 rounded-lg ${mdmLevelColor(mdmDetails.problemComplexity)}`}>
             <p className="text-xs font-medium opacity-75">Problems</p>
             <p className="text-sm font-bold">{mdmDetails.problemComplexity}</p>

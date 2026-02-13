@@ -142,7 +142,7 @@ export default function AddendumGenerator({ note, gaps }) {
                 )}
               </button>
             </div>
-            <pre className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-5 text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap font-mono overflow-x-auto shadow-inner animate-fadeIn">
+            <pre className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 sm:p-5 text-xs sm:text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap break-words font-mono overflow-x-auto shadow-inner animate-fadeIn">
               {addendum.addendumText}
             </pre>
           </div>

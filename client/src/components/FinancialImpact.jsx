@@ -45,7 +45,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis }) {
       </div>
 
       {/* Top-level metrics */}
-      <div className="flex gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4">
         <MetricCard
           label="Claim Value"
           value={totalClaimValue || '$0'}

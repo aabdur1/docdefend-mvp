@@ -73,9 +73,9 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 flex overflow-hidden">
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* Template List */}
-          <div className="w-1/3 border-r border-gray-200 dark:border-slate-700 flex flex-col">
+          <div className="w-full md:w-1/3 border-b md:border-b-0 md:border-r border-gray-200 dark:border-slate-700 flex flex-col max-h-[40vh] md:max-h-none">
             {/* Filter */}
             <div className="p-3 border-b border-gray-200 dark:border-slate-700">
               <select

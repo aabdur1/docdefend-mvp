@@ -171,13 +171,13 @@ export default function AnalysisReport({ report, note, selectedCptCodes }) {
         {/* Decorative gradient header */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-healthcare-500 via-indigo-500 to-emerald-500"></div>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-healthcare-500 to-indigo-600 flex items-center justify-center shadow-lg vitals-pulse">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-healthcare-500 to-indigo-600 flex items-center justify-center shadow-lg vitals-pulse flex-shrink-0">
               <StethoscopeIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-slate-800 dark:text-white">
+              <h2 className="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">
                 Defensibility Analysis Report
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
@@ -186,7 +186,7 @@ export default function AnalysisReport({ report, note, selectedCptCodes }) {
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-shrink-0">
             <ExportButton />
             <RiskBadge level={report.overallScore} size="lg" />
           </div>

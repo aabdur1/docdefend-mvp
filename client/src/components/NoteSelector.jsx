@@ -101,7 +101,7 @@ export default function NoteSelector({ value, onChange }) {
 
           {selectedNote && (
             <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 rounded-xl p-4 text-sm border border-slate-200/50 dark:border-slate-600/50 shadow-sm animate-scaleIn">
-              <div className="grid grid-cols-3 gap-4 text-slate-600 dark:text-slate-300">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-slate-600 dark:text-slate-300">
                 <div className="flex flex-col">
                   <span className="text-xs text-slate-400 dark:text-slate-500 uppercase tracking-wide mb-1">Visit Type</span>
                   <span className="font-medium">{selectedNote.visitType}</span>

@@ -86,7 +86,7 @@ export default function FileUploader({ onContentExtracted }) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          relative overflow-hidden border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 group
+          relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group
           ${isDragging
             ? 'border-healthcare-500 bg-gradient-to-br from-healthcare-50 to-cyan-50 dark:from-healthcare-900/20 dark:to-cyan-900/20 scale-[1.02]'
             : 'border-gray-300 dark:border-slate-600 hover:border-healthcare-400 dark:hover:border-healthcare-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'

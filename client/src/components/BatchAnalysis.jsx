@@ -189,12 +189,12 @@ export default function BatchAnalysis() {
         {/* Add notes section */}
         <div className="mb-4">
           <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Add sample notes:</p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
             {sampleNotes.map(sn => (
               <button
                 key={sn.id}
                 onClick={() => addSampleNote(sn)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors truncate max-w-[200px]"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors truncate max-w-[160px] sm:max-w-[200px]"
               >
                 + {sn.title}
               </button>
