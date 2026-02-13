@@ -1,0 +1,530 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(14, 165, 233, 0.3); }
+  50% { box-shadow: 0 0 20px rgba(14, 165, 233, 0.5); }
+}
+
+@keyframes rotatePill {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pillPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+@keyframes orbitPill {
+  0% { transform: rotate(0deg) translateX(40px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(40px) rotate(-360deg); }
+}
+
+@keyframes progressFill {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+/* Confetti animation */
+@keyframes confettiFall {
+  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes confettiShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.confetti-piece {
+  position: fixed;
+  top: -20px;
+  animation: confettiFall 3s ease-out forwards;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Toast animations */
+@keyframes toastSlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastSlideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+.toast-enter {
+  animation: toastSlideIn 0.3s ease-out forwards;
+}
+
+.toast-exit {
+  animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+/* EKG Heartbeat Animation */
+@keyframes ekg {
+  0% { stroke-dashoffset: 1000; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes ekgPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.ekg-line {
+  stroke-dasharray: 1000;
+  animation: ekg 3s linear infinite;
+}
+
+.ekg-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ekg-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, var(--ekg-bg, white));
+  pointer-events: none;
+}
+
+.dark .ekg-container::after {
+  --ekg-bg: rgb(30 41 59);
+}
+
+/* Medical cross pattern background */
+.medical-pattern {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(14, 165, 233, 0.03) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+.dark .medical-pattern {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(14, 165, 233, 0.05) 1px, transparent 0);
+}
+
+/* Prescription pad styling */
+.rx-pad {
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(14, 165, 233, 0.1) 27px,
+    rgba(14, 165, 233, 0.1) 28px
+  );
+  background-position: 0 8px;
+}
+
+.dark .rx-pad {
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(14, 165, 233, 0.15) 27px,
+    rgba(14, 165, 233, 0.15) 28px
+  );
+}
+
+/* Medical cross icon */
+.medical-cross {
+  position: relative;
+}
+
+.medical-cross::before {
+  content: '✚';
+  position: absolute;
+  top: -2px;
+  right: -8px;
+  font-size: 10px;
+  color: #ef4444;
+  opacity: 0.7;
+}
+
+/* Vitals pulse effect */
+@keyframes vitalsPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.vitals-pulse {
+  animation: vitalsPulse 2s ease-in-out infinite;
+}
+
+/* Animation utilities */
+.animate-fadeIn {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.5s ease-out forwards;
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.4s ease-out forwards;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.4s ease-out forwards;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.animate-rotatePill {
+  animation: rotatePill 2s linear infinite;
+}
+
+.animate-pillPulse {
+  animation: pillPulse 1.5s ease-in-out infinite;
+}
+
+.animate-orbitPill {
+  animation: orbitPill 2s linear infinite;
+}
+
+/* Staggered animations */
+.stagger-1 { animation-delay: 0.1s; opacity: 0; }
+.stagger-2 { animation-delay: 0.2s; opacity: 0; }
+.stagger-3 { animation-delay: 0.3s; opacity: 0; }
+.stagger-4 { animation-delay: 0.4s; opacity: 0; }
+.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+
+/* Gradient backgrounds */
+.bg-gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, rgba(14, 165, 233, 0.1) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+}
+
+.dark .bg-gradient-mesh {
+  background:
+    radial-gradient(at 40% 20%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.dark .glass {
+  background: rgba(30, 41, 59, 0.7);
+}
+
+/* Shimmer loading effect */
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.15);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
+}
+
+/* Button effects */
+.btn-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-glow:hover::before {
+  left: 100%;
+}
+
+/* Smooth focus rings */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-healthcare-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Base styles */
+body {
+  @apply bg-gray-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(14, 165, 233, 0.3);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  .print-friendly {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+
+  /* Force light theme for print */
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    background: white !important;
+    color: #1e293b !important;
+  }
+
+  .dark {
+    background: white !important;
+    color: #1e293b !important;
+  }
+
+  /* Hide non-report elements */
+  header, footer, .no-print {
+    display: none !important;
+  }
+
+  /* Full width report */
+  main {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .grid {
+    display: block !important;
+  }
+
+  .lg\:sticky {
+    position: static !important;
+  }
+
+  /* Print header / letterhead */
+  .print-friendly::before {
+    content: '';
+    display: block;
+    text-align: center;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #0ea5e9;
+    font-size: 14px;
+    color: #475569;
+  }
+
+  /* Page breaks */
+  .print-friendly > div {
+    page-break-inside: avoid;
+  }
+
+  /* Clean card styling */
+  [class*="rounded-xl"],
+  [class*="rounded-2xl"] {
+    border-radius: 8px !important;
+  }
+
+  [class*="shadow"] {
+    box-shadow: none !important;
+  }
+
+  /* Ensure backgrounds print */
+  [class*="bg-gradient"],
+  [class*="bg-green"],
+  [class*="bg-red"],
+  [class*="bg-blue"],
+  [class*="bg-amber"],
+  [class*="bg-purple"],
+  [class*="bg-emerald"] {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove dark mode overrides */
+  .dark * {
+    background-color: transparent !important;
+  }
+
+  /* Page margins */
+  @page {
+    margin: 0.75in;
+    size: letter;
+  }
+}
+
+/* Tooltip styles */
+.tooltip {
+  @apply invisible opacity-0 absolute z-50 px-2 py-1 text-xs font-medium text-white bg-slate-800 rounded shadow-lg transition-all duration-200;
+}
+
+.tooltip-trigger:hover .tooltip {
+  @apply visible opacity-100;
+}
+
+/* Badge pulse animation */
+.badge-pulse {
+  position: relative;
+}
+
+.badge-pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  animation: pulse-soft 2s ease-in-out infinite;
+  background: inherit;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+/* Input focus animation */
+input:focus, textarea:focus, select:focus {
+  @apply ring-2 ring-healthcare-500 border-healthcare-500;
+  transition: all 0.2s ease;
+}
+
+/* Checkbox custom style */
+input[type="checkbox"] {
+  @apply rounded border-gray-300 text-healthcare-600 focus:ring-healthcare-500 transition-all duration-200;
+}
+
+input[type="checkbox"]:checked {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Loading dots animation */
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}

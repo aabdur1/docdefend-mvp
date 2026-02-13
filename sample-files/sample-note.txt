@@ -1,0 +1,45 @@
+CLINICAL NOTE - PAIN MANAGEMENT
+
+Patient: [Synthetic Patient]
+Date of Service: [Today]
+Provider: Pain Management Physician
+
+CHIEF COMPLAINT:
+Follow-up for chronic neck pain with bilateral upper extremity radiculopathy.
+
+HISTORY OF PRESENT ILLNESS:
+This is a 52-year-old female returning for management of chronic cervical pain with radiation to both arms. She was seen 6 weeks ago and received bilateral C5-C6 and C6-C7 medial branch blocks with 80% relief lasting approximately 3 weeks. She now reports return of symptoms to baseline.
+
+Current pain level is 8/10. She describes burning pain in the posterior neck radiating to both shoulders and down the lateral arms to the hands. Associated numbness and tingling in fingers 4-5 bilaterally. Pain is worse with looking up and turning head. She has difficulty with activities of daily living including dressing and cooking due to arm weakness and pain.
+
+Failed treatments include: physical therapy x 12 sessions, chiropractic care, NSAIDs, muscle relaxants, and the diagnostic blocks as above.
+
+CURRENT MEDICATIONS:
+- Gabapentin 600mg TID
+- Meloxicam 15mg daily
+- Tizanidine 4mg TID PRN
+
+ALLERGIES: Sulfa drugs, Codeine
+
+PHYSICAL EXAMINATION:
+Vitals: BP 142/88, HR 82, SpO2 98% RA
+General: Well-appearing female, appears uncomfortable
+Cervical Spine: Diffuse tenderness C4-C7 paraspinal muscles bilaterally. Markedly limited ROM in all planes. Spurling test positive bilaterally. No midline tenderness.
+Upper Extremities: Grip strength 4/5 bilateral. Biceps/triceps reflexes 1+ bilateral. Sensory diminished C7-C8 distribution bilateral.
+
+IMAGING:
+MRI C-spine (3 months ago): Multilevel degenerative disc disease. Moderate foraminal stenosis C5-C6 and C6-C7 bilateral. Mild central stenosis C5-C6.
+
+ASSESSMENT:
+1. Cervical spondylosis with bilateral radiculopathy, C6-C7 distribution
+2. Chronic neck pain with facet arthropathy - confirmed by positive diagnostic blocks
+3. Failed conservative management
+
+PLAN:
+1. Given positive diagnostic medial branch blocks with >50% relief, patient is a candidate for radiofrequency ablation.
+2. Schedule bilateral C5-C6 and C6-C7 medial branch radiofrequency ablation under fluoroscopic guidance.
+3. Risks, benefits, and alternatives discussed. Patient consents to proceed.
+4. Continue current medications.
+5. Follow-up 6 weeks post-procedure.
+
+Time spent: 35 minutes, majority spent in counseling regarding procedure options and coordination of care.

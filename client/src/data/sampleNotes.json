@@ -1,0 +1,50 @@
+[
+  {
+    "id": "note-1",
+    "title": "Established Patient - Low Back Pain Follow-up",
+    "visitType": "Follow-up Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "54-year-old male with chronic low back pain, 3-month follow-up",
+    "note": "CHIEF COMPLAINT: Follow-up for chronic low back pain.\n\nHISTORY OF PRESENT ILLNESS:\nPatient returns for follow-up of chronic low back pain. He reports the pain has been relatively stable since last visit. Current pain level is 6/10. Pain is worse with prolonged sitting and standing. He has been taking his medications as prescribed.\n\nCURRENT MEDICATIONS:\n- Gabapentin 300mg TID\n- Meloxicam 15mg daily\n\nPHYSICAL EXAMINATION:\nVitals: BP 132/84, HR 78\nGeneral: Alert, no acute distress\nSpine: Tenderness to palpation over lumbar paraspinal muscles. Limited range of motion with flexion and extension. No neurological deficits in lower extremities.\n\nASSESSMENT:\nChronic low back pain, stable on current regimen.\n\nPLAN:\n1. Continue current medications\n2. Physical therapy referral\n3. Return in 3 months"
+  },
+  {
+    "id": "note-2",
+    "title": "New Patient - Cervical Radiculopathy Evaluation",
+    "visitType": "New Patient Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "42-year-old female with neck pain and arm numbness, initial evaluation",
+    "note": "CHIEF COMPLAINT: Neck pain with radiating symptoms to left arm x 6 weeks.\n\nHISTORY OF PRESENT ILLNESS:\nThis is a 42-year-old female presenting for evaluation of neck pain with radiation to the left arm. She states the pain began approximately 6 weeks ago without any specific injury. The pain is described as sharp and burning, radiating from the neck down the lateral aspect of the left arm to the thumb and index finger. She rates the pain as 7/10 currently. She reports numbness and tingling in the affected fingers. Pain is worse with looking up and turning head to the left. She has tried ibuprofen with minimal relief.\n\nPAST MEDICAL HISTORY:\n- Hypertension\n- Hypothyroidism\n\nSOCIAL HISTORY:\nWorks as an accountant, sits at desk most of day. Non-smoker.\n\nPHYSICAL EXAMINATION:\nVitals: BP 128/82, HR 72, Ht 5'6\", Wt 158 lbs\nGeneral: Well-appearing, mild distress due to pain\nCervical Spine: Tenderness over left paraspinal muscles C5-C7. Decreased ROM with extension and left lateral rotation. Spurling's test positive on left.\nNeurological: Left C6 dermatomal hypesthesia. Biceps reflex 1+ on left, 2+ on right. Grip strength 4/5 left, 5/5 right.\n\nIMAGING REVIEW:\nMRI cervical spine (brought by patient): Broad-based disc bulge at C5-6 with left foraminal stenosis.\n\nASSESSMENT:\n1. Cervical radiculopathy, left C6 distribution\n2. Cervical disc disorder C5-6\n\nPLAN:\n1. Start Medrol dose pack\n2. Start gabapentin 100mg TID, titrate as tolerated\n3. Physical therapy evaluation\n4. Consider epidural injection if no improvement in 3 weeks\n5. Return in 3 weeks"
+  },
+  {
+    "id": "note-3",
+    "title": "Lumbar Epidural Steroid Injection",
+    "visitType": "Procedure Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "61-year-old male receiving lumbar epidural injection for radiculopathy",
+    "note": "PROCEDURE NOTE\n\nPATIENT: [Synthetic Patient]\nDATE OF PROCEDURE: [Today]\n\nPREOPERATIVE DIAGNOSIS: Lumbar radiculopathy\n\nPROCEDURE PERFORMED: Lumbar epidural steroid injection\n\nANESTHESIA: Local\n\nINDICATION: Patient with lumbar radiculopathy who has failed conservative management including physical therapy and oral medications.\n\nDESCRIPTION OF PROCEDURE:\nPatient was brought to the procedure room and placed in prone position. The area was prepped and draped in sterile fashion. Using fluoroscopic guidance, the L4-5 interspace was identified. Local anesthesia was administered with 1% lidocaine. A 22-gauge Tuohy needle was advanced using loss of resistance technique. Epidural space confirmed. A mixture of 80mg Depo-Medrol and 2cc 0.25% bupivacaine was injected. Needle was removed. Patient tolerated the procedure well with no immediate complications.\n\nPOST-PROCEDURE:\nPatient was monitored for 20 minutes. Vital signs stable. No adverse reactions. Discharged home with instructions.\n\nPLAN:\nFollow up in 2 weeks to assess response."
+  },
+  {
+    "id": "note-4",
+    "title": "Established Patient - Complex Pain Management",
+    "visitType": "Follow-up Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "67-year-old female with multiple chronic pain conditions, medication management",
+    "note": "CHIEF COMPLAINT: Follow-up for chronic pain management.\n\nHISTORY OF PRESENT ILLNESS:\nPatient is a 67-year-old female returning for management of multiple chronic pain conditions. She has a history of lumbar spondylosis with stenosis, bilateral knee osteoarthritis, and fibromyalgia. \n\nSince last visit, she reports her back pain has worsened and is now 8/10. She had an MRI last month showing progression of stenosis at L4-5. She also reports increasing knee pain bilaterally, left greater than right. Her fibromyalgia symptoms are stable on duloxetine.\n\nShe has been taking her opioid medication as prescribed without any issues. She denies any falls, confusion, or concerning side effects. PDMP was reviewed - consistent with prescribed medications only.\n\nREVIEW OF DATA:\n- MRI lumbar spine (last month): Moderate to severe central stenosis L4-5, mild stenosis L3-4\n- Recent labs: CBC and CMP within normal limits\n- Reviewed physical therapy notes showing limited progress due to pain\n\nCURRENT MEDICATIONS:\n- Hydrocodone/APAP 5/325mg Q6H PRN (taking 3-4 daily)\n- Duloxetine 60mg daily\n- Meloxicam 15mg daily\n- Gabapentin 400mg TID\n\nPHYSICAL EXAMINATION:\nVitals: BP 142/88, HR 76\nGeneral: Appears uncomfortable, slow gait\nLumbar Spine: Tenderness L3-L5. Markedly limited ROM. Positive straight leg raise bilateral at 45 degrees.\nKnees: Bilateral crepitus. Mild effusion left knee. Tender medial joint lines bilateral.\nNeurological: Strength 4/5 bilateral lower extremities. Sensation intact. DTRs 1+ bilateral.\n\nASSESSMENT:\n1. Lumbar spinal stenosis - worsening, surgical consult may be warranted\n2. Chronic pain syndrome on opioid therapy - stable, no aberrant behaviors\n3. Bilateral knee osteoarthritis - symptomatic\n4. Fibromyalgia - controlled\n\nRISK ASSESSMENT FOR OPIOID THERAPY:\n- Benefits: Functional improvement, able to perform ADLs\n- Risks discussed: Sedation, constipation, dependence\n- PDMP reviewed: Appropriate\n- No signs of misuse\n\nPLAN:\n1. Continue current opioid regimen - not escalating despite reported increased pain given stenosis progression\n2. Refer to spine surgery for evaluation of stenosis\n3. Left knee injection today to address effusion and pain\n4. Continue duloxetine and gabapentin\n5. Follow up in 6 weeks or sooner if surgery scheduled\n\nTime spent on this visit: 30 minutes, greater than 50% counseling and coordination of care, discussing surgical options and risks/benefits of continued conservative management vs intervention."
+  },
+  {
+    "id": "note-5",
+    "title": "Facet Joint Injection - Documentation Gaps Example",
+    "visitType": "Procedure Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "58-year-old with back pain receiving facet injection (intentional documentation gaps)",
+    "note": "PROCEDURE NOTE\n\nPROCEDURE: Facet joint injection\n\nThe patient was brought to the procedure suite. Placed prone on the table. The back was prepped and draped. The injection was performed. A total of 40mg of triamcinolone was injected. The patient tolerated the procedure well.\n\nDISPOSITION: Stable, discharged home."
+  },
+  {
+    "id": "note-6",
+    "title": "Brief Office Visit - Minimal Documentation",
+    "visitType": "Follow-up Visit",
+    "providerType": "Pain Management Physician",
+    "patientSummary": "45-year-old with chronic pain, brief note (intentional documentation gaps)",
+    "note": "S: Patient here for pain management follow-up. Doing okay. Pain is about the same.\n\nO: VSS. NAD.\n\nA: Chronic pain\n\nP: Refill medications. RTC 3 months."
+  }
+]

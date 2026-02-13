@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3">
+  <title>Clinical Note - Pain Management Follow-up</title>
+  <component>
+    <structuredBody>
+      <component>
+        <section>
+          <title>Chief Complaint</title>
+          <text>
+            <paragraph>Patient presents for follow-up of chronic low back pain with radiculopathy.</paragraph>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>History of Present Illness</title>
+          <text>
+            <paragraph>58-year-old male with chronic low back pain radiating to the left leg for the past 2 years.
+            Patient reports pain level of 7/10 today, worse than previous visit. Pain is described as sharp,
+            shooting down the posterior left thigh to the calf. Aggravated by prolonged sitting and standing.
+            Partially relieved by lying down and heat application.</paragraph>
+            <paragraph>Patient has tried conservative management including physical therapy (8 sessions completed),
+            NSAIDs (ibuprofen 800mg TID for 6 weeks), and muscle relaxants (cyclobenzaprine 10mg TID).
+            Reports only 20% improvement with current regimen.</paragraph>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Current Medications</title>
+          <text>
+            <list>
+              <item>Ibuprofen 800mg TID</item>
+              <item>Cyclobenzaprine 10mg TID PRN</item>
+              <item>Gabapentin 300mg TID</item>
+              <item>Lisinopril 10mg daily (for HTN)</item>
+              <item>Metformin 500mg BID (for DM2)</item>
+            </list>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Physical Examination</title>
+          <text>
+            <paragraph>Vital Signs: BP 138/86, HR 78, Temp 98.4F</paragraph>
+            <paragraph>General: Alert, oriented, in mild distress due to pain</paragraph>
+            <paragraph>Lumbar Spine: Tenderness to palpation L4-S1 paraspinal muscles, left greater than right.
+            Decreased range of motion with flexion (30 degrees) and extension (10 degrees).
+            Positive straight leg raise on left at 45 degrees. Negative on right.</paragraph>
+            <paragraph>Neurological: Left L5 dermatomal hypesthesia. EHL weakness 4/5 on left, 5/5 on right.
+            DTRs 2+ bilateral knees, 1+ left ankle, 2+ right ankle.</paragraph>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Imaging Review</title>
+          <text>
+            <paragraph>MRI Lumbar Spine (dated 2 weeks ago): Large left paracentral disc herniation at L4-L5
+            with impingement on the left L5 nerve root. Moderate central canal stenosis.
+            Degenerative changes at L3-L4 and L5-S1 without significant neural compression.</paragraph>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Assessment</title>
+          <text>
+            <list>
+              <item>Lumbar radiculopathy, left L5 distribution, secondary to L4-L5 disc herniation</item>
+              <item>Lumbar disc herniation L4-L5 with nerve root impingement</item>
+              <item>Chronic low back pain, worsening despite conservative management</item>
+              <item>Failed conservative therapy</item>
+            </list>
+          </text>
+        </section>
+      </component>
+      <component>
+        <section>
+          <title>Plan</title>
+          <text>
+            <paragraph>1. Proceed with left L4-L5 transforaminal epidural steroid injection under fluoroscopic guidance
+            for diagnostic and therapeutic purposes. Medical necessity established by failed conservative therapy
+            and MRI-confirmed pathology correlating with clinical presentation.</paragraph>
+            <paragraph>2. Discussed risks, benefits, and alternatives of the procedure. Patient verbalized understanding
+            and wishes to proceed. Written consent obtained.</paragraph>
+            <paragraph>3. Continue gabapentin, may increase to 400mg TID if tolerated.</paragraph>
+            <paragraph>4. Follow-up in 2-4 weeks post-procedure to assess response.</paragraph>
+            <paragraph>5. If inadequate relief after injection series, will discuss surgical referral.</paragraph>
+          </text>
+        </section>
+      </component>
+    </structuredBody>
+  </component>
+</ClinicalDocument>
