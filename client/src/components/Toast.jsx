@@ -58,7 +58,7 @@ function ToastItem({ toast, onRemove }) {
         ${isExiting ? 'toast-exit' : 'toast-enter'}
         ${styles[toast.type] || styles.info}
         flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl backdrop-blur-sm
-        min-w-[300px] max-w-md
+        min-w-0 sm:min-w-[300px] max-w-[calc(100vw-2rem)] sm:max-w-md
       `}
     >
       <div className="flex-shrink-0 opacity-90">

@@ -257,7 +257,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-mesh medical-pattern bg-gray-50 dark:bg-slate-900 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-mesh medical-pattern bg-gray-50 dark:bg-slate-900 w-full max-w-full">
       <Confetti active={showConfetti} duration={3000} />
 
       <Header
@@ -273,9 +273,9 @@ function AppContent() {
         {batchMode ? (
           <BatchAnalysis />
         ) : (
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-full overflow-hidden">
             {/* Left Column - Input */}
-            <div className="space-y-6 no-print">
+            <div className="space-y-6 no-print min-w-0">
               {/* Clinical Note Card */}
               <div className="animate-fadeInUp stagger-1 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
                 <div className="flex items-center justify-between mb-5">
@@ -381,7 +381,7 @@ function AppContent() {
             </div>
 
             {/* Right Column - Results */}
-            <div className="lg:sticky lg:top-24 lg:self-start">
+            <div className="lg:sticky lg:top-24 lg:self-start min-w-0">
               {loading && <LoadingSpinner />}
               {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
               {report && !loading && (
