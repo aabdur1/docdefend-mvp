@@ -5,11 +5,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-      },
-    },
+    // Proxy API calls to Express backend during local development.
+    // On Vercel, the api/ directory handles routing natively.
+    proxy: process.env.VERCEL
+      ? undefined
+      : {
+          '/api': {
+            target: 'http://localhost:3001',
+            changeOrigin: true,
+          },
+        },
   },
 });

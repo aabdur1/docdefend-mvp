@@ -1,0 +1,12 @@
+{
+  "name": "docdefend-mvp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.30.0",
+    "fast-xml-parser": "^5.3.4",
+    "pdf-parse": "^2.4.5",
+    "busboy": "^1.6.0"
+  }
+}
