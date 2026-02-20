@@ -1,0 +1,70 @@
+PATIENT: John Smith
+DOB: 03/15/1962
+DATE OF SERVICE: 02/20/2026
+PROVIDER: Dr. Sarah Chen, MD
+SPECIALTY: Pain Management
+
+CHIEF COMPLAINT:
+Follow-up for chronic low back pain with bilateral lower extremity radiculopathy. Patient reports worsening symptoms over the past 3 weeks despite conservative management.
+
+HISTORY OF PRESENT ILLNESS:
+Mr. Smith is a 63-year-old male with a long-standing history of chronic low back pain secondary to lumbar spondylosis and degenerative disc disease at L4-L5 and L5-S1. He presents today for follow-up evaluation. The patient reports pain intensity of 7/10 on the numeric rating scale, increased from 5/10 at his last visit 6 weeks ago. Pain is described as constant, dull, and aching in the lumbar region with intermittent sharp, shooting pain radiating into both lower extremities, left greater than right, extending to the lateral calf and dorsum of the foot.
+
+Aggravating factors include prolonged sitting (>20 minutes), standing (>15 minutes), bending, and lifting. Alleviating factors include lying supine, ice application, and current medication regimen. The patient reports difficulty with activities of daily living including dressing, household chores, and driving. He has been unable to work as a warehouse supervisor for the past 2 weeks.
+
+Current medications include gabapentin 300mg TID, meloxicam 15mg daily, and cyclobenzaprine 10mg at bedtime. He reports partial relief with current regimen but inadequate pain control. Patient denies bowel or bladder dysfunction, saddle anesthesia, or progressive weakness.
+
+PAST MEDICAL HISTORY:
+- Lumbar spondylosis (diagnosed 2019)
+- Degenerative disc disease L4-L5, L5-S1
+- Hypertension, well-controlled
+- Type 2 diabetes mellitus, A1c 6.8%
+- Previous lumbar epidural steroid injection x2 (last performed 8 months ago with 4 months of relief)
+
+REVIEW OF SYSTEMS:
+Constitutional: No fever, no unintended weight loss
+Musculoskeletal: Low back pain as described, bilateral lower extremity pain
+Neurological: Numbness and tingling in bilateral lower extremities, left > right
+Psychiatric: Reports increased anxiety related to pain and functional limitations
+All other systems reviewed and negative.
+
+PHYSICAL EXAMINATION:
+Vitals: BP 138/82, HR 76, Temp 98.4F
+General: Alert, oriented, in mild distress due to pain. Antalgic gait noted.
+Spine: Tenderness to palpation over L4-L5 and L5-S1 spinous processes and bilateral paraspinal muscles. Decreased lumbar lordosis. Range of motion: flexion limited to 40 degrees (normal 60), extension limited to 10 degrees (normal 25), lateral bending limited bilaterally to 15 degrees (normal 25).
+Neurological:
+- Motor: 5/5 bilateral hip flexors, knee extensors, ankle dorsiflexors. 4/5 left EHL.
+- Sensory: Decreased light touch sensation L5 dermatome bilaterally, left > right.
+- Reflexes: Patellar 2+ bilaterally, Achilles 1+ bilaterally.
+- SLR: Positive at 45 degrees on left, 60 degrees on right.
+- Crossed SLR: Negative bilaterally.
+
+DIAGNOSTIC REVIEW:
+MRI lumbar spine (01/10/2026): Broad-based disc protrusion at L4-L5 with moderate bilateral foraminal stenosis. Disc desiccation and height loss at L5-S1 with mild central canal narrowing. Facet arthropathy at L4-L5 and L5-S1.
+
+MEDICAL DECISION MAKING:
+Number of diagnoses/management options: Multiple established conditions with worsening symptoms requiring reassessment of treatment plan — HIGH complexity.
+Data reviewed: Prior imaging (MRI), current medication efficacy, functional status assessment — MODERATE complexity.
+Risk of complications: Moderate risk given consideration of interventional procedure (epidural steroid injection) and current medication management — MODERATE risk.
+Overall MDM complexity: MODERATE to HIGH.
+
+ASSESSMENT:
+1. Lumbar spondylosis with radiculopathy, bilateral — worsening
+2. Degenerative disc disease, L4-L5 and L5-S1
+3. Chronic pain syndrome
+4. Lumbar foraminal stenosis, bilateral
+
+PLAN:
+1. Given inadequate response to conservative management and worsening radicular symptoms, recommend bilateral L4-L5 transforaminal epidural steroid injection under fluoroscopic guidance.
+2. Continue gabapentin 300mg TID, increase to 400mg TID if tolerated.
+3. Continue meloxicam 15mg daily.
+4. Refer to physical therapy for core stabilization program, 2x/week for 6 weeks.
+5. Discussed risks, benefits, and alternatives of epidural injection including but not limited to infection, bleeding, nerve injury, dural puncture, and temporary increase in pain. Patient verbalized understanding and wishes to proceed.
+6. Follow-up in 4 weeks post-procedure or sooner if symptoms worsen.
+7. Return precautions reviewed: seek immediate care for bowel/bladder dysfunction, progressive weakness, fever, or severe headache post-procedure.
+
+TIME SPENT: 35 minutes total, greater than 50% in counseling and coordination of care including discussion of treatment options, risks/benefits of interventional procedure, and coordination with physical therapy.
+
+ELECTRONICALLY SIGNED:
+Dr. Sarah Chen, MD
+Board Certified, Pain Management
