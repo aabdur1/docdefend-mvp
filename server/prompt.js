@@ -1,4 +1,6 @@
-export const systemPrompt = `You are a clinical documentation integrity (CDI) specialist and certified medical coder (CPC, CCS) with 15 years of experience reviewing documentation for small specialty practices, particularly pain management.
+import { getPayerRules, getPayerRateTable, PAYERS } from './payerRules.js';
+
+export const baseSystemPrompt = `You are a clinical documentation integrity (CDI) specialist and certified medical coder (CPC, CCS) with 15 years of experience reviewing documentation for small specialty practices, particularly pain management.
 
 Your job is to analyze a clinical note against the billing codes a provider intends to submit and determine whether the documentation defensibly supports those codes. You are thorough, specific, and practical.
 
@@ -62,13 +64,54 @@ IMPORTANT NOTES:
 - For the financialImpact breakdown, include an entry for each selected CPT code (not ICD-10 codes).
 - Return ONLY valid JSON with no other text, no markdown fences, no explanation outside the JSON.`;
 
-export function buildUserPrompt(note, cptCodes, icd10Codes) {
+// Keep backward-compatible export for batch analysis and other endpoints
+export const systemPrompt = baseSystemPrompt;
+
+/**
+ * Build a system prompt with optional payer-specific rules appended.
+ * If no payerId or payerId is 'medicare', returns the base prompt unchanged.
+ */
+export function buildSystemPrompt(payerId) {
+  if (!payerId || payerId === 'medicare') {
+    return baseSystemPrompt;
+  }
+
+  const payerRules = getPayerRules(payerId);
+  const payerRates = getPayerRateTable(payerId);
+  const payer = PAYERS[payerId];
+
+  if (!payer) return baseSystemPrompt;
+
+  const payerFindingsInstruction = `
+
+PAYER-SPECIFIC ANALYSIS INSTRUCTIONS:
+In addition to the standard analysis fields above, you MUST also include a "payerSpecificFindings" array in your JSON response. For each payer-specific rule listed above, evaluate whether the clinical note meets that requirement for the selected CPT codes. Only include findings for rules that are relevant to the selected codes.
+
+Add this field to your JSON response:
+  "payerSpecificFindings": [
+    {
+      "rule": "string — the payer-specific requirement being evaluated",
+      "status": "NOT_MET" | "MET" | "PARTIALLY_MET",
+      "detail": "string — specific explanation of what was or wasn't found in the note",
+      "impact": "string — what happens if this requirement is not met (denial risk, prior auth needed, etc.)"
+    }
+  ]
+
+If no payer-specific rules apply to the selected codes, return an empty array for payerSpecificFindings.`;
+
+  return baseSystemPrompt + payerRules + payerRates + payerFindingsInstruction;
+}
+
+export function buildUserPrompt(note, cptCodes, icd10Codes, payerId) {
+  const payerContext = payerId && payerId !== 'medicare' && PAYERS[payerId]
+    ? `\nPAYER: ${PAYERS[payerId].name}\n`
+    : '';
+
   return `CLINICAL NOTE:
 ${note}
 
 BILLING CODES SELECTED:
 CPT: ${cptCodes.join(', ')}
-ICD-10: ${icd10Codes.join(', ')}
-
+ICD-10: ${icd10Codes.join(', ')}${payerContext}
 Analyze whether this clinical note defensibly supports the selected billing codes.`;
 }

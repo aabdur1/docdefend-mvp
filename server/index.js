@@ -3,7 +3,8 @@ import cors from 'cors';
 import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import multer from 'multer';
-import { systemPrompt, buildUserPrompt } from './prompt.js';
+import { systemPrompt, buildSystemPrompt, buildUserPrompt } from './prompt.js';
+import { PAYERS } from './payerRules.js';
 import { parseDocument } from './parsers.js';
 import {
   codeSuggestionPrompt,
@@ -86,7 +87,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 // Analysis endpoint
 app.post('/api/analyze', async (req, res) => {
   try {
-    const { note, cptCodes, icd10Codes } = req.body;
+    const { note, cptCodes, icd10Codes, payerId } = req.body;
 
     if (!note || !cptCodes?.length || !icd10Codes?.length) {
       return res.status(400).json({
@@ -94,7 +95,8 @@ app.post('/api/analyze', async (req, res) => {
       });
     }
 
-    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes);
+    const payerSystemPrompt = buildSystemPrompt(payerId);
+    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes, payerId);
     const anthropic = getAnthropicClient(req);
 
     const message = await anthropic.messages.create({
@@ -106,7 +108,7 @@ app.post('/api/analyze', async (req, res) => {
           content: userPrompt,
         },
       ],
-      system: systemPrompt,
+      system: payerSystemPrompt,
     });
 
     let responseText = message.content[0].text;
@@ -120,6 +122,11 @@ app.post('/api/analyze', async (req, res) => {
 
     try {
       const analysis = JSON.parse(responseText);
+      // Attach payer info to response
+      if (payerId && payerId !== 'medicare' && PAYERS[payerId]) {
+        analysis.payerId = payerId;
+        analysis.payerName = PAYERS[payerId].name;
+      }
       res.json(analysis);
     } catch (parseError) {
       console.error('Failed to parse Claude response:', responseText);

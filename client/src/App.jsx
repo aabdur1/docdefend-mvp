@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Header from './components/Header';
 import NoteSelector from './components/NoteSelector';
 import CodeSelector from './components/CodeSelector';
+import PayerSelector from './components/PayerSelector';
 import CodeSuggestions from './components/CodeSuggestions';
 import TemplateLibrary from './components/TemplateLibrary';
 import AnalysisReport from './components/AnalysisReport';
@@ -130,6 +131,7 @@ function AppContent() {
   const [note, setNote] = useState('');
   const [selectedCptCodes, setSelectedCptCodes] = useState([]);
   const [selectedIcd10Codes, setSelectedIcd10Codes] = useState([]);
+  const [selectedPayer, setSelectedPayer] = useState(null);
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -199,6 +201,7 @@ function AppContent() {
           note,
           cptCodes: selectedCptCodes,
           icd10Codes: selectedIcd10Codes,
+          payerId: selectedPayer || undefined,
         }),
       });
 
@@ -217,6 +220,7 @@ function AppContent() {
         codes: selectedCptCodes.length + selectedIcd10Codes.length,
         date: new Date().toLocaleDateString(),
         score: data.overallScore,
+        payer: selectedPayer || 'medicare',
       };
       const newHistory = [...analysisHistory, historyEntry].slice(-50); // Keep last 50
       setAnalysisHistory(newHistory);
@@ -243,6 +247,7 @@ function AppContent() {
     setNote('');
     setSelectedCptCodes([]);
     setSelectedIcd10Codes([]);
+    setSelectedPayer(null);
     setReport(null);
     setError(null);
   };
@@ -331,6 +336,14 @@ function AppContent() {
                 />
               </div>
 
+              {/* Payer Selection */}
+              <div className="animate-fadeInUp stagger-3 bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 card-hover">
+                <PayerSelector
+                  selectedPayer={selectedPayer}
+                  onPayerChange={setSelectedPayer}
+                />
+              </div>
+
               {/* Action Buttons */}
               <div className="animate-fadeInUp stagger-3 flex gap-3">
                 <button
@@ -390,6 +403,7 @@ function AppContent() {
                     report={report}
                     note={note}
                     selectedCptCodes={selectedCptCodes}
+                    selectedPayer={selectedPayer}
                   />
                 </div>
               )}

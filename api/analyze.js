@@ -1,5 +1,6 @@
 import { cors, getAnthropicClient, stripMarkdownFences } from './lib/helpers.js';
-import { systemPrompt, buildUserPrompt } from './lib/prompt.js';
+import { buildSystemPrompt, buildUserPrompt } from './lib/prompt.js';
+import { PAYERS } from './lib/payerRules.js';
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;
@@ -9,7 +10,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { note, cptCodes, icd10Codes } = req.body;
+    const { note, cptCodes, icd10Codes, payerId } = req.body;
 
     if (!note || !cptCodes?.length || !icd10Codes?.length) {
       return res.status(400).json({
@@ -17,7 +18,8 @@ export default async function handler(req, res) {
       });
     }
 
-    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes);
+    const systemPrompt = buildSystemPrompt(payerId);
+    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes, payerId);
     const anthropic = getAnthropicClient(req);
 
     const message = await anthropic.messages.create({
@@ -36,6 +38,11 @@ export default async function handler(req, res) {
 
     try {
       const analysis = JSON.parse(responseText);
+      // Attach payer info to response
+      if (payerId && payerId !== 'medicare' && PAYERS[payerId]) {
+        analysis.payerId = payerId;
+        analysis.payerName = PAYERS[payerId].name;
+      }
       res.json(analysis);
     } catch (parseError) {
       console.error('Failed to parse Claude response:', responseText);

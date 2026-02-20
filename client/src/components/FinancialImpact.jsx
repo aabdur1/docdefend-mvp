@@ -18,7 +18,13 @@ function MetricCard({ label, value, icon, colorClass }) {
   );
 }
 
-export default function FinancialImpact({ financialImpact, codeAnalysis }) {
+const PAYER_DISPLAY_NAMES = {
+  united: 'United Healthcare',
+  aetna: 'Aetna',
+  bcbs: 'Blue Cross Blue Shield',
+};
+
+export default function FinancialImpact({ financialImpact, codeAnalysis, selectedPayer }) {
   if (!financialImpact) return null;
 
   const { totalClaimValue, atRiskAmount, potentialRecovery, breakdown } = financialImpact;
@@ -40,7 +46,9 @@ export default function FinancialImpact({ financialImpact, codeAnalysis }) {
         </div>
         <div>
           <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Financial Impact</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Estimated Medicare reimbursement analysis</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Estimated {selectedPayer && PAYER_DISPLAY_NAMES[selectedPayer] ? PAYER_DISPLAY_NAMES[selectedPayer] : 'Medicare'} reimbursement analysis
+          </p>
         </div>
       </div>
 

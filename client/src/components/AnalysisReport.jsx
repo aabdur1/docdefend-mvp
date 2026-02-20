@@ -152,7 +152,128 @@ function CodeAnalysisCard({ analysis, index }) {
   );
 }
 
-export default function AnalysisReport({ report, note, selectedCptCodes }) {
+const PAYER_NAMES = {
+  united: 'United Healthcare',
+  aetna: 'Aetna',
+  bcbs: 'Blue Cross Blue Shield',
+};
+
+function PayerFindingsSection({ findings, payerName }) {
+  if (!findings || findings.length === 0) return null;
+
+  const statusIcon = (status) => {
+    switch (status) {
+      case 'MET':
+        return (
+          <div className="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/50 flex items-center justify-center flex-shrink-0">
+            <svg className="w-3.5 h-3.5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      case 'PARTIALLY_MET':
+        return (
+          <div className="w-6 h-6 rounded-full bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center flex-shrink-0">
+            <svg className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+      default:
+        return (
+          <div className="w-6 h-6 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center flex-shrink-0">
+            <svg className="w-3.5 h-3.5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
+          </div>
+        );
+    }
+  };
+
+  const statusBadge = (status) => {
+    const classes = {
+      MET: 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300',
+      PARTIALLY_MET: 'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300',
+      NOT_MET: 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300',
+    };
+    const labels = { MET: 'Met', PARTIALLY_MET: 'Partial', NOT_MET: 'Not Met' };
+    return (
+      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${classes[status] || classes.NOT_MET}`}>
+        {labels[status] || 'Not Met'}
+      </span>
+    );
+  };
+
+  const metCount = findings.filter(f => f.status === 'MET').length;
+  const notMetCount = findings.filter(f => f.status === 'NOT_MET').length;
+
+  return (
+    <div className="rounded-xl border border-indigo-200 dark:border-indigo-800/50 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 p-5 mb-6 animate-fadeInUp">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center">
+          <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div className="flex-1">
+          <h3 className="text-sm font-semibold text-slate-800 dark:text-white">
+            Payer-Specific Requirements
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {payerName} documentation rules beyond Medicare baseline
+          </p>
+        </div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          {metCount > 0 && (
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300">
+              {metCount} met
+            </span>
+          )}
+          {notMetCount > 0 && (
+            <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300">
+              {notMetCount} gaps
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {findings.map((finding, idx) => (
+          <div
+            key={idx}
+            className="bg-white/70 dark:bg-slate-800/70 rounded-lg border border-indigo-100 dark:border-indigo-800/30 p-3 animate-fadeInUp"
+            style={{ animationDelay: `${idx * 80}ms` }}
+          >
+            <div className="flex items-start gap-2.5">
+              {statusIcon(finding.status)}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="text-sm font-medium text-slate-800 dark:text-white">
+                    {finding.rule}
+                  </span>
+                  {statusBadge(finding.status)}
+                </div>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {finding.detail}
+                </p>
+                {finding.status !== 'MET' && finding.impact && (
+                  <p className="text-xs text-red-600 dark:text-red-400 mt-1.5 flex items-start gap-1">
+                    <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    {finding.impact}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function AnalysisReport({ report, note, selectedCptCodes, selectedPayer }) {
   if (!report) return null;
 
   // Collect all missing elements and fix suggestions for addendum generation
@@ -208,8 +329,17 @@ export default function AnalysisReport({ report, note, selectedCptCodes }) {
             <FinancialImpact
               financialImpact={report.financialImpact}
               codeAnalysis={report.codeAnalysis}
+              selectedPayer={selectedPayer}
             />
           </div>
+        )}
+
+        {/* Payer-Specific Findings */}
+        {report.payerSpecificFindings?.length > 0 && (
+          <PayerFindingsSection
+            findings={report.payerSpecificFindings}
+            payerName={report.payerName || PAYER_NAMES[selectedPayer] || selectedPayer}
+          />
         )}
 
         <div className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 rounded-xl p-5 mb-6 border border-slate-200/50 dark:border-slate-600/50">
