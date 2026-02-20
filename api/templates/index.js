@@ -1,5 +1,5 @@
-import { cors } from '../lib/helpers.js';
-import { templateLibrary } from '../lib/suggestions.js';
+import { cors } from '../_lib/helpers.js';
+import { templateLibrary } from '../_lib/suggestions.js';
 
 export default function handler(req, res) {
   if (cors(req, res)) return;

@@ -1,5 +1,5 @@
-import { cors, getAnthropicClient, stripMarkdownFences } from './lib/helpers.js';
-import { systemPrompt, buildUserPrompt } from './lib/prompt.js';
+import { cors, getAnthropicClient, stripMarkdownFences } from './_lib/helpers.js';
+import { systemPrompt, buildUserPrompt } from './_lib/prompt.js';
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;

@@ -1,5 +1,5 @@
-import { cors } from './lib/helpers.js';
-import { parseDocument } from './lib/parsers.js';
+import { cors } from './_lib/helpers.js';
+import { parseDocument } from './_lib/parsers.js';
 import Busboy from 'busboy';
 
 // Disable Vercel's default body parsing so we can handle multipart ourselves
