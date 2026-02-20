@@ -3,6 +3,7 @@ import sampleNotes from '../data/sampleNotes.json';
 import AnalysisReport from './AnalysisReport';
 import RiskBadge from './RiskBadge';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { API_URL } from '../config';
 
 const CPT_CODES = [
   '99213', '99214', '99215', '99203', '99204', '99205',
@@ -115,7 +116,7 @@ export default function BatchAnalysis() {
     })));
 
     try {
-      const response = await fetch('/api/analyze-batch', {
+      const response = await fetch(API_URL + '/api/analyze-batch', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
         body: JSON.stringify({

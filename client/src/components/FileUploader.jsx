@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useApiKey } from '../context/ApiKeyContext';
+import { API_URL } from '../config';
 
 export default function FileUploader({ onContentExtracted }) {
   const [isDragging, setIsDragging] = useState(false);
@@ -47,7 +48,7 @@ export default function FileUploader({ onContentExtracted }) {
       const headers = {};
       if (apiKey) headers['x-api-key'] = apiKey;
 
-      const response = await fetch('/api/upload', {
+      const response = await fetch(API_URL + '/api/upload', {
         method: 'POST',
         headers,
         body: formData,

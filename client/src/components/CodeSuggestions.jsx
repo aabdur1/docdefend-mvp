@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { API_URL } from '../config';
 
 const confidenceColors = {
   HIGH: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
@@ -21,7 +22,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
     setError(null);
 
     try {
-      const response = await fetch('/api/suggest-codes', {
+      const response = await fetch(API_URL + '/api/suggest-codes', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
         body: JSON.stringify({ note }),

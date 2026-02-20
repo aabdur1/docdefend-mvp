@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { API_URL } from '../config';
 
 export default function AddendumGenerator({ note, gaps }) {
   const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ export default function AddendumGenerator({ note, gaps }) {
     setError(null);
 
     try {
-      const response = await fetch('/api/generate-addendum', {
+      const response = await fetch(API_URL + '/api/generate-addendum', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
         body: JSON.stringify({ note, gaps }),

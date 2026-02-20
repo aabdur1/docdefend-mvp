@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 
 export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
   const [templates, setTemplates] = useState([]);
@@ -15,7 +16,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
 
   const fetchTemplates = async () => {
     try {
-      const response = await fetch('/api/templates');
+      const response = await fetch(API_URL + '/api/templates');
       const data = await response.json();
       setTemplates(data);
     } catch (error) {
@@ -28,7 +29,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
   const handleSelectTemplate = async (templateId) => {
     setLoadingTemplate(true);
     try {
-      const response = await fetch(`/api/templates/${templateId}`);
+      const response = await fetch(`${API_URL}/api/templates/${templateId}`);
       const template = await response.json();
       setSelectedTemplate(template);
     } catch (error) {

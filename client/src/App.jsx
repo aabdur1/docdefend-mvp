@@ -12,6 +12,7 @@ import Confetti from './components/Confetti';
 import Dashboard from './components/Dashboard';
 import EKGLine from './components/EKGLine';
 import { ApiKeyProvider, useApiKey, getAuthHeaders } from './context/ApiKeyContext';
+import { API_URL } from './config';
 
 function LoadingSpinner() {
   return (
@@ -194,7 +195,7 @@ function AppContent() {
     setReport(null);
 
     try {
-      const response = await fetch('/api/analyze', {
+      const response = await fetch(API_URL + '/api/analyze', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
         body: JSON.stringify({
