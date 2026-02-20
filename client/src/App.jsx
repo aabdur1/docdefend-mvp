@@ -279,7 +279,7 @@ function AppContent() {
         {batchMode ? (
           <BatchAnalysis />
         ) : (
-          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-full overflow-x-clip">
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-full">
             {/* Left Column - Input */}
             <div className="space-y-6 no-print min-w-0">
               {/* Clinical Note Card */}
