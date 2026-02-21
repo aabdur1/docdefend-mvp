@@ -299,7 +299,7 @@ export default function AnalysisReport({ report, note, selectedCptCodes, selecte
               <StethoscopeIcon className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg sm:text-xl font-bold font-display text-slate-800 dark:text-white">
+              <h2 className="text-xl sm:text-2xl font-bold font-display text-slate-800 dark:text-white">
                 Defensibility Analysis Report
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">

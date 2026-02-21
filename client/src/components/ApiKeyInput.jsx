@@ -43,7 +43,7 @@ export default function ApiKeyInput() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl border border-[#D6C9A8] dark:border-instrument-border shadow-2xl p-4">
-            <h3 className="text-sm font-semibold font-display text-slate-800 dark:text-white mb-1">Anthropic API Key</h3>
+            <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white mb-1">Anthropic API Key</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
               Your key is stored locally in your browser and never saved on any server.
             </p>

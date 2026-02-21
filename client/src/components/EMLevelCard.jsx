@@ -72,7 +72,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
             </svg>
           </div>
           <div>
-            <h3 className="text-sm font-semibold font-display text-slate-800 dark:text-white">E/M Level Recommendation</h3>
+            <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white">E/M Level Recommendation</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">Based on {methodology === 'TIME' ? 'time-based' : 'MDM-based'} evaluation</p>
           </div>
         </div>

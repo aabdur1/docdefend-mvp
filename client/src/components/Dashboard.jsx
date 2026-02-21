@@ -224,7 +224,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
                 </svg>
               </div>
               <div>
-                <h2 className="text-lg font-bold font-display text-slate-800 dark:text-white">Provider Dashboard</h2>
+                <h2 className="text-xl font-bold font-display text-slate-800 dark:text-white">Provider Dashboard</h2>
                 <p className="text-sm text-slate-500 dark:text-slate-400">Defensibility analytics & trends</p>
               </div>
             </div>

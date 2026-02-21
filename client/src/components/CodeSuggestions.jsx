@@ -74,7 +74,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold font-display text-slate-800 dark:text-white">Smart Code Suggestions</h3>
+            <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Smart Code Suggestions</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">AI-powered code recommendations</p>
           </div>
         </div>

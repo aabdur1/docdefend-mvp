@@ -83,7 +83,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
           </svg>
         </div>
         <div>
-          <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Payer</h2>
+          <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Payer</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">Select insurance payer for targeted analysis</p>
         </div>
       </div>

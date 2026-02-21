@@ -60,7 +60,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#D6C9A8] dark:border-instrument-border">
           <div>
-            <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Documentation Templates</h2>
+            <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Documentation Templates</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">Pre-built templates that meet coding requirements</p>
           </div>
           <button

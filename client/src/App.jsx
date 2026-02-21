@@ -287,7 +287,7 @@ function AppContent() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Clinical Note</h2>
+                      <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Clinical Note</h2>
                       <p className="text-xs text-slate-500 dark:text-slate-400">Patient documentation</p>
                     </div>
                   </div>
@@ -320,7 +320,7 @@ function AppContent() {
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Billing Codes</h2>
+                    <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Billing Codes</h2>
                     <p className="text-xs text-slate-500 dark:text-slate-400">CPT & ICD-10 selection</p>
                   </div>
                 </div>

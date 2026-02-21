@@ -60,7 +60,7 @@ export default function AddendumGenerator({ note, gaps }) {
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold font-display text-slate-800 dark:text-white">Smart Addendum Generator</h3>
+            <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Smart Addendum Generator</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">Create compliant documentation fixes</p>
           </div>
         </div>
