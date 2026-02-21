@@ -46,18 +46,20 @@ function ToastItem({ toast, onRemove }) {
   };
 
   const styles = {
-    success: 'bg-gradient-to-r from-emerald-500 to-green-600 text-white',
-    error: 'bg-gradient-to-r from-red-500 to-rose-600 text-white',
-    info: 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white',
-    warning: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white',
+    success: 'bg-green-500 text-white',
+    error: 'bg-red-500 text-white',
+    info: 'bg-blue-500 text-white',
+    warning: 'bg-amber-500 text-white',
   };
+
+  const duration = toast.duration || 4000;
 
   return (
     <div
       className={`
         ${isExiting ? 'toast-exit' : 'toast-enter'}
         ${styles[toast.type] || styles.info}
-        flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl backdrop-blur-sm
+        relative overflow-hidden flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl backdrop-blur-sm
         min-w-0 sm:min-w-[300px] max-w-[calc(100vw-2rem)] sm:max-w-md
       `}
     >
@@ -83,6 +85,11 @@ function ToastItem({ toast, onRemove }) {
           <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
         </svg>
       </button>
+      {/* Countdown progress bar */}
+      <div
+        className="toast-countdown absolute bottom-0 left-0 right-0 h-0.5 bg-white/30 origin-left"
+        style={{ animationDuration: `${duration}ms` }}
+      />
     </div>
   );
 }

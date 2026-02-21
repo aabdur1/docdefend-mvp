@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
 const COLORS = [
-  '#10b981', // emerald
-  '#0ea5e9', // sky
+  '#52B788', // trace green
+  '#2d6a4f', // BRG mid
   '#6366f1', // indigo
-  '#f59e0b', // amber
+  '#74C69D', // trace glow
   '#ec4899', // pink
   '#8b5cf6', // violet
   '#14b8a6', // teal

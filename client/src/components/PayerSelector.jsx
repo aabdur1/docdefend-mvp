@@ -77,13 +77,13 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+        <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
           </svg>
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Payer</h2>
+          <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Payer</h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">Select insurance payer for targeted analysis</p>
         </div>
       </div>
@@ -97,17 +97,19 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
             <button
               key={payer.id || 'medicare'}
               onClick={() => onPayerChange(payer.id)}
+              aria-label={`Select ${payer.name} as payer`}
+              aria-pressed={isSelected}
               className={`relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group ${
                 isSelected
                   ? `${colors.border} ${colors.bg} shadow-md`
-                  : 'border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-gray-300 dark:hover:border-slate-500 hover:shadow-sm'
+                  : 'border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised hover:border-[#C4B48E] dark:hover:border-instrument-border-hover hover:shadow-sm'
               }`}
             >
               <div
                 className={`w-9 h-9 rounded-lg flex items-center justify-center transition-colors ${
                   isSelected
                     ? `${colors.iconBg} ${colors.iconText}`
-                    : 'bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 group-hover:bg-gray-200 dark:group-hover:bg-slate-600'
+                    : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-slate-400 group-hover:bg-[#E5DBBF] dark:group-hover:bg-instrument-bg-hover'
                 }`}
               >
                 {payer.icon}
@@ -120,7 +122,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
                 >
                   {payer.shortName}
                 </p>
-                <p className="text-[10px] text-slate-400 dark:text-slate-500 leading-tight mt-0.5 hidden sm:block">
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-tight mt-0.5 hidden sm:block">
                   {payer.description}
                 </p>
               </div>
@@ -128,7 +130,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
                 <div className={`absolute top-1.5 right-1.5 w-2 h-2 rounded-full ${colors.border.replace('border-', 'bg-')}`} />
               )}
               {payer.id === null && (
-                <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 text-[9px] font-medium px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-slate-400 leading-none">
+                <span className="absolute -top-1.5 left-1/2 -translate-x-1/2 text-[11px] font-medium px-1.5 py-0.5 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 leading-none">
                   Default
                 </span>
               )}

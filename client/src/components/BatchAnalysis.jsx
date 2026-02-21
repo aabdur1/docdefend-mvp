@@ -20,7 +20,7 @@ function CodePills({ codes, onRemove }) {
       {codes.map(code => (
         <span
           key={code}
-          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300"
+          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300"
         >
           {code}
           <button
@@ -169,20 +169,20 @@ export default function BatchAnalysis() {
   return (
     <div className="space-y-6">
       {/* Batch header */}
-      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-6 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50">
+      <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8]/50 dark:border-instrument-border/50 p-6 shadow-card">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-purple-500/30">
+            <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-slate-800 dark:text-white">Batch Analysis</h2>
+              <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Batch Analysis</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+          <span className="px-3 py-1 rounded-full text-xs font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace">
             {rows.length} note{rows.length !== 1 ? 's' : ''}
           </span>
         </div>
@@ -195,14 +195,14 @@ export default function BatchAnalysis() {
               <button
                 key={sn.id}
                 onClick={() => addSampleNote(sn)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors truncate max-w-[160px] sm:max-w-[200px]"
+                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover transition-colors truncate max-w-[160px] sm:max-w-[200px]"
               >
                 + {sn.title}
               </button>
             ))}
             <button
               onClick={addBlankRow}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-colors"
+              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace hover:bg-healthcare-200 dark:hover:bg-healthcare-900/50 transition-colors"
             >
               + Blank Note
             </button>
@@ -217,14 +217,14 @@ export default function BatchAnalysis() {
                 key={row.id}
                 className={`border rounded-xl p-4 transition-all ${
                   expandedRow === row.id
-                    ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50/30 dark:bg-indigo-900/10'
-                    : 'border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800'
+                    ? 'border-healthcare-300 dark:border-healthcare-700 bg-healthcare-50/30 dark:bg-healthcare-900/10'
+                    : 'border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised'
                 }`}
               >
                 {/* Row header */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400 text-xs flex items-center justify-center font-bold flex-shrink-0">
+                    <span className="w-6 h-6 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 text-xs flex items-center justify-center font-bold flex-shrink-0">
                       {idx + 1}
                     </span>
                     <input
@@ -249,7 +249,7 @@ export default function BatchAnalysis() {
                       </span>
                     )}
                     {row.status === 'skipped' && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400">
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-slate-400">
                         Skipped
                       </span>
                     )}
@@ -257,7 +257,7 @@ export default function BatchAnalysis() {
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                       onClick={() => setExpandedRow(expandedRow === row.id ? null : row.id)}
-                      className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                      className="p-1.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-colors"
                     >
                       <svg className={`w-4 h-4 text-slate-400 transition-transform ${expandedRow === row.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -282,7 +282,7 @@ export default function BatchAnalysis() {
                       value={row.note}
                       onChange={(e) => updateRow(row.id, { note: e.target.value })}
                       rows={4}
-                      className="w-full text-sm border border-gray-200 dark:border-slate-600 rounded-lg p-3 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-200 resize-y"
+                      className="w-full text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-lg p-3 bg-[#F5EFE0] dark:bg-instrument-bg text-slate-800 dark:text-slate-200 resize-y"
                       placeholder="Paste or type clinical note..."
                     />
 
@@ -294,10 +294,10 @@ export default function BatchAnalysis() {
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'cpt', code)}
-                            className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+                            className={`px-2 py-0.5 rounded text-xs font-mono font-medium transition-colors ${
                               row.cptCodes.includes(code)
                                 ? 'bg-healthcare-500 text-white'
-                                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'
                             }`}
                           >
                             {code}
@@ -317,10 +317,10 @@ export default function BatchAnalysis() {
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'icd10', code)}
-                            className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+                            className={`px-2 py-0.5 rounded text-xs font-mono font-medium transition-colors ${
                               row.icd10Codes.includes(code)
-                                ? 'bg-indigo-500 text-white'
-                                : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-600'
+                                ? 'bg-healthcare-500 text-white'
+                                : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'
                             }`}
                           >
                             {code}
@@ -334,7 +334,7 @@ export default function BatchAnalysis() {
 
                     {/* Show full analysis report if complete */}
                     {row.status === 'complete' && row.analysis && (
-                      <div className="mt-4 border-t border-gray-200 dark:border-slate-700 pt-4">
+                      <div className="mt-4 border-t border-[#D6C9A8] dark:border-instrument-border pt-4">
                         <AnalysisReport report={row.analysis} note={row.note} />
                       </div>
                     )}
@@ -354,7 +354,7 @@ export default function BatchAnalysis() {
           <button
             onClick={handleAnalyzeAll}
             disabled={!canAnalyze || analyzing}
-            className="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 px-6 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-purple-500/30 hover:shadow-xl"
+            className="flex-1 bg-healthcare-500 hover:bg-healthcare-600 text-white py-3 px-6 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-healthcare-500/30 hover:shadow-xl"
           >
             {analyzing ? (
               <span className="flex items-center justify-center gap-2">
@@ -375,7 +375,7 @@ export default function BatchAnalysis() {
           </button>
           <button
             onClick={handleReset}
-            className="px-6 py-3 border-2 border-gray-200 dark:border-slate-600 text-slate-600 dark:text-slate-300 rounded-xl font-semibold hover:bg-gray-50 dark:hover:bg-slate-700 transition-all"
+            className="px-6 py-3 border-2 border-[#D6C9A8] dark:border-instrument-border text-slate-600 dark:text-slate-300 rounded-xl font-semibold hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-all"
           >
             Clear All
           </button>
@@ -384,9 +384,9 @@ export default function BatchAnalysis() {
         {/* Progress bar during analysis */}
         {analyzing && progress.total > 0 && (
           <div className="mt-4">
-            <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500"
+                className="h-full bg-healthcare-500 dark:bg-trace rounded-full transition-all duration-500"
                 style={{ width: `${(progress.current / progress.total) * 100}%` }}
               />
             </div>
@@ -399,15 +399,15 @@ export default function BatchAnalysis() {
 
       {/* Batch Summary */}
       {batchResults?.summary && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-6 shadow-xl animate-fadeInUp">
+        <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8]/50 dark:border-instrument-border/50 p-6 shadow-card animate-fadeInUp">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-lg">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Batch Summary</h3>
+              <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Batch Summary</h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 {batchResults.summary.completed} of {batchResults.summary.total} notes analyzed
               </p>
@@ -415,20 +415,20 @@ export default function BatchAnalysis() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="text-center p-3 rounded-xl bg-slate-50 dark:bg-slate-700/50">
-              <p className="text-2xl font-bold text-slate-800 dark:text-white">{batchResults.summary.total}</p>
+            <div className="text-center p-3 rounded-xl bg-[#EDE6D3] dark:bg-instrument-bg-surface/50">
+              <p className="text-2xl font-bold font-mono text-slate-800 dark:text-white">{batchResults.summary.total}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-green-50 dark:bg-green-900/20">
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">{batchResults.summary.highCount}</p>
+              <p className="text-2xl font-bold font-mono text-green-600 dark:text-green-400">{batchResults.summary.highCount}</p>
               <p className="text-xs text-green-600 dark:text-green-400">High Score</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20">
-              <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">{batchResults.summary.mediumCount}</p>
+              <p className="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400">{batchResults.summary.mediumCount}</p>
               <p className="text-xs text-amber-600 dark:text-amber-400">Medium Score</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-red-50 dark:bg-red-900/20">
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">{batchResults.summary.lowCount}</p>
+              <p className="text-2xl font-bold font-mono text-red-600 dark:text-red-400">{batchResults.summary.lowCount}</p>
               <p className="text-xs text-red-600 dark:text-red-400">Low Score</p>
             </div>
           </div>
@@ -443,13 +443,13 @@ export default function BatchAnalysis() {
 
       {/* Empty state */}
       {rows.length === 0 && (
-        <div className="bg-white dark:bg-slate-800 rounded-2xl border border-gray-200/50 dark:border-slate-700/50 p-6 sm:p-10 text-center shadow-xl">
-          <div className="w-16 h-16 rounded-2xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8]/50 dark:border-instrument-border/50 p-6 sm:p-10 text-center shadow-card">
+          <div className="w-16 h-16 rounded-2xl bg-healthcare-100 dark:bg-healthcare-900/30 flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-healthcare-500 dark:text-trace" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-2">No Notes Added</h3>
+          <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white mb-2">No Notes Added</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
             Add sample notes or create blank notes to start batch analysis. Select codes for each note, then analyze all at once.
           </p>

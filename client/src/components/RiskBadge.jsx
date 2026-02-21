@@ -1,6 +1,6 @@
 const riskConfig = {
   HIGH: {
-    bg: 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40',
+    bg: 'bg-green-100 dark:bg-green-900/40',
     text: 'text-green-700 dark:text-green-300',
     border: 'border-green-200/50 dark:border-green-700/50',
     shadow: 'shadow-green-500/20',
@@ -8,7 +8,7 @@ const riskConfig = {
     label: 'High Defensibility',
   },
   MEDIUM: {
-    bg: 'bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/40 dark:to-amber-900/40',
+    bg: 'bg-yellow-100 dark:bg-yellow-900/40',
     text: 'text-yellow-700 dark:text-yellow-300',
     border: 'border-yellow-200/50 dark:border-yellow-700/50',
     shadow: 'shadow-yellow-500/20',
@@ -16,7 +16,7 @@ const riskConfig = {
     label: 'Medium Defensibility',
   },
   LOW: {
-    bg: 'bg-gradient-to-r from-red-100 to-rose-100 dark:from-red-900/40 dark:to-rose-900/40',
+    bg: 'bg-red-100 dark:bg-red-900/40',
     text: 'text-red-700 dark:text-red-300',
     border: 'border-red-200/50 dark:border-red-700/50',
     shadow: 'shadow-red-500/20',
@@ -24,7 +24,7 @@ const riskConfig = {
     label: 'Low Defensibility',
   },
   SUPPORTED: {
-    bg: 'bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/40 dark:to-emerald-900/40',
+    bg: 'bg-green-100 dark:bg-green-900/40',
     text: 'text-green-700 dark:text-green-300',
     border: 'border-green-200/50 dark:border-green-700/50',
     shadow: 'shadow-green-500/20',
@@ -32,7 +32,7 @@ const riskConfig = {
     label: 'Supported',
   },
   PARTIALLY_SUPPORTED: {
-    bg: 'bg-gradient-to-r from-yellow-100 to-amber-100 dark:from-yellow-900/40 dark:to-amber-900/40',
+    bg: 'bg-yellow-100 dark:bg-yellow-900/40',
     text: 'text-yellow-700 dark:text-yellow-300',
     border: 'border-yellow-200/50 dark:border-yellow-700/50',
     shadow: 'shadow-yellow-500/20',
@@ -40,7 +40,7 @@ const riskConfig = {
     label: 'Partially Supported',
   },
   NOT_SUPPORTED: {
-    bg: 'bg-gradient-to-r from-red-100 to-rose-100 dark:from-red-900/40 dark:to-rose-900/40',
+    bg: 'bg-red-100 dark:bg-red-900/40',
     text: 'text-red-700 dark:text-red-300',
     border: 'border-red-200/50 dark:border-red-700/50',
     shadow: 'shadow-red-500/20',

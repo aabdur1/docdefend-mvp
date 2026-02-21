@@ -11,7 +11,7 @@ export default function EKGLine({ className = '' }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
-          className="ekg-line text-healthcare-500 dark:text-healthcare-400"
+          className="ekg-line text-trace"
         />
       </svg>
     </div>

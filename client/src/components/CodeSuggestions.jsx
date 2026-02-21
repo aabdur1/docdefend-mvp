@@ -13,6 +13,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
   const [suggestions, setSuggestions] = useState(null);
   const [error, setError] = useState(null);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [applied, setApplied] = useState(false);
   const { apiKey } = useApiKey();
 
   const handleAnalyze = async () => {
@@ -29,11 +30,17 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to get suggestions');
+        let message = 'Failed to get suggestions';
+        try {
+          const data = await response.json();
+          message = data.error || message;
+        } catch {}
+        throw new Error(message);
       }
 
-      const data = await response.json();
+      const text = await response.text();
+      if (!text) throw new Error('Empty response from server — is the backend running?');
+      const data = JSON.parse(text);
       setSuggestions(data);
     } catch (err) {
       setError(err.message);
@@ -53,26 +60,28 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
       .map(c => c.code);
 
     onSelectCodes(cptCodes, icd10Codes);
+    setApplied(true);
+    setTimeout(() => setApplied(false), 3000);
   };
 
   return (
-    <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 rounded-xl border border-purple-200 dark:border-purple-800 p-5 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fadeIn">
+    <div className="bg-healthcare-50 dark:bg-healthcare-900/20 rounded-xl border border-healthcare-200 dark:border-healthcare-800/50 p-5 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fadeIn">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shadow-lg flex-shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg flex-shrink-0">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold text-purple-900 dark:text-purple-200">Smart Code Suggestions</h3>
-            <p className="text-xs text-purple-600 dark:text-purple-400">AI-powered code recommendations</p>
+            <h3 className="font-semibold font-display text-healthcare-700 dark:text-trace-glow">Smart Code Suggestions</h3>
+            <p className="text-xs text-healthcare-600 dark:text-trace-dim">AI-powered code recommendations</p>
           </div>
         </div>
         <button
           onClick={handleAnalyze}
           disabled={loading || !note.trim()}
-          className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
+          className="px-4 py-2 text-sm font-medium bg-healthcare-500 hover:bg-healthcare-600 text-white rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
         >
           {loading ? (
             <>
@@ -100,7 +109,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
         <div className="space-y-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
+            className="flex items-center gap-1 text-sm text-healthcare-600 dark:text-trace hover:text-healthcare-700 dark:hover:text-trace-glow"
           >
             <svg className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`} fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
@@ -112,12 +121,12 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
             <>
               {/* CPT Codes */}
               <div>
-                <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Suggested CPT Codes</h4>
+                <h4 className="text-sm font-medium font-display text-slate-700 dark:text-slate-300 mb-2">Suggested CPT Codes</h4>
                 <div className="space-y-2">
                   {suggestions.cptCodes.map((code, idx) => (
                     <div
                       key={idx}
-                      className="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
+                      className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-3 sm:p-4 border border-[#D6C9A8] dark:border-instrument-border hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
                       style={{ animationDelay: `${idx * 50}ms` }}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
@@ -134,7 +143,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
                           {code.confidence}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 sm:pl-10">{code.rationale}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 sm:pl-10">{code.rationale}</p>
                     </div>
                   ))}
                 </div>
@@ -142,12 +151,12 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
 
               {/* ICD-10 Codes */}
               <div>
-                <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Suggested ICD-10 Codes</h4>
+                <h4 className="text-sm font-medium font-display text-slate-700 dark:text-slate-300 mb-2">Suggested ICD-10 Codes</h4>
                 <div className="space-y-2">
                   {suggestions.icd10Codes.map((code, idx) => (
                     <div
                       key={idx}
-                      className="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-gray-200 dark:border-slate-700 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
+                      className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-3 sm:p-4 border border-[#D6C9A8] dark:border-instrument-border hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 animate-fadeInUp"
                       style={{ animationDelay: `${idx * 50}ms` }}
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
@@ -164,7 +173,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
                           {code.confidence}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 sm:pl-10">{code.rationale}</p>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 mt-2 sm:pl-10">{code.rationale}</p>
                     </div>
                   ))}
                 </div>
@@ -173,7 +182,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
               {/* Warnings */}
               {suggestions.warnings?.length > 0 && (
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-3">
-                  <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300 mb-1">Warnings</h4>
+                  <h4 className="text-sm font-medium font-display text-amber-800 dark:text-amber-300 mb-1">Warnings</h4>
                   <ul className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
                     {suggestions.warnings.map((warning, idx) => (
                       <li key={idx}>• {warning}</li>
@@ -183,22 +192,40 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
               )}
 
               {/* Apply Button */}
-              <button
-                onClick={handleApplySuggestions}
-                className="w-full py-3 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 text-purple-700 dark:text-purple-300 rounded-xl hover:from-purple-200 hover:to-indigo-200 dark:hover:from-purple-900/50 dark:hover:to-indigo-900/50 text-sm font-semibold transition-all duration-200 flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                Apply High/Medium Confidence Codes
-              </button>
+              <div className="pt-2 border-t border-healthcare-200/50 dark:border-healthcare-800/30 mt-2">
+                <button
+                  onClick={handleApplySuggestions}
+                  disabled={applied}
+                  className={`w-full py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 active:scale-[0.98] ${
+                    applied
+                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                      : 'bg-healthcare-500 hover:bg-healthcare-600 text-white shadow-lg shadow-healthcare-500/30 hover:shadow-xl hover:shadow-healthcare-500/40 btn-lift'
+                  }`}
+                >
+                  {applied ? (
+                    <>
+                      <svg className="w-5 h-5 check-pop" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Codes Applied!
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                      </svg>
+                      Apply High/Medium Confidence Codes
+                    </>
+                  )}
+                </button>
+              </div>
             </>
           )}
         </div>
       )}
 
       {!suggestions && !loading && (
-        <p className="text-sm text-purple-600 dark:text-purple-400">
+        <p className="text-sm text-healthcare-600 dark:text-trace-dim">
           Click "Suggest Codes" to analyze the clinical note and get AI-powered code recommendations.
         </p>
       )}

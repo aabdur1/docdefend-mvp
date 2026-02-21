@@ -29,8 +29,8 @@ export default function ApiKeyInput() {
         }}
         className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 hover:scale-105 active:scale-95 border ${
           apiKey
-            ? 'bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 text-emerald-700 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-800/50'
-            : 'bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 text-amber-700 dark:text-amber-300 border-amber-200/50 dark:border-amber-800/50 animate-pulse'
+            ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-800/50'
+            : 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border-amber-200/50 dark:border-amber-800/50 animate-pulse'
         }`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,8 +42,8 @@ export default function ApiKeyInput() {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 shadow-2xl p-4">
-            <h3 className="text-sm font-semibold text-slate-800 dark:text-white mb-1">Anthropic API Key</h3>
+          <div className="absolute right-0 top-full mt-2 z-50 w-[calc(100vw-2rem)] sm:w-80 max-w-sm bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl border border-[#D6C9A8] dark:border-instrument-border shadow-2xl p-4">
+            <h3 className="text-sm font-semibold font-display text-slate-800 dark:text-white mb-1">Anthropic API Key</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
               Your key is stored locally in your browser and never saved on any server.
             </p>
@@ -54,7 +54,7 @@ export default function ApiKeyInput() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="sk-ant-..."
-                className="w-full px-3 py-2 pr-10 text-sm bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-healthcare-500 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400"
+                className="w-full px-3 py-2 pr-10 text-sm bg-[#EDE6D3] dark:bg-instrument-bg border border-[#D6C9A8] dark:border-instrument-border rounded-lg focus:ring-2 focus:ring-healthcare-500 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400"
                 onKeyDown={(e) => e.key === 'Enter' && handleSave()}
               />
               <button

@@ -29,19 +29,19 @@ const ICD10_CODES = [
 
 function CodeCheckbox({ code, description, checked, onChange }) {
   return (
-    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-gradient-to-r hover:from-slate-50 hover:to-transparent dark:hover:from-slate-700 dark:hover:to-transparent cursor-pointer transition-all duration-200 group">
+    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface cursor-pointer transition-all duration-200 group">
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="mt-1 rounded border-gray-300 dark:border-slate-600 text-healthcare-600 focus:ring-healthcare-500 dark:bg-slate-700 transition-transform duration-200 group-hover:scale-110"
+        className="mt-1 rounded border-[#D6C9A8] dark:border-instrument-border text-healthcare-600 focus:ring-healthcare-500 dark:bg-instrument-bg-surface transition-transform duration-200 group-hover:scale-110"
       />
       <div className="flex-1">
         <span className="font-mono text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-healthcare-600 dark:group-hover:text-healthcare-400 transition-colors">{code}</span>
         <span className="text-sm text-slate-500 dark:text-slate-400 ml-2">{description}</span>
       </div>
       {checked && (
-        <span className="text-healthcare-500 animate-scaleIn">
+        <span className="text-healthcare-500 check-pop">
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
@@ -59,7 +59,7 @@ function CustomCodeInput({ value, onChange, onAdd, placeholder }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="flex-1 px-4 py-2 text-sm border border-gray-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-white dark:bg-slate-700 dark:text-white shadow-sm transition-shadow duration-200 focus:shadow-md"
+        className="flex-1 px-4 py-2 text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-shadow duration-200 focus:shadow-md"
         onKeyDown={(e) => {
           if (e.key === 'Enter' && value.trim()) {
             onAdd();
@@ -70,7 +70,7 @@ function CustomCodeInput({ value, onChange, onAdd, placeholder }) {
         type="button"
         onClick={onAdd}
         disabled={!value.trim()}
-        className="px-4 py-2 text-sm font-medium bg-gradient-to-r from-healthcare-500 to-healthcare-600 text-white rounded-xl hover:from-healthcare-600 hover:to-healthcare-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md transition-all duration-200 hover:scale-105 active:scale-95"
+        className="px-4 py-2 text-sm font-medium bg-healthcare-500 text-white rounded-xl hover:bg-healthcare-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 btn-lift"
       >
         Add
       </button>
@@ -116,8 +116,8 @@ export default function CodeSelector({
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div className="animate-slideInLeft">
-        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        <h3 className="text-sm font-semibold font-display text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
             CPT
           </span>
           CPT Codes
@@ -127,7 +127,7 @@ export default function CodeSelector({
             </span>
           )}
         </h3>
-        <div className="border border-gray-200 dark:border-slate-600 rounded-xl max-h-64 overflow-y-auto bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="border border-[#D6C9A8] dark:border-instrument-border rounded-xl max-h-64 overflow-y-auto bg-[#F5EFE0] dark:bg-instrument-bg-raised shadow-sm hover:shadow-md transition-shadow duration-300 scroll-fade">
           {CPT_CODES.map((item) => (
             <CodeCheckbox
               key={item.code}
@@ -156,8 +156,8 @@ export default function CodeSelector({
       </div>
 
       <div className="animate-slideInRight">
-        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        <h3 className="text-sm font-semibold font-display text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
             ICD
           </span>
           ICD-10 Codes
@@ -167,7 +167,7 @@ export default function CodeSelector({
             </span>
           )}
         </h3>
-        <div className="border border-gray-200 dark:border-slate-600 rounded-xl max-h-64 overflow-y-auto bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <div className="border border-[#D6C9A8] dark:border-instrument-border rounded-xl max-h-64 overflow-y-auto bg-[#F5EFE0] dark:bg-instrument-bg-raised shadow-sm hover:shadow-md transition-shadow duration-300 scroll-fade">
           {ICD10_CODES.map((item) => (
             <CodeCheckbox
               key={item.code}

@@ -14,7 +14,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
   // Determine color scheme based on comparison
   const comparisonConfig = {
     MATCH: {
-      bg: 'from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20',
+      bg: 'bg-green-50 dark:bg-green-900/20',
       border: 'border-green-200 dark:border-green-800/50',
       icon: 'text-green-600 dark:text-green-400',
       iconBg: 'bg-green-100 dark:bg-green-900/50',
@@ -23,7 +23,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       description: 'Your selected E/M level matches the documentation.',
     },
     UNDERCODED: {
-      bg: 'from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20',
+      bg: 'bg-blue-50 dark:bg-blue-900/20',
       border: 'border-blue-200 dark:border-blue-800/50',
       icon: 'text-blue-600 dark:text-blue-400',
       iconBg: 'bg-blue-100 dark:bg-blue-900/50',
@@ -32,7 +32,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       description: 'Your documentation supports a higher E/M level than selected.',
     },
     OVERCODED: {
-      bg: 'from-red-50 to-rose-50 dark:from-red-900/20 dark:to-rose-900/20',
+      bg: 'bg-red-50 dark:bg-red-900/20',
       border: 'border-red-200 dark:border-red-800/50',
       icon: 'text-red-600 dark:text-red-400',
       iconBg: 'bg-red-100 dark:bg-red-900/50',
@@ -41,8 +41,8 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       description: 'Your documentation does not support the selected E/M level.',
     },
     'N/A': {
-      bg: 'from-slate-50 to-gray-50 dark:from-slate-800/50 dark:to-slate-700/50',
-      border: 'border-slate-200 dark:border-slate-700',
+      bg: 'bg-slate-50 dark:bg-slate-800/50',
+      border: 'border-[#D6C9A8] dark:border-instrument-border',
       icon: 'text-slate-600 dark:text-slate-400',
       iconBg: 'bg-slate-100 dark:bg-slate-700',
       label: 'N/A',
@@ -63,7 +63,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
   const selectedEM = selectedCptCodes?.find(c => /^99\d{3}$/.test(c));
 
   return (
-    <div className={`rounded-xl border ${config.border} bg-gradient-to-r ${config.bg} p-5 animate-fadeInUp`}>
+    <div className={`rounded-xl border ${config.border} ${config.bg} p-5 animate-fadeInUp`}>
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl ${config.iconBg} flex items-center justify-center`}>
@@ -72,7 +72,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
             </svg>
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-slate-800 dark:text-white">E/M Level Recommendation</h3>
+            <h3 className="text-sm font-semibold font-display text-slate-800 dark:text-white">E/M Level Recommendation</h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">Based on {methodology === 'TIME' ? 'time-based' : 'MDM-based'} evaluation</p>
           </div>
         </div>
@@ -83,17 +83,17 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
 
       {/* Main recommendation */}
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 mb-4">
-        <div className="flex-1 text-center p-3 rounded-lg bg-white/60 dark:bg-slate-800/60 border border-white/50 dark:border-slate-700/50">
+        <div className="flex-1 text-center p-3 rounded-lg bg-[#F5EFE0]/60 dark:bg-instrument-bg-raised/60 border border-[#D6C9A8]/50 dark:border-instrument-border/50">
           {selectedEM && (
             <>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Selected</p>
-              <p className="text-lg font-bold text-slate-700 dark:text-slate-300">{selectedEM}</p>
+              <p className="text-lg font-bold font-mono text-slate-700 dark:text-slate-300">{selectedEM}</p>
             </>
           )}
           {!selectedEM && (
             <>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Selected</p>
-              <p className="text-sm text-slate-400 dark:text-slate-500">No E/M code</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">No E/M code</p>
             </>
           )}
         </div>
@@ -102,9 +102,10 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </div>
-        <div className="flex-1 text-center p-3 rounded-lg bg-white/80 dark:bg-slate-800/80 border-2 border-current/20 shadow-sm">
+        <div className="flex-1 text-center p-3 rounded-lg bg-[#F5EFE0]/80 dark:bg-instrument-bg-raised/80 border-2 border-current/20 shadow-sm">
           <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Documented Level</p>
-          <p className={`text-lg font-bold ${config.icon}`}>{documentedLevel}</p>
+          <p className={`text-lg font-bold font-mono ${config.icon}`}>{documentedLevel}</p>
+
           <p className="text-xs text-slate-500 dark:text-slate-400">{documentedLevelDescription}</p>
         </div>
       </div>
@@ -113,15 +114,15 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       {mdmDetails && methodology === 'MDM' && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
           <div className={`text-center p-2 rounded-lg ${mdmLevelColor(mdmDetails.problemComplexity)}`}>
-            <p className="text-xs font-medium opacity-75">Problems</p>
+            <p className="text-sm font-medium opacity-80">Problems</p>
             <p className="text-sm font-bold">{mdmDetails.problemComplexity}</p>
           </div>
           <div className={`text-center p-2 rounded-lg ${mdmLevelColor(mdmDetails.dataComplexity)}`}>
-            <p className="text-xs font-medium opacity-75">Data</p>
+            <p className="text-sm font-medium opacity-80">Data</p>
             <p className="text-sm font-bold">{mdmDetails.dataComplexity}</p>
           </div>
           <div className={`text-center p-2 rounded-lg ${mdmLevelColor(mdmDetails.riskLevel)}`}>
-            <p className="text-xs font-medium opacity-75">Risk</p>
+            <p className="text-sm font-medium opacity-80">Risk</p>
             <p className="text-sm font-bold">{mdmDetails.riskLevel}</p>
           </div>
         </div>

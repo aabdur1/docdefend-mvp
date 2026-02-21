@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react';
 import { getRate } from '../data/reimbursementRates';
 
 function parseDollar(str) {
@@ -6,14 +7,46 @@ function parseDollar(str) {
   return isNaN(num) ? 0 : num;
 }
 
-function MetricCard({ label, value, icon, colorClass }) {
+function useCountUp(target, duration = 1000) {
+  const [value, setValue] = useState(0);
+  const frameRef = useRef(null);
+
+  useEffect(() => {
+    if (target <= 0) { setValue(0); return; }
+    const start = performance.now();
+    const step = (now) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(eased * target));
+      if (progress < 1) {
+        frameRef.current = requestAnimationFrame(step);
+      }
+    };
+    frameRef.current = requestAnimationFrame(step);
+    return () => { if (frameRef.current) cancelAnimationFrame(frameRef.current); };
+  }, [target, duration]);
+
+  return value;
+}
+
+function AnimatedDollar({ amount }) {
+  const num = parseDollar(amount);
+  const animated = useCountUp(num, 1200);
+  return <>${animated.toLocaleString()}</>;
+}
+
+function MetricCard({ label, value, icon, colorClass, animate }) {
   return (
-    <div className="flex-1 text-center p-3 rounded-xl bg-white/70 dark:bg-slate-800/70 border border-white/50 dark:border-slate-700/50 shadow-sm">
+    <div className="flex-1 text-center p-3 rounded-xl bg-[#F5EFE0]/70 dark:bg-instrument-bg-raised/70 border border-[#D6C9A8]/50 dark:border-instrument-border/50 shadow-sm">
       <div className={`w-8 h-8 rounded-lg mx-auto mb-2 flex items-center justify-center ${colorClass}`}>
         {icon}
       </div>
       <p className="text-xs text-slate-500 dark:text-slate-400 mb-0.5">{label}</p>
-      <p className="text-lg font-bold text-slate-800 dark:text-white">{value}</p>
+      <p className="text-lg font-bold font-mono text-slate-800 dark:text-white">
+        {animate ? <AnimatedDollar amount={value} /> : value}
+      </p>
     </div>
   );
 }
@@ -37,7 +70,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
   const riskPct = totalNum > 0 ? Math.min(100, Math.round((atRiskNum / totalNum) * 100)) : 0;
 
   return (
-    <div className="rounded-xl border border-amber-200 dark:border-amber-800/50 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 p-5 animate-fadeInUp">
+    <div className="rounded-xl border border-amber-200 dark:border-amber-800/50 bg-amber-50 dark:bg-amber-900/20 p-5 animate-fadeInUp">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/50 flex items-center justify-center">
           <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -45,7 +78,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
           </svg>
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-slate-800 dark:text-white">Financial Impact</h3>
+          <h3 className="text-sm font-semibold font-display text-slate-800 dark:text-white">Financial Impact</h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             Estimated {selectedPayer && PAYER_DISPLAY_NAMES[selectedPayer] ? PAYER_DISPLAY_NAMES[selectedPayer] : 'Medicare'} reimbursement analysis
           </p>
@@ -57,6 +90,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
         <MetricCard
           label="Claim Value"
           value={totalClaimValue || '$0'}
+          animate
           colorClass="bg-emerald-100 dark:bg-emerald-900/50"
           icon={
             <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,6 +101,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
         <MetricCard
           label="At Risk"
           value={atRiskAmount || '$0'}
+          animate
           colorClass="bg-red-100 dark:bg-red-900/50"
           icon={
             <svg className="w-4 h-4 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,6 +112,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
         <MetricCard
           label="Recovery"
           value={potentialRecovery || '$0'}
+          animate
           colorClass="bg-blue-100 dark:bg-blue-900/50"
           icon={
             <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -91,9 +127,9 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
         <div className="mb-4">
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mb-1">
             <span>Revenue at risk</span>
-            <span>{riskPct}%</span>
+            <span className="font-mono">{riskPct}%</span>
           </div>
-          <div className="w-full h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div className="w-full h-2 bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-1000 ${
                 riskPct > 60 ? 'bg-red-500' : riskPct > 30 ? 'bg-amber-500' : 'bg-green-500'
@@ -125,7 +161,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
                   <span className="font-mono text-xs font-bold text-slate-700 dark:text-slate-300 flex-shrink-0">
                     {item.code}
                   </span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  <span className="text-sm text-slate-600 dark:text-slate-300 truncate">
                     {item.reason}
                   </span>
                 </div>
