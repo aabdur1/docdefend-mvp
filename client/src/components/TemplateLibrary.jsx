@@ -153,7 +153,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
                 <div className="p-4 border-t border-[#D6C9A8] dark:border-instrument-border">
                   <button
                     onClick={handleUseTemplate}
-                    className="w-full py-2 bg-healthcare-600 text-white rounded-lg hover:bg-healthcare-700 font-medium"
+                    className="w-full py-2 bg-healthcare-500 text-white rounded-lg hover:bg-healthcare-600 font-medium"
                   >
                     Use This Template
                   </button>

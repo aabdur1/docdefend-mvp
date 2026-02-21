@@ -258,13 +258,13 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
           <div className="grid md:grid-cols-2 gap-6">
             {/* Weekly Activity */}
             <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
-              <h3 className="font-semibold font-display text-slate-800 dark:text-white mb-4">Weekly Activity</h3>
+              <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Weekly Activity</h3>
               <BarChart data={weeklyData} height={120} />
             </div>
 
             {/* Risk Distribution */}
             <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
-              <h3 className="font-semibold font-display text-slate-800 dark:text-white mb-4">Risk Distribution</h3>
+              <h3 className="font-semibold text-slate-800 dark:text-white mb-4">Risk Distribution</h3>
               <div className="flex items-center justify-center gap-6">
                 <DonutChart data={riskDistribution} size={120} />
                 <div className="space-y-2">
@@ -284,7 +284,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
           {/* Recent Analyses */}
           <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold font-display text-slate-800 dark:text-white">Recent Analyses</h3>
+              <h3 className="font-semibold text-slate-800 dark:text-white">Recent Analyses</h3>
               <span className="text-xs text-slate-500 dark:text-slate-400">Last 5</span>
             </div>
             <div className="space-y-1">
@@ -303,7 +303,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
                 </svg>
               </div>
               <div>
-                <h4 className="font-semibold font-display text-slate-800 dark:text-slate-200">Pro Tip</h4>
+                <h4 className="font-semibold text-slate-800 dark:text-slate-200">Pro Tip</h4>
                 <p className="text-sm text-slate-700 dark:text-slate-300 mt-1">
                   Focus on documenting medical decision making (MDM) complexity. This is the most common area where documentation falls short for E/M code support.
                 </p>
