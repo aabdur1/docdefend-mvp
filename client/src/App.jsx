@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Component } from 'react';
 import Header from './components/Header';
 import NoteSelector from './components/NoteSelector';
 import CodeSelector from './components/CodeSelector';
@@ -174,6 +174,47 @@ function EmptyState({ hasNote, hasCodes }) {
   );
 }
 
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary caught:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#FAF6EF] dark:bg-instrument-bg p-6">
+          <div className="max-w-md w-full bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-8 text-center shadow-card">
+            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 dark:bg-red-900/30 rounded-2xl flex items-center justify-center">
+              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Something went wrong</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">An unexpected error occurred. Please try refreshing the page.</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2.5 bg-healthcare-500 hover:bg-healthcare-600 text-white rounded-xl font-medium transition-colors shadow-lg shadow-healthcare-500/30"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function AppContent() {
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem('darkMode');
@@ -228,9 +269,13 @@ function AppContent() {
     setReport(null);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
       const response = await fetch(API_URL + '/api/analyze', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
+        signal: controller.signal,
         body: JSON.stringify({
           note,
           cptCodes: selectedCptCodes,
@@ -238,6 +283,8 @@ function AppContent() {
           payerId: selectedPayer || undefined,
         }),
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -269,8 +316,9 @@ function AppContent() {
         toast.error('Documentation needs significant improvements.', 'Analysis Complete');
       }
     } catch (err) {
-      setError(err.message);
-      toast.error(err.message, 'Analysis Failed');
+      const message = err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message;
+      setError(message);
+      toast.error(message, 'Analysis Failed');
     } finally {
       setLoading(false);
     }
@@ -572,7 +620,7 @@ function AppContent() {
                 <p className="font-semibold font-display text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   DocDefend<span className="text-red-500 text-xs">✚</span>
                 </p>
-                <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Clinical Documentation QA Platform</p>
+                <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Clinical Documentation QA</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -605,10 +653,12 @@ function AppContent() {
 
 export default function App() {
   return (
-    <ApiKeyProvider>
-      <ToastProvider>
-        <AppContent />
-      </ToastProvider>
-    </ApiKeyProvider>
+    <ErrorBoundary>
+      <ApiKeyProvider>
+        <ToastProvider>
+          <AppContent />
+        </ToastProvider>
+      </ApiKeyProvider>
+    </ErrorBoundary>
   );
 }

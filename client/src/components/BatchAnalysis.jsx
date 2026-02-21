@@ -130,11 +130,17 @@ export default function BatchAnalysis() {
         const headers = {};
         if (apiKey) headers['x-api-key'] = apiKey;
 
+        const uploadController = new AbortController();
+        const uploadTimeout = setTimeout(() => uploadController.abort(), 30000);
+
         const response = await fetch(API_URL + '/api/upload', {
           method: 'POST',
           headers,
+          signal: uploadController.signal,
           body: formData,
         });
+
+        clearTimeout(uploadTimeout);
 
         const data = await response.json();
 
@@ -167,11 +173,17 @@ export default function BatchAnalysis() {
     updateRow(rowId, { suggestionsLoading: true, suggestionsError: null });
 
     try {
+      const suggestController = new AbortController();
+      const suggestTimeout = setTimeout(() => suggestController.abort(), 30000);
+
       const response = await fetch(API_URL + '/api/suggest-codes', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
+        signal: suggestController.signal,
         body: JSON.stringify({ note: row.note }),
       });
+
+      clearTimeout(suggestTimeout);
 
       if (!response.ok) {
         let message = 'Failed to get suggestions';
@@ -188,7 +200,7 @@ export default function BatchAnalysis() {
 
       updateRow(rowId, { suggestions: data, suggestionsLoading: false });
     } catch (err) {
-      updateRow(rowId, { suggestionsLoading: false, suggestionsError: err.message });
+      updateRow(rowId, { suggestionsLoading: false, suggestionsError: err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message });
     }
   };
 
@@ -232,9 +244,13 @@ export default function BatchAnalysis() {
     })));
 
     try {
+      const batchController = new AbortController();
+      const batchTimeout = setTimeout(() => batchController.abort(), 120000);
+
       const response = await fetch(API_URL + '/api/analyze-batch', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
+        signal: batchController.signal,
         body: JSON.stringify({
           notes: validRows.map(r => ({
             id: r.id,
@@ -245,6 +261,8 @@ export default function BatchAnalysis() {
           })),
         }),
       });
+
+      clearTimeout(batchTimeout);
 
       if (!response.ok) {
         throw new Error('Batch analysis failed');
@@ -431,6 +449,7 @@ export default function BatchAnalysis() {
                   <div className="flex items-center gap-1 flex-shrink-0">
                     <button
                       onClick={() => setExpandedRow(expandedRow === row.id ? null : row.id)}
+                      aria-label={expandedRow === row.id ? 'Collapse note details' : 'Expand note details'}
                       className="p-1.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-colors"
                     >
                       <svg className={`w-4 h-4 text-slate-400 transition-transform ${expandedRow === row.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -439,6 +458,7 @@ export default function BatchAnalysis() {
                     </button>
                     <button
                       onClick={() => removeRow(row.id)}
+                      aria-label="Remove note from batch"
                       className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
                     >
                       <svg className="w-4 h-4 text-slate-400 hover:text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

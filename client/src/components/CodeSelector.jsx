@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 const CPT_CODES = [
   { code: '99213', description: 'E/M Level 3, established patient' },
@@ -51,29 +51,36 @@ function CodeCheckbox({ code, description, checked, onChange }) {
   );
 }
 
-function CustomCodeInput({ value, onChange, onAdd, placeholder }) {
+function CustomCodeInput({ value, onChange, onAdd, placeholder, duplicateError }) {
   return (
-    <div className="flex gap-2 mt-3">
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className="flex-1 px-4 py-2 text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-shadow duration-200 focus:shadow-md"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && value.trim()) {
-            onAdd();
-          }
-        }}
-      />
-      <button
-        type="button"
-        onClick={onAdd}
-        disabled={!value.trim()}
-        className="px-4 py-2 text-sm font-medium bg-healthcare-500 text-white rounded-xl hover:bg-healthcare-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 btn-lift"
-      >
-        Add
-      </button>
+    <div className="mt-3">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="flex-1 px-4 py-2 text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-shadow duration-200 focus:shadow-md"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && value.trim()) {
+              onAdd();
+            }
+          }}
+        />
+        <button
+          type="button"
+          onClick={onAdd}
+          disabled={!value.trim()}
+          className="px-4 py-2 text-sm font-medium bg-healthcare-500 text-white rounded-xl hover:bg-healthcare-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md transition-all duration-200 active:scale-95 btn-lift"
+        >
+          Add
+        </button>
+      </div>
+      {duplicateError && (
+        <p className="mt-1.5 text-xs text-red-600 dark:text-red-400 animate-fadeIn">
+          Code already exists in the list.
+        </p>
+      )}
     </div>
   );
 }
@@ -88,6 +95,10 @@ export default function CodeSelector({
   const [customIcd10, setCustomIcd10] = useState('');
   const [customCptCodes, setCustomCptCodes] = useState([]);
   const [customIcd10Codes, setCustomIcd10Codes] = useState([]);
+  const [cptDuplicateError, setCptDuplicateError] = useState(false);
+  const [icd10DuplicateError, setIcd10DuplicateError] = useState(false);
+  const cptDupTimer = useRef(null);
+  const icd10DupTimer = useRef(null);
 
   const toggleCode = (code, selected, setSelected) => {
     if (selected.includes(code)) {
@@ -97,21 +108,35 @@ export default function CodeSelector({
     }
   };
 
-  const addCustomCpt = () => {
-    if (customCpt.trim() && !selectedCptCodes.includes(customCpt.trim())) {
-      setCustomCptCodes([...customCptCodes, customCpt.trim()]);
-      onCptChange([...selectedCptCodes, customCpt.trim()]);
-      setCustomCpt('');
+  const addCustomCpt = useCallback(() => {
+    const trimmed = customCpt.trim();
+    if (!trimmed) return;
+    if (selectedCptCodes.includes(trimmed)) {
+      setCptDuplicateError(true);
+      clearTimeout(cptDupTimer.current);
+      cptDupTimer.current = setTimeout(() => setCptDuplicateError(false), 2000);
+      return;
     }
-  };
+    setCptDuplicateError(false);
+    setCustomCptCodes((prev) => [...prev, trimmed]);
+    onCptChange([...selectedCptCodes, trimmed]);
+    setCustomCpt('');
+  }, [customCpt, selectedCptCodes, onCptChange]);
 
-  const addCustomIcd10 = () => {
-    if (customIcd10.trim() && !selectedIcd10Codes.includes(customIcd10.trim())) {
-      setCustomIcd10Codes([...customIcd10Codes, customIcd10.trim()]);
-      onIcd10Change([...selectedIcd10Codes, customIcd10.trim()]);
-      setCustomIcd10('');
+  const addCustomIcd10 = useCallback(() => {
+    const trimmed = customIcd10.trim();
+    if (!trimmed) return;
+    if (selectedIcd10Codes.includes(trimmed)) {
+      setIcd10DuplicateError(true);
+      clearTimeout(icd10DupTimer.current);
+      icd10DupTimer.current = setTimeout(() => setIcd10DuplicateError(false), 2000);
+      return;
     }
-  };
+    setIcd10DuplicateError(false);
+    setCustomIcd10Codes((prev) => [...prev, trimmed]);
+    onIcd10Change([...selectedIcd10Codes, trimmed]);
+    setCustomIcd10('');
+  }, [customIcd10, selectedIcd10Codes, onIcd10Change]);
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
@@ -152,6 +177,7 @@ export default function CodeSelector({
           onChange={setCustomCpt}
           onAdd={addCustomCpt}
           placeholder="Add custom CPT code..."
+          duplicateError={cptDuplicateError}
         />
       </div>
 
@@ -192,6 +218,7 @@ export default function CodeSelector({
           onChange={setCustomIcd10}
           onAdd={addCustomIcd10}
           placeholder="Add custom ICD-10 code..."
+          duplicateError={icd10DuplicateError}
         />
       </div>
     </div>

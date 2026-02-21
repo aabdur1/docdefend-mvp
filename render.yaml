@@ -9,6 +9,6 @@ services:
       - key: ANTHROPIC_API_KEY
         sync: false
       - key: CORS_ORIGIN
-        sync: false
+        value: "https://docdefend.vercel.app"
       - key: NODE_ENV
         value: production

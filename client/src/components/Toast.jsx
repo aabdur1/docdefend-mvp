@@ -103,6 +103,7 @@ function ToastItem({ toast, onRemove }) {
           setIsExiting(true);
           setTimeout(onRemove, 300);
         }}
+        aria-label="Dismiss notification"
         className="flex-shrink-0 p-1 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-colors"
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">

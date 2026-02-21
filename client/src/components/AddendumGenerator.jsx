@@ -16,11 +16,17 @@ export default function AddendumGenerator({ note, gaps }) {
     setError(null);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
       const response = await fetch(API_URL + '/api/generate-addendum', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
+        signal: controller.signal,
         body: JSON.stringify({ note, gaps }),
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const data = await response.json();
@@ -30,7 +36,7 @@ export default function AddendumGenerator({ note, gaps }) {
       const data = await response.json();
       setAddendum(data);
     } catch (err) {
-      setError(err.message);
+      setError(err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message);
     } finally {
       setLoading(false);
     }

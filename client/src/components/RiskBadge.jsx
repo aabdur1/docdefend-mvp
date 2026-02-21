@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const riskConfig = {
   HIGH: {
     bg: 'bg-green-100 dark:bg-green-900/40',
@@ -49,7 +51,7 @@ const riskConfig = {
   },
 };
 
-export default function RiskBadge({ level, size = 'md' }) {
+function RiskBadge({ level, size = 'md' }) {
   const config = riskConfig[level] || riskConfig.MEDIUM;
 
   const sizeClasses = size === 'lg'
@@ -73,3 +75,5 @@ export default function RiskBadge({ level, size = 'md' }) {
     </span>
   );
 }
+
+export default memo(RiskBadge);

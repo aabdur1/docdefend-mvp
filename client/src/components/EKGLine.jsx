@@ -1,4 +1,6 @@
-export default function EKGLine({ className = '' }) {
+import { memo } from 'react';
+
+function EKGLine({ className = '' }) {
   return (
     <div className={`ekg-container w-full h-8 ${className}`}>
       <svg
@@ -17,3 +19,5 @@ export default function EKGLine({ className = '' }) {
     </div>
   );
 }
+
+export default memo(EKGLine);

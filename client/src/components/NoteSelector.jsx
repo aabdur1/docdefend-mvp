@@ -198,9 +198,9 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
           <textarea
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            rows={12}
+            rows={6}
             aria-label="Clinical note text"
-            className="relative z-10 w-full px-4 py-3 border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 font-clinical text-sm bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-all duration-300 group-hover:shadow-md focus:shadow-lg focus:shadow-healthcare-500/10 resize-none rx-pad"
+            className="relative z-10 w-full px-4 py-3 border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 font-clinical text-sm bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-all duration-300 group-hover:shadow-md focus:shadow-lg focus:shadow-healthcare-500/10 resize-y sm:min-h-[300px] min-h-[160px] rx-pad"
             placeholder="Clinical note content will appear here..."
           />
           <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-20">

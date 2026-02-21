@@ -550,6 +550,8 @@
 .animate-spin,
 .animate-pulse,
 [class*="animate-rotate"],
+.dark-toggle-icon,
+.dark-toggle-icon svg,
 svg path,
 svg circle {
   transition-property: none !important;
@@ -773,6 +775,62 @@ body {
 
 .tooltip-trigger:hover .tooltip {
   @apply visible opacity-100;
+}
+
+/* ─── Dark mode toggle animations ─── */
+@keyframes sunSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(180deg); }
+}
+
+@keyframes moonRock {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-12deg); }
+  75% { transform: rotate(12deg); }
+}
+
+@keyframes sunRaysGlow {
+  0%, 100% { filter: drop-shadow(0 0 0px transparent); }
+  50% { filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.5)); }
+}
+
+@keyframes moonGlow {
+  0%, 100% { filter: drop-shadow(0 0 0px transparent); }
+  50% { filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.45)); }
+}
+
+.dark-toggle-icon {
+  display: inline-flex;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sun: spin on hover */
+.dark-toggle-sun:hover .dark-toggle-icon {
+  animation: sunSpin 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-toggle-sun:hover .dark-toggle-icon svg {
+  animation: sunRaysGlow 0.6s ease-in-out;
+}
+
+/* Moon: rock on hover */
+.dark-toggle-moon:hover .dark-toggle-icon {
+  animation: moonRock 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dark-toggle-moon:hover .dark-toggle-icon svg {
+  animation: moonGlow 0.6s ease-in-out;
+}
+
+/* Swap transition — icon enters with a small scale+rotate pop */
+@keyframes iconSwapIn {
+  0% { transform: scale(0.5) rotate(-90deg); opacity: 0; }
+  60% { transform: scale(1.1) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.dark-toggle-swap-enter {
+  animation: iconSwapIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* Badge pulse animation */

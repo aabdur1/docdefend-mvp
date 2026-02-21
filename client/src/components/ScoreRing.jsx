@@ -39,7 +39,16 @@ function useCountUp(target, duration = 1000, delay = 300) {
 export default function ScoreRing({ score, size = 96 }) {
   const [mounted, setMounted] = useState(false);
   const [showLabel, setShowLabel] = useState(false);
-  const isDark = document.documentElement.classList.contains('dark');
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      setIsDark(root.classList.contains('dark'));
+    });
+    observer.observe(root, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
   const config = SCORE_CONFIG[score] || SCORE_CONFIG.MEDIUM;
   const animatedPct = useCountUp(config.pct, 1200, 400);
 

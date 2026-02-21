@@ -23,11 +23,17 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
     setError(null);
 
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
       const response = await fetch(API_URL + '/api/suggest-codes', {
         method: 'POST',
         headers: getAuthHeaders(apiKey),
+        signal: controller.signal,
         body: JSON.stringify({ note }),
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         let message = 'Failed to get suggestions';
@@ -43,7 +49,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
       const data = JSON.parse(text);
       setSuggestions(data);
     } catch (err) {
-      setError(err.message);
+      setError(err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message);
     } finally {
       setLoading(false);
     }

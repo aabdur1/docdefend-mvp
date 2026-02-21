@@ -60,6 +60,7 @@ export default function ApiKeyInput() {
               <button
                 type="button"
                 onClick={() => setShowKey(!showKey)}
+                aria-label={showKey ? 'Hide API key' : 'Show API key'}
                 className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
               >
                 {showKey ? (

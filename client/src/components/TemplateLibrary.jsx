@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { API_URL } from '../config';
 
 export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
@@ -7,12 +7,41 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   const [loadingTemplate, setLoadingTemplate] = useState(false);
   const [filter, setFilter] = useState('all');
+  const modalRef = useRef(null);
+  const previousFocusRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
+      previousFocusRef.current = document.activeElement;
       fetchTemplates();
+      // Focus the modal after render
+      requestAnimationFrame(() => modalRef.current?.focus());
+    } else if (previousFocusRef.current) {
+      previousFocusRef.current.focus();
+      previousFocusRef.current = null;
     }
   }, [isOpen]);
+
+  // Close on Escape and trap focus
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') {
+      onClose();
+      return;
+    }
+    if (e.key === 'Tab' && modalRef.current) {
+      const focusable = modalRef.current.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }, [onClose]);
 
   const fetchTemplates = async () => {
     try {
@@ -55,8 +84,8 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl shadow-card max-w-4xl w-full max-h-[90vh] flex flex-col">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div ref={modalRef} role="dialog" aria-modal="true" aria-label="Documentation Templates" tabIndex={-1} onKeyDown={handleKeyDown} className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl shadow-card max-w-4xl w-full max-h-[90vh] flex flex-col outline-none">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-[#D6C9A8] dark:border-instrument-border">
           <div>
@@ -65,6 +94,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
           </div>
           <button
             onClick={onClose}
+            aria-label="Close template library"
             className="p-2 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface rounded-lg"
           >
             <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
