@@ -433,7 +433,7 @@ function AppContent() {
               </div>
 
               {/* Action Buttons */}
-              <div className="animate-fadeInUp stagger-3 flex gap-3">
+              <div className="animate-fadeInUp stagger-4 flex gap-3">
                 <button
                   onClick={handleAnalyze}
                   disabled={!canAnalyze || loading}

@@ -305,12 +305,12 @@
   animation: orbitPill 2s linear infinite;
 }
 
-/* Staggered animations */
+/* Staggered animations — wider delays for dramatic cascade */
 .stagger-1 { animation-delay: 0.1s; opacity: 0; }
-.stagger-2 { animation-delay: 0.2s; opacity: 0; }
-.stagger-3 { animation-delay: 0.3s; opacity: 0; }
-.stagger-4 { animation-delay: 0.4s; opacity: 0; }
-.stagger-5 { animation-delay: 0.5s; opacity: 0; }
+.stagger-2 { animation-delay: 0.25s; opacity: 0; }
+.stagger-3 { animation-delay: 0.4s; opacity: 0; }
+.stagger-4 { animation-delay: 0.55s; opacity: 0; }
+.stagger-5 { animation-delay: 0.7s; opacity: 0; }
 
 /* ─── Gradient backgrounds ─── */
 .bg-gradient-mesh {
@@ -605,8 +605,43 @@ body {
   animation: readyGlow 2s ease-in-out infinite;
 }
 
+/* Auto-shimmer sweep on ready button */
+@keyframes readySweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.btn-ready-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.15) 55%,
+    transparent 60%
+  );
+  animation: readySweep 3s ease-in-out infinite;
+  animation-delay: 1s;
+  pointer-events: none;
+  z-index: 1;
+}
+
 .dark .btn-ready-glow {
   animation-name: readyGlowDark;
+}
+
+.dark .btn-ready-glow::after {
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(82, 183, 136, 0.1) 45%,
+    rgba(82, 183, 136, 0.2) 50%,
+    rgba(82, 183, 136, 0.1) 55%,
+    transparent 60%
+  );
 }
 
 @keyframes readyGlowDark {

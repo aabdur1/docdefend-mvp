@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const SCORE_CONFIG = {
   HIGH: { color: '#2D6A4F', darkColor: '#52B788', pct: 90, label: 'HIGH' },
@@ -6,10 +6,41 @@ const SCORE_CONFIG = {
   LOW: { color: '#ef4444', darkColor: '#f87171', pct: 25, label: 'LOW' },
 };
 
+function useCountUp(target, duration = 1000, delay = 300) {
+  const [value, setValue] = useState(0);
+  const frameRef = useRef(null);
+
+  useEffect(() => {
+    if (target <= 0) { setValue(0); return; }
+
+    const timer = setTimeout(() => {
+      const start = performance.now();
+      const step = (now) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setValue(Math.round(eased * target));
+        if (progress < 1) {
+          frameRef.current = requestAnimationFrame(step);
+        }
+      };
+      frameRef.current = requestAnimationFrame(step);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+    };
+  }, [target, duration, delay]);
+
+  return value;
+}
+
 export default function ScoreRing({ score, size = 96 }) {
   const [mounted, setMounted] = useState(false);
   const isDark = document.documentElement.classList.contains('dark');
   const config = SCORE_CONFIG[score] || SCORE_CONFIG.MEDIUM;
+  const animatedPct = useCountUp(config.pct, 1200, 400);
 
   const strokeWidth = 6;
   const radius = (size - strokeWidth) / 2;
@@ -63,7 +94,7 @@ export default function ScoreRing({ score, size = 96 }) {
           className="text-lg font-bold font-mono leading-none"
           style={{ color: isDark ? config.darkColor : config.color }}
         >
-          {config.pct}
+          {animatedPct}
         </span>
         <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
           {config.label}
