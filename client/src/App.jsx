@@ -25,8 +25,31 @@ function LoadingSpinner() {
         </div>
 
         {/* Spinning pill */}
-        <div className="relative text-6xl animate-rotatePill drop-shadow-xl pill-trail">
-          💊
+        <div className="relative animate-rotatePill drop-shadow-xl pill-trail">
+          <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-20 h-10">
+            <defs>
+              <linearGradient id="spinPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ff6b6b"/>
+                <stop offset="50%" stopColor="#ee5253"/>
+                <stop offset="100%" stopColor="#d42c2c"/>
+              </linearGradient>
+              <linearGradient id="spinPillRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#f0f0f0"/>
+                <stop offset="50%" stopColor="#dcdcdc"/>
+                <stop offset="100%" stopColor="#c2c2c2"/>
+              </linearGradient>
+              <linearGradient id="spinGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="white" stopOpacity="0.45"/>
+                <stop offset="100%" stopColor="white" stopOpacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#spinPillLeft)"/>
+            <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#spinPillRight)"/>
+            <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#spinGloss)"/>
+            <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5"/>
+            <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20"
+                  fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="1.5"/>
+          </svg>
         </div>
       </div>
 
@@ -505,7 +528,30 @@ function AppContent() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-lg">💊</span>
+                <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-8 h-4" style={{ transform: 'rotate(-45deg)' }}>
+                  <defs>
+                    <linearGradient id="ftrPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#ff6b6b"/>
+                      <stop offset="50%" stopColor="#ee5253"/>
+                      <stop offset="100%" stopColor="#d42c2c"/>
+                    </linearGradient>
+                    <linearGradient id="ftrPillRight" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#f0f0f0"/>
+                      <stop offset="50%" stopColor="#dcdcdc"/>
+                      <stop offset="100%" stopColor="#c2c2c2"/>
+                    </linearGradient>
+                    <linearGradient id="ftrGloss" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="white" stopOpacity="0.45"/>
+                      <stop offset="100%" stopColor="white" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#ftrPillLeft)"/>
+                  <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#ftrPillRight)"/>
+                  <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#ftrGloss)"/>
+                  <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5"/>
+                  <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20"
+                        fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="1.5"/>
+                </svg>
               </div>
               <div>
                 <p className="font-semibold font-display text-slate-700 dark:text-slate-300 flex items-center gap-1">
