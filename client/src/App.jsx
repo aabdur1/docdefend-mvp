@@ -8,7 +8,6 @@ import TemplateLibrary from './components/TemplateLibrary';
 import AnalysisReport from './components/AnalysisReport';
 import BatchAnalysis from './components/BatchAnalysis';
 import { ToastProvider, useToast } from './components/Toast';
-import Confetti from './components/Confetti';
 import Dashboard from './components/Dashboard';
 import EKGLine from './components/EKGLine';
 import { ApiKeyProvider, useApiKey, getAuthHeaders } from './context/ApiKeyContext';
@@ -162,7 +161,6 @@ function AppContent() {
   const [error, setError] = useState(null);
   const [templateLibraryOpen, setTemplateLibraryOpen] = useState(false);
   const [dashboardOpen, setDashboardOpen] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
   const [analysisHistory, setAnalysisHistory] = useState([]);
   const [batchMode, setBatchMode] = useState(false);
   const toast = useToast();
@@ -179,14 +177,6 @@ function AppContent() {
       }
     }
   }, []);
-
-  // Reset confetti after it plays
-  useEffect(() => {
-    if (showConfetti) {
-      const timer = setTimeout(() => setShowConfetti(false), 3500);
-      return () => clearTimeout(timer);
-    }
-  }, [showConfetti]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -244,8 +234,7 @@ function AppContent() {
 
       // Show success feedback
       if (data.overallScore === 'HIGH') {
-        setShowConfetti(true);
-        toast.success('Excellent! High defensibility score achieved.', 'Analysis Complete');
+        toast.success('High defensibility score confirmed.', 'Analysis Complete');
       } else if (data.overallScore === 'MEDIUM') {
         toast.warning('Documentation has some gaps to address.', 'Analysis Complete');
       } else {
@@ -279,8 +268,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-mesh medical-pattern bg-[#FAF6EF] dark:bg-instrument-bg w-full max-w-full grain-texture">
-      <Confetti active={showConfetti} duration={3000} />
-
       <Header
         darkMode={darkMode}
         onToggleDarkMode={toggleDarkMode}
@@ -562,12 +549,11 @@ function AppContent() {
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                <span>🏥</span>
                 <span>Built for small medical practices</span>
               </div>
               <div className="h-4 w-px bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
               <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800/50">
-                ⚠️ Demo only • Synthetic data • Not for clinical use
+                Demo only • Synthetic data • Not for clinical use
               </p>
             </div>
           </div>
