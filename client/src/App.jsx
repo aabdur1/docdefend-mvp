@@ -263,7 +263,7 @@ function AppContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-mesh medical-pattern bg-[#FAF6EF] dark:bg-instrument-bg w-full max-w-full grain-texture">
+    <div className="min-h-screen flex flex-col bg-gradient-mesh medical-pattern bg-[#FAF6EF] dark:bg-instrument-bg w-full max-w-full grain-texture">
       <Confetti active={showConfetti} duration={3000} />
 
       <Header
@@ -275,7 +275,7 @@ function AppContent() {
         onToggleBatchMode={() => setBatchMode(prev => !prev)}
       />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {batchMode ? (
           <BatchAnalysis />
         ) : (

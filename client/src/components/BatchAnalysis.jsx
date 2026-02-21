@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import sampleNotes from '../data/sampleNotes.json';
 import AnalysisReport from './AnalysisReport';
 import RiskBadge from './RiskBadge';
@@ -13,6 +13,18 @@ const CPT_CODES = [
 const ICD10_CODES = [
   'M54.5', 'M54.2', 'M47.816', 'M51.16', 'G89.29', 'M79.3', 'G89.4', 'M54.41', 'M54.42',
 ];
+
+const confidenceColors = {
+  HIGH: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  MEDIUM: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  LOW: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+};
+
+const confidenceBadge = {
+  HIGH: 'bg-green-500',
+  MEDIUM: 'bg-yellow-500',
+  LOW: 'bg-red-500',
+};
 
 function CodePills({ codes, onRemove }) {
   return (
@@ -35,6 +47,21 @@ function CodePills({ codes, onRemove }) {
   );
 }
 
+function createRow(overrides = {}) {
+  return {
+    id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    title: '',
+    note: '',
+    cptCodes: [],
+    icd10Codes: [],
+    status: 'pending',
+    suggestions: null,
+    suggestionsLoading: false,
+    suggestionsError: null,
+    ...overrides,
+  };
+}
+
 export default function BatchAnalysis() {
   const [rows, setRows] = useState([]);
   const [analyzing, setAnalyzing] = useState(false);
@@ -43,32 +70,21 @@ export default function BatchAnalysis() {
   const [batchResults, setBatchResults] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
 
+  // Upload state
+  const fileInputRef = useRef(null);
+  const [uploadState, setUploadState] = useState({
+    isUploading: false,
+    current: 0,
+    total: 0,
+    errors: [],
+  });
+
   const addSampleNote = (sampleNote) => {
-    setRows(prev => [
-      ...prev,
-      {
-        id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        title: sampleNote.title,
-        note: sampleNote.note,
-        cptCodes: [],
-        icd10Codes: [],
-        status: 'pending',
-      },
-    ]);
+    setRows(prev => [...prev, createRow({ title: sampleNote.title, note: sampleNote.note })]);
   };
 
   const addBlankRow = () => {
-    setRows(prev => [
-      ...prev,
-      {
-        id: `batch-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-        title: `Custom Note ${prev.length + 1}`,
-        note: '',
-        cptCodes: [],
-        icd10Codes: [],
-        status: 'pending',
-      },
-    ]);
+    setRows(prev => [...prev, createRow({ title: `Custom Note ${prev.length + 1}` })]);
   };
 
   const removeRow = (id) => {
@@ -91,6 +107,106 @@ export default function BatchAnalysis() {
           : [...current, code],
       };
     }));
+  };
+
+  // --- Multi-file upload ---
+  const handleFileUpload = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Reset the input so the same files can be re-selected
+    e.target.value = '';
+
+    setUploadState({ isUploading: true, current: 0, total: files.length, errors: [] });
+    const errors = [];
+
+    for (let i = 0; i < files.length; i++) {
+      setUploadState(prev => ({ ...prev, current: i + 1 }));
+
+      const formData = new FormData();
+      formData.append('file', files[i]);
+
+      try {
+        const headers = {};
+        if (apiKey) headers['x-api-key'] = apiKey;
+
+        const response = await fetch(API_URL + '/api/upload', {
+          method: 'POST',
+          headers,
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || data.message || 'Upload failed');
+        }
+
+        // Create a new row with the uploaded content
+        setRows(prev => [...prev, createRow({
+          title: files[i].name,
+          note: data.content || '',
+        })]);
+      } catch (err) {
+        errors.push(`${files[i].name}: ${err.message}`);
+      }
+    }
+
+    setUploadState(prev => ({ ...prev, isUploading: false, errors }));
+  };
+
+  const dismissUploadErrors = () => {
+    setUploadState(prev => ({ ...prev, errors: [] }));
+  };
+
+  // --- AI Code Suggestions ---
+  const handleSuggestCodes = async (rowId) => {
+    const row = rows.find(r => r.id === rowId);
+    if (!row || !row.note.trim()) return;
+
+    updateRow(rowId, { suggestionsLoading: true, suggestionsError: null });
+
+    try {
+      const response = await fetch(API_URL + '/api/suggest-codes', {
+        method: 'POST',
+        headers: getAuthHeaders(apiKey),
+        body: JSON.stringify({ note: row.note }),
+      });
+
+      if (!response.ok) {
+        let message = 'Failed to get suggestions';
+        try {
+          const data = await response.json();
+          message = data.error || message;
+        } catch {}
+        throw new Error(message);
+      }
+
+      const text = await response.text();
+      if (!text) throw new Error('Empty response from server');
+      const data = JSON.parse(text);
+
+      updateRow(rowId, { suggestions: data, suggestionsLoading: false });
+    } catch (err) {
+      updateRow(rowId, { suggestionsLoading: false, suggestionsError: err.message });
+    }
+  };
+
+  const handleApplySuggestions = (rowId) => {
+    const row = rows.find(r => r.id === rowId);
+    if (!row?.suggestions) return;
+
+    const newCpt = row.suggestions.cptCodes
+      .filter(c => c.confidence !== 'LOW')
+      .map(c => c.code);
+    const newIcd = row.suggestions.icd10Codes
+      .filter(c => c.confidence !== 'LOW')
+      .map(c => c.code);
+
+    updateRow(rowId, {
+      cptCodes: [...new Set([...row.cptCodes, ...newCpt])],
+      icd10Codes: [...new Set([...row.icd10Codes, ...newIcd])],
+    });
   };
 
   const canAnalyze = rows.length > 0 && rows.some(r =>
@@ -206,8 +322,66 @@ export default function BatchAnalysis() {
             >
               + Blank Note
             </button>
+            {/* Upload Files button */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept=".pdf,.xml,.ccd,.ccda,.txt"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadState.isUploading}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+              </svg>
+              {uploadState.isUploading ? `Uploading ${uploadState.current}/${uploadState.total}...` : 'Upload Files'}
+            </button>
           </div>
         </div>
+
+        {/* Upload progress bar */}
+        {uploadState.isUploading && (
+          <div className="mb-4 animate-fadeIn">
+            <div className="w-full h-2 bg-blue-100 dark:bg-blue-900/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
+                style={{ width: `${(uploadState.current / uploadState.total) * 100}%` }}
+              />
+            </div>
+            <p className="text-xs text-blue-600 dark:text-blue-300 mt-1 text-center">
+              Uploading file {uploadState.current} of {uploadState.total}...
+            </p>
+          </div>
+        )}
+
+        {/* Upload errors */}
+        {uploadState.errors.length > 0 && (
+          <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 animate-fadeIn">
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex-1">
+                <p className="text-sm font-medium text-red-700 dark:text-red-300 mb-1">Some files failed to upload:</p>
+                <ul className="text-xs text-red-600 dark:text-red-400 space-y-0.5">
+                  {uploadState.errors.map((err, i) => (
+                    <li key={i}>• {err}</li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={dismissUploadErrors}
+                className="p-1 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors flex-shrink-0"
+              >
+                <svg className="w-4 h-4 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Notes table */}
         {rows.length > 0 && (
@@ -332,6 +506,108 @@ export default function BatchAnalysis() {
                       )}
                     </div>
 
+                    {/* AI Code Suggestions */}
+                    <div className="border-t border-[#D6C9A8]/50 dark:border-instrument-border/50 pt-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-4 h-4 text-healthcare-500 dark:text-trace" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                          </svg>
+                          <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">AI Code Suggestions</p>
+                        </div>
+                        <button
+                          onClick={() => handleSuggestCodes(row.id)}
+                          disabled={!row.note.trim() || row.suggestionsLoading}
+                          className="px-3 py-1 text-xs font-medium rounded-lg bg-healthcare-500 hover:bg-healthcare-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
+                        >
+                          {row.suggestionsLoading ? (
+                            <>
+                              <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                              Analyzing...
+                            </>
+                          ) : (
+                            <>
+                              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                              </svg>
+                              Suggest Codes
+                            </>
+                          )}
+                        </button>
+                      </div>
+
+                      {/* Suggestions error */}
+                      {row.suggestionsError && (
+                        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-2 text-xs text-red-700 dark:text-red-300 mb-2">
+                          {row.suggestionsError}
+                        </div>
+                      )}
+
+                      {/* Suggestion pills */}
+                      {row.suggestions && (
+                        <div className="space-y-2 animate-fadeIn">
+                          {/* CPT suggestions */}
+                          {row.suggestions.cptCodes?.length > 0 && (
+                            <div>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Suggested CPT</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {row.suggestions.cptCodes.map((s, i) => (
+                                  <span
+                                    key={i}
+                                    className={`group relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
+                                    title={`${s.description}\n\nRationale: ${s.rationale}`}
+                                  >
+                                    <span className={`w-3.5 h-3.5 rounded-full ${confidenceBadge[s.confidence]} text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0`}>
+                                      {s.confidence[0]}
+                                    </span>
+                                    {s.code}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* ICD-10 suggestions */}
+                          {row.suggestions.icd10Codes?.length > 0 && (
+                            <div>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Suggested ICD-10</p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {row.suggestions.icd10Codes.map((s, i) => (
+                                  <span
+                                    key={i}
+                                    className={`group relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
+                                    title={`${s.description}\n\nRationale: ${s.rationale}`}
+                                  >
+                                    <span className={`w-3.5 h-3.5 rounded-full ${confidenceBadge[s.confidence]} text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0`}>
+                                      {s.confidence[0]}
+                                    </span>
+                                    {s.code}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Apply button */}
+                          <button
+                            onClick={() => handleApplySuggestions(row.id)}
+                            className="px-3 py-1 text-xs font-medium rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
+                          >
+                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                            </svg>
+                            Apply High/Medium Codes
+                          </button>
+                        </div>
+                      )}
+
+                      {!row.suggestions && !row.suggestionsLoading && !row.suggestionsError && (
+                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                          Click "Suggest Codes" to get AI-powered code recommendations for this note.
+                        </p>
+                      )}
+                    </div>
+
                     {/* Show full analysis report if complete */}
                     {row.status === 'complete' && row.analysis && (
                       <div className="mt-4 border-t border-[#D6C9A8] dark:border-instrument-border pt-4">
@@ -451,7 +727,7 @@ export default function BatchAnalysis() {
           </div>
           <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white mb-2">No Notes Added</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
-            Add sample notes or create blank notes to start batch analysis. Select codes for each note, then analyze all at once.
+            Add sample notes, upload files, or create blank notes to start batch analysis. Select codes for each note, then analyze all at once.
           </p>
         </div>
       )}
