@@ -98,7 +98,7 @@ export default function FileUploader({ onContentExtracted }) {
         {/* Animated background pattern */}
         <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
           <div className="absolute top-0 left-0 w-20 h-20 bg-trace rounded-full -translate-x-1/2 -translate-y-1/2 group-hover:scale-150 transition-transform duration-500"></div>
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-healthcare-500 rounded-full translate-x-1/2 translate-y-1/2 group-hover:scale-150 transition-transform duration-500"></div>
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-healthcare-500 rounded-full translate-x-1/2 translate-y-1/2 group-hover:scale-150 transition-transform duration-700 delay-75"></div>
         </div>
 
         <input
@@ -108,6 +108,15 @@ export default function FileUploader({ onContentExtracted }) {
           onChange={handleFileSelect}
           className="hidden"
         />
+
+        {/* Drop hint overlay */}
+        {isDragging && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            <span className="text-sm font-semibold text-healthcare-600 dark:text-trace-glow bg-white/80 dark:bg-instrument-bg-raised/90 px-4 py-2 rounded-xl shadow-lg animate-scaleIn">
+              Drop to upload
+            </span>
+          </div>
+        )}
 
         {isUploading ? (
           <div className="flex flex-col items-center relative z-10">

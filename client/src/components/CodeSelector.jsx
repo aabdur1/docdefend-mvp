@@ -29,7 +29,7 @@ const ICD10_CODES = [
 
 function CodeCheckbox({ code, description, checked, onChange }) {
   return (
-    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface cursor-pointer transition-all duration-200 group">
+    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group">
       <input
         type="checkbox"
         checked={checked}

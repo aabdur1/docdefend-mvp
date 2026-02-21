@@ -25,7 +25,7 @@ function LoadingSpinner() {
         </div>
 
         {/* Spinning pill */}
-        <div className="relative text-6xl animate-rotatePill drop-shadow-xl">
+        <div className="relative text-6xl animate-rotatePill drop-shadow-xl pill-trail">
           💊
         </div>
       </div>
@@ -77,15 +77,12 @@ function EmptyState() {
   return (
     <div className="animate-fadeIn bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-6 sm:p-10 text-center shadow-card">
       {/* Stethoscope icon */}
-      <div className="relative w-24 h-24 mx-auto mb-6">
-        <div className="absolute inset-0 bg-healthcare-500/20 dark:bg-trace/20 rounded-2xl animate-pulse"></div>
-        <div className="relative w-full h-full bg-healthcare-100 dark:bg-healthcare-800/40 rounded-2xl flex items-center justify-center shadow-inner dark:shadow-none dark:border dark:border-healthcare-700/50">
-          <svg className="w-12 h-12 text-healthcare-600 dark:text-trace" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a6 6 0 006 6 6 6 0 006-6V4a2 2 0 00-2-2h-1a.2.2 0 10.3.3" />
-            <path d="M8 15v1a6 6 0 006 6 6 6 0 006-6v-4" />
-            <circle cx="20" cy="10" r="2" />
-          </svg>
-        </div>
+      <div className="w-20 h-20 mx-auto mb-6 bg-healthcare-500 rounded-2xl flex items-center justify-center shadow-lg shadow-healthcare-500/30">
+        <svg className="w-10 h-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a6 6 0 006 6 6 6 0 006-6V4a2 2 0 00-2-2h-1a.2.2 0 10.3.3" />
+          <path d="M8 15v1a6 6 0 006 6 6 6 0 006-6v-4" />
+          <circle cx="20" cy="10" r="2" />
+        </svg>
       </div>
 
       <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Ready for Analysis</h3>
@@ -99,14 +96,14 @@ function EmptyState() {
           <span className="w-5 h-5 rounded-full bg-healthcare-500 text-white dark:bg-healthcare-500 dark:text-white flex items-center justify-center font-bold">1</span>
           <span>Note</span>
         </div>
-        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600 animate-chevron-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
         <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
           <span className="w-5 h-5 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-instrument-text-muted flex items-center justify-center font-bold">2</span>
           <span>Codes</span>
         </div>
-        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600 animate-chevron-bounce" style={{ animationDelay: '0.2s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
         <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
@@ -465,7 +462,7 @@ function AppContent() {
                 <button
                   onClick={handleReset}
                   aria-label="Reset all fields"
-                  className="px-6 py-3 border-2 border-[#D6C9A8] dark:border-instrument-border text-slate-600 dark:text-slate-300 rounded-xl font-medium hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface hover:border-[#C4B48E] dark:hover:border-instrument-border-hover transition-all duration-300 active:scale-95"
+                  className="px-6 py-3 border-2 border-[#D6C9A8] dark:border-instrument-border text-slate-600 dark:text-slate-300 rounded-xl font-medium hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface hover:border-[#C4B48E] dark:hover:border-instrument-border-hover transition-all duration-200 active:scale-95"
                 >
                   Reset
                 </button>

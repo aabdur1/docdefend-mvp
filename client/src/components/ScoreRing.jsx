@@ -38,6 +38,7 @@ function useCountUp(target, duration = 1000, delay = 300) {
 
 export default function ScoreRing({ score, size = 96 }) {
   const [mounted, setMounted] = useState(false);
+  const [showLabel, setShowLabel] = useState(false);
   const isDark = document.documentElement.classList.contains('dark');
   const config = SCORE_CONFIG[score] || SCORE_CONFIG.MEDIUM;
   const animatedPct = useCountUp(config.pct, 1200, 400);
@@ -50,7 +51,9 @@ export default function ScoreRing({ score, size = 96 }) {
   useEffect(() => {
     // Trigger animation after mount
     const t = setTimeout(() => setMounted(true), 50);
-    return () => clearTimeout(t);
+    // Stagger label entrance after counter settles
+    const t2 = setTimeout(() => setShowLabel(true), 800);
+    return () => { clearTimeout(t); clearTimeout(t2); };
   }, []);
 
   return (
@@ -96,7 +99,9 @@ export default function ScoreRing({ score, size = 96 }) {
         >
           {animatedPct}
         </span>
-        <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5">
+        <span
+          className={`text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mt-0.5 transition-all duration-500 ${showLabel ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-1'}`}
+        >
           {config.label}
         </span>
       </div>

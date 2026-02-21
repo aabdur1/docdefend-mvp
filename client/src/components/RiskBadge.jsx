@@ -62,7 +62,7 @@ export default function RiskBadge({ level, size = 'md' }) {
         inline-flex items-center rounded-full border backdrop-blur-sm
         ${config.bg} ${config.text} ${config.border} ${sizeClasses}
         shadow-lg ${config.shadow}
-        transition-all duration-300 hover:scale-105
+        transition-transform duration-150 ease-out hover:scale-105
         animate-scaleIn
       `}
     >
