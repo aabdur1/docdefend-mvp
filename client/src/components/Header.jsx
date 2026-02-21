@@ -1,22 +1,22 @@
 import ApiKeyInput from './ApiKeyInput';
 
 export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, analysisCount = 0, batchMode, onToggleBatchMode }) {
-  const navBtn = 'px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#EDE6D3] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-surface dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
-  const navBtnIcon = 'p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#EDE6D3] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-surface dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+  const navBtn = 'px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+  const navBtnIcon = 'p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
 
   return (
     <header className="bg-[#EDE6D3] dark:bg-instrument-bg-surface border-b border-[#D6C9A8] dark:border-instrument-border no-print sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <span className="text-white text-2xl">💊</span>
+            <div className="w-14 h-14 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <span className="text-white text-3xl">💊</span>
             </div>
             <div>
-              <h1 className="font-semibold font-display text-2xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
+              <h1 className="font-semibold font-display text-2xl sm:text-3xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
                 DocDefend<span className="text-red-500 text-sm">✚</span>
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
             </div>
           </div>
 
