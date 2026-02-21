@@ -20,7 +20,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
       const data = await response.json();
       setTemplates(data);
     } catch (error) {
-      console.error('Failed to fetch templates:', error);
+      // silently handle fetch failure
     } finally {
       setLoading(false);
     }
@@ -33,7 +33,7 @@ export default function TemplateLibrary({ onSelectTemplate, isOpen, onClose }) {
       const template = await response.json();
       setSelectedTemplate(template);
     } catch (error) {
-      console.error('Failed to fetch template:', error);
+      // silently handle fetch failure
     } finally {
       setLoadingTemplate(false);
     }

@@ -70,7 +70,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
   const riskPct = totalNum > 0 ? Math.min(100, Math.round((atRiskNum / totalNum) * 100)) : 0;
 
   return (
-    <div className="rounded-xl border border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised p-5 animate-fadeInUp">
+    <div className="rounded-xl border border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised p-4 sm:p-6 animate-fadeInUp">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

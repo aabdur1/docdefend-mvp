@@ -44,14 +44,14 @@ export default function AddendumGenerator({ note, gaps }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error('Failed to copy:', err);
+      // clipboard fallback not needed
     }
   };
 
   if (!gaps?.length) return null;
 
   return (
-    <div className="mt-6 bg-healthcare-50 dark:bg-healthcare-900/20 rounded-xl border border-healthcare-200 dark:border-healthcare-800/50 p-5 shadow-sm animate-fadeInUp">
+    <div className="mt-6 bg-healthcare-50 dark:bg-healthcare-900/20 rounded-xl border border-healthcare-200 dark:border-healthcare-800/50 p-4 sm:p-6 shadow-sm animate-fadeInUp">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg flex-shrink-0">

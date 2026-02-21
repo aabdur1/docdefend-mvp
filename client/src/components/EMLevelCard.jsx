@@ -63,7 +63,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
   const selectedEM = selectedCptCodes?.find(c => /^99\d{3}$/.test(c));
 
   return (
-    <div className={`rounded-xl border ${config.border} ${config.bg} p-5 animate-fadeInUp`}>
+    <div className={`rounded-xl border ${config.border} ${config.bg} p-4 sm:p-6 animate-fadeInUp`}>
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-xl ${config.iconBg} flex items-center justify-center`}>

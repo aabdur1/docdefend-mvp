@@ -482,17 +482,6 @@
   opacity: 0.5;
 }
 
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
-.dark .glass {
-  background: rgba(17, 24, 39, 0.7);
-}
-
 /* Shimmer loading effect */
 .shimmer {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
@@ -512,27 +501,6 @@
 
 .dark .card-hover:hover {
   box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.4);
-}
-
-/* Button effects */
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-glow::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.btn-glow:hover::before {
-  left: 100%;
 }
 
 /* Smooth focus rings */

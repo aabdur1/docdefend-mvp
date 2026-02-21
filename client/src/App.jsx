@@ -173,7 +173,7 @@ function AppContent() {
       try {
         setAnalysisHistory(JSON.parse(saved));
       } catch (e) {
-        console.error('Failed to load analysis history:', e);
+        // silently ignore corrupted history
       }
     }
   }, []);

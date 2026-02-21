@@ -44,7 +44,7 @@ function CodeAnalysisCard({ analysis, index }) {
 
   return (
     <div
-      className={`border border-[#D6C9A8] dark:border-instrument-border border-l-4 ${accent} rounded-xl p-5 print-friendly bg-[#F5EFE0] dark:bg-instrument-bg-raised shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fadeInUp`}
+      className={`border border-[#D6C9A8] dark:border-instrument-border border-l-4 ${accent} rounded-xl p-4 sm:p-6 print-friendly bg-[#F5EFE0] dark:bg-instrument-bg-raised shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-fadeInUp`}
       style={{ animationDelay: `${index * 100}ms` }}
     >
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
@@ -183,7 +183,7 @@ function PayerFindingsSection({ findings, payerName }) {
   const notMetCount = findings.filter(f => f.status === 'NOT_MET').length;
 
   return (
-    <div className="rounded-xl border border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised p-5 mb-6 animate-fadeInUp">
+    <div className="rounded-xl border border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised p-4 sm:p-6 mb-6 animate-fadeInUp">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-[#EDE6D3] dark:bg-instrument-bg-surface flex items-center justify-center">
           <svg className="w-5 h-5 text-healthcare-500 dark:text-trace-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">

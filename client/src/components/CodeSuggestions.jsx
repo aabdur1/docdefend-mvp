@@ -65,7 +65,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
   };
 
   return (
-    <div className="bg-healthcare-50 dark:bg-healthcare-900/20 rounded-xl border border-healthcare-200 dark:border-healthcare-800/50 p-5 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fadeIn">
+    <div className="bg-healthcare-50 dark:bg-healthcare-900/20 rounded-xl border border-healthcare-200 dark:border-healthcare-800/50 p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow duration-300 animate-fadeIn">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg flex-shrink-0">
