@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 
 const SCORE_CONFIG = {
-  HIGH: { color: '#10b981', darkColor: '#34d399', pct: 90, label: 'HIGH' },
+  HIGH: { color: '#2D6A4F', darkColor: '#52B788', pct: 90, label: 'HIGH' },
   MEDIUM: { color: '#f59e0b', darkColor: '#fbbf24', pct: 55, label: 'MED' },
   LOW: { color: '#ef4444', darkColor: '#f87171', pct: 25, label: 'LOW' },
 };
 
 export default function ScoreRing({ score, size = 96 }) {
   const [mounted, setMounted] = useState(false);
+  const isDark = document.documentElement.classList.contains('dark');
   const config = SCORE_CONFIG[score] || SCORE_CONFIG.MEDIUM;
 
   const strokeWidth = 6;
@@ -52,7 +53,7 @@ export default function ScoreRing({ score, size = 96 }) {
             r={radius}
             className="score-ring-fill"
             strokeWidth={strokeWidth}
-            style={{ stroke: config.color }}
+            style={{ stroke: isDark ? config.darkColor : config.color }}
           />
         )}
       </svg>
@@ -60,7 +61,7 @@ export default function ScoreRing({ score, size = 96 }) {
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span
           className="text-lg font-bold font-mono leading-none"
-          style={{ color: config.color }}
+          style={{ color: isDark ? config.darkColor : config.color }}
         >
           {config.pct}
         </span>

@@ -89,7 +89,7 @@ export default function FileUploader({ onContentExtracted }) {
         className={`
           relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group
           ${isDragging
-            ? 'border-healthcare-500 bg-healthcare-50 dark:bg-healthcare-900/20 scale-[1.02]'
+            ? 'border-healthcare-500 bg-[#EDE6D3] dark:bg-healthcare-900/20 scale-[1.02]'
             : 'border-[#D6C9A8] dark:border-instrument-border hover:border-healthcare-400 dark:hover:border-healthcare-500 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface'
           }
           ${isUploading ? 'opacity-50 cursor-wait' : ''}
@@ -119,7 +119,7 @@ export default function FileUploader({ onContentExtracted }) {
           </div>
         ) : (
           <div className="relative z-10">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EDE6D3] dark:bg-instrument-bg-surface flex items-center justify-center mb-3 shadow-inner group-hover:bg-healthcare-100 dark:group-hover:bg-healthcare-900/30 transition-colors duration-300">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-[#EDE6D3] dark:bg-instrument-bg-surface flex items-center justify-center mb-3 shadow-inner group-hover:bg-[#E5DBBF] dark:group-hover:bg-healthcare-900/30 transition-colors duration-300">
               <svg
                 className="w-8 h-8 text-slate-500 dark:text-slate-400 group-hover:text-healthcare-500 dark:group-hover:text-healthcare-400 transition-colors duration-300"
                 fill="none"
@@ -164,8 +164,8 @@ export default function FileUploader({ onContentExtracted }) {
       )}
 
       {uploadResult && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4 flex items-start gap-3 animate-scaleIn shadow-sm">
-          <div className="w-10 h-10 rounded-xl bg-green-500 flex items-center justify-center shadow-lg flex-shrink-0">
+        <div className="bg-healthcare-50 dark:bg-healthcare-900/20 border border-healthcare-200 dark:border-healthcare-800/50 rounded-xl p-4 flex items-start gap-3 animate-scaleIn shadow-sm">
+          <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg flex-shrink-0">
             <svg
               className="w-5 h-5 text-white"
               fill="currentColor"
@@ -179,14 +179,14 @@ export default function FileUploader({ onContentExtracted }) {
             </svg>
           </div>
           <div className="text-sm flex-1">
-            <p className="font-semibold text-green-700 dark:text-green-300">
+            <p className="font-semibold text-slate-800 dark:text-white">
               {uploadResult.filename}
             </p>
             <div className="flex items-center gap-2 mt-1">
-              <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full">
+              <span className="px-2 py-0.5 text-xs font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-500 dark:text-trace rounded-full">
                 {uploadResult.fileType}
               </span>
-              <span className="text-green-600 dark:text-green-400">
+              <span className="text-slate-600 dark:text-slate-400">
                 {uploadResult.contentLength.toLocaleString()} characters extracted
               </span>
             </div>

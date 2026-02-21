@@ -74,8 +74,8 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
             </svg>
           </div>
           <div>
-            <h3 className="font-semibold font-display text-healthcare-700 dark:text-trace-glow">Smart Code Suggestions</h3>
-            <p className="text-xs text-healthcare-600 dark:text-trace-dim">AI-powered code recommendations</p>
+            <h3 className="font-semibold font-display text-slate-800 dark:text-white">Smart Code Suggestions</h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">AI-powered code recommendations</p>
           </div>
         </div>
         <button
@@ -121,7 +121,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
             <>
               {/* CPT Codes */}
               <div>
-                <h4 className="text-sm font-medium font-display text-slate-700 dark:text-slate-300 mb-2">Suggested CPT Codes</h4>
+                <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Suggested CPT Codes</h4>
                 <div className="space-y-2">
                   {suggestions.cptCodes.map((code, idx) => (
                     <div
@@ -151,7 +151,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
 
               {/* ICD-10 Codes */}
               <div>
-                <h4 className="text-sm font-medium font-display text-slate-700 dark:text-slate-300 mb-2">Suggested ICD-10 Codes</h4>
+                <h4 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Suggested ICD-10 Codes</h4>
                 <div className="space-y-2">
                   {suggestions.icd10Codes.map((code, idx) => (
                     <div
@@ -182,7 +182,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
               {/* Warnings */}
               {suggestions.warnings?.length > 0 && (
                 <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-3">
-                  <h4 className="text-sm font-medium font-display text-amber-800 dark:text-amber-300 mb-1">Warnings</h4>
+                  <h4 className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-1">Warnings</h4>
                   <ul className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
                     {suggestions.warnings.map((warning, idx) => (
                       <li key={idx}>• {warning}</li>
@@ -198,7 +198,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
                   disabled={applied}
                   className={`w-full py-3 rounded-xl text-sm font-semibold transition-all duration-300 flex items-center justify-center gap-2 active:scale-[0.98] ${
                     applied
-                      ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
+                      ? 'bg-healthcare-300 text-white shadow-lg shadow-healthcare-300/30'
                       : 'bg-healthcare-500 hover:bg-healthcare-600 text-white shadow-lg shadow-healthcare-500/30 hover:shadow-xl hover:shadow-healthcare-500/40 btn-lift'
                   }`}
                 >
