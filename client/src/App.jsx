@@ -95,7 +95,25 @@ function ErrorMessage({ message, onDismiss }) {
   );
 }
 
-function EmptyState() {
+function EmptyState({ hasNote, hasCodes }) {
+  const step = hasCodes ? 3 : hasNote ? 2 : 1;
+
+  const stepClass = (n) => {
+    if (n < step) return 'bg-healthcare-500 text-white';
+    if (n === step) return 'bg-healthcare-500 text-white';
+    return 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-instrument-text-muted';
+  };
+
+  const chevronClass = (n) =>
+    n < step
+      ? 'text-healthcare-500 dark:text-trace'
+      : 'text-slate-300 dark:text-slate-600';
+
+  const labelClass = (n) =>
+    n <= step
+      ? 'text-slate-700 dark:text-slate-200 font-medium'
+      : 'text-slate-500 dark:text-slate-400';
+
   return (
     <div className="animate-fadeIn bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-6 sm:p-10 text-center shadow-card">
       {/* Stethoscope icon */}
@@ -109,28 +127,38 @@ function EmptyState() {
 
       <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Ready for Analysis</h3>
       <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs mx-auto leading-relaxed">
-        Select a clinical note and billing codes to generate your defensibility report.
+        {step === 1 && 'Select a clinical note to get started.'}
+        {step === 2 && 'Now select your billing codes.'}
+        {step === 3 && 'Ready to analyze. Click the button below.'}
       </p>
 
       {/* Steps indicator */}
       <div className="mt-6 flex items-center justify-center gap-4 text-xs">
-        <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-          <span className="w-5 h-5 rounded-full bg-healthcare-500 text-white dark:bg-healthcare-500 dark:text-white flex items-center justify-center font-bold">1</span>
-          <span>Note</span>
+        <div className="flex items-center gap-1.5">
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(1)}`}>
+            {step > 1 ? (
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+            ) : '1'}
+          </span>
+          <span className={`transition-colors duration-300 ${labelClass(1)}`}>Note</span>
         </div>
-        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600 animate-chevron-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(1)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
-        <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-          <span className="w-5 h-5 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-instrument-text-muted flex items-center justify-center font-bold">2</span>
-          <span>Codes</span>
+        <div className="flex items-center gap-1.5">
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(2)}`}>
+            {step > 2 ? (
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+            ) : '2'}
+          </span>
+          <span className={`transition-colors duration-300 ${labelClass(2)}`}>Codes</span>
         </div>
-        <svg className="w-4 h-4 text-slate-300 dark:text-slate-600 animate-chevron-bounce" style={{ animationDelay: '0.2s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(2)}`} style={{ animationDelay: '0.2s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
-        <div className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
-          <span className="w-5 h-5 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-instrument-text-muted flex items-center justify-center font-bold">3</span>
-          <span>Report</span>
+        <div className="flex items-center gap-1.5">
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(3)}`}>3</span>
+          <span className={`transition-colors duration-300 ${labelClass(3)}`}>Report</span>
         </div>
       </div>
 
@@ -504,7 +532,7 @@ function AppContent() {
                   />
                 </div>
               )}
-              {!report && !loading && !error && <EmptyState />}
+              {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} />}
             </div>
           </div>
         )}
