@@ -47,6 +47,8 @@ Warm, paper-like tones that evoke a clinical document feel.
 | `--color-border` | `#D6C9A8` | `border-[#D6C9A8]` | Card/panel borders |
 | `--color-border-hover` | `#C4B48E` | `border-[#C4B48E]` | Interactive borders on hover |
 
+**Color hierarchy**: Header and footer use `#EDE6D3` (surface tone) to visually differentiate from the `#F5EFE0` content cards. This creates a subtle frame effect — the chrome is slightly darker than the content area.
+
 ### Dark Mode — Instrument Namespace
 
 Cool navy/charcoal tones that evoke a medical instrument display.
@@ -78,9 +80,11 @@ Cool navy/charcoal tones that evoke a medical instrument display.
 | Payer | Border | Background |
 |-------|--------|------------|
 | Medicare (CMS) | `border-blue-500` | `bg-blue-50` / `dark:bg-blue-900/20` |
-| United Healthcare | `border-indigo-500` | `bg-indigo-50` / `dark:bg-indigo-900/20` |
+| United Healthcare | `border-orange-500` | `bg-orange-50` / `dark:bg-orange-900/20` |
 | Aetna | `border-purple-500` | `bg-purple-50` / `dark:bg-purple-900/20` |
 | BCBS | `border-sky-500` | `bg-sky-50` / `dark:bg-sky-900/20` |
+
+Note: UHC uses orange (its actual brand color), not indigo. Aetna uses purple with a heart icon, BCBS uses sky-blue with a shield icon.
 
 ---
 
@@ -90,7 +94,7 @@ Cool navy/charcoal tones that evoke a medical instrument display.
 
 | Class | Family | Weight | Usage |
 |-------|--------|--------|-------|
-| `font-display` | DM Serif Display, Georgia, serif | 400 | Card titles, section headings, "DocDefend" |
+| `font-display` | DM Serif Display, Georgia, serif | 400 | **Card titles only** (never sub-headings or labels), "DocDefend" |
 | `font-body` | DM Sans, system-ui, sans-serif | 400–700 | Body text, UI labels, descriptions |
 | `font-mono` | Share Tech Mono, Courier New, monospace | 400 | CPT/ICD codes, dollar amounts, scores, percentages |
 | `font-clinical` | IBM Plex Mono, Courier New, monospace | 400–600 | Clinical note textarea |
@@ -101,10 +105,13 @@ Cool navy/charcoal tones that evoke a medical instrument display.
 |-------|------|-------|
 | `text-xs` | 12px | Metadata labels, badges, footnotes |
 | `text-sm` | 14px | Body copy, descriptions, rationales |
-| `text-base` | 16px | Button text, primary UI text |
-| `text-lg` | 18px | Card section headings (with `font-display`) |
-| `text-xl` | 20px | Loading/empty state titles |
+| `text-base` | 16px | Button text, primary UI text, small card titles (ApiKeyInput, EMLevelCard, FinancialImpact) |
+| `text-lg` | 18px | Card sub-headings (`font-semibold`, no font-display), mid-size card titles (CodeSuggestions, AddendumGenerator) |
+| `text-xl` | 20px | Main card titles (with `font-display`): Clinical Note, Billing Codes, Dashboard, TemplateLibrary, PayerSelector |
+| `text-xl sm:text-2xl` | 20–24px | AnalysisReport title (responsive) |
 | `text-2xl` | 24px | Header "DocDefend+" title, stat card values |
+
+**Rule**: `font-display` is reserved for the top-level card title only. Sub-headings within cards use `font-semibold` (no serif).
 
 ### Accessibility Minimums
 
@@ -141,6 +148,8 @@ shadow-lg shadow-healthcare-500/30
 hover:shadow-xl hover:shadow-healthcare-500/40
 btn-ready-glow (when canAnalyze is true)
 ```
+
+**Rule**: All primary buttons use `healthcare-500` → `healthcare-600` hover. Never use `healthcare-600` → `healthcare-700` (too dark).
 
 **Secondary/Nav** (Header buttons):
 ```
@@ -226,14 +235,22 @@ shadow-lg shadow-healthcare-500/30
 
 ### Section Headings (inside cards)
 
+**Card title** (top-level, with serif font):
 ```
-text-lg font-semibold font-display text-slate-800 dark:text-white
+text-xl font-semibold font-display text-slate-800 dark:text-white
+```
+
+**Sub-heading** (within card body, no serif):
+```
+text-lg font-semibold text-slate-800 dark:text-white
 ```
 
 With subtitle:
 ```
 text-xs text-slate-500 dark:text-slate-400
 ```
+
+**Important**: Never use `font-display` on sub-headings, labels, or h4 elements inside a card. Only the primary card title gets the serif font.
 
 ---
 
@@ -252,13 +269,13 @@ text-xs text-slate-500 dark:text-slate-400
 
 ### Stagger Classes
 
-Apply to sequential siblings for cascading entry:
+Apply to sequential siblings for cascading entry. Delays are widened for a more dramatic cascade:
 ```
 stagger-1  →  animation-delay: 0.1s
-stagger-2  →  animation-delay: 0.2s
-stagger-3  →  animation-delay: 0.3s
-stagger-4  →  animation-delay: 0.4s
-stagger-5  →  animation-delay: 0.5s
+stagger-2  →  animation-delay: 0.25s
+stagger-3  →  animation-delay: 0.4s
+stagger-4  →  animation-delay: 0.55s
+stagger-5  →  animation-delay: 0.7s
 ```
 
 All stagger classes set `opacity: 0` initially — the animation fills it to 1.
@@ -268,7 +285,7 @@ All stagger classes set `opacity: 0` initially — the animation fills it to 1.
 | Class | Effect |
 |-------|--------|
 | `btn-lift` | Hover: translateY(-1px); Active: translateY(0) |
-| `btn-ready-glow` | Pulsing green glow on analyze button when ready |
+| `btn-ready-glow` | Pulsing green glow + auto-shimmer diagonal light sweep (`readySweep` via `::after`, 3s loop with 1s delay) |
 | `card-hover` | Hover: translateY(-2px) + enhanced shadow |
 | `check-pop` | Scale 1→1.15→1 bounce on checkbox toggle |
 | `focus-glow-wrap` | Ambient radial glow around textarea on focus |
@@ -285,11 +302,19 @@ All stagger classes set `opacity: 0` initially — the animation fills it to 1.
 
 ### Score Ring
 
-SVG circular progress with CSS-driven stroke animation:
-- Track: `.score-ring-track` (static bg stroke)
+SVG circular progress with CSS-driven stroke animation + JS count-up:
+- Track: `.score-ring-track` (static bg stroke, uses `var(--color-bg-surface)`)
 - Fill: `.score-ring-fill` (animated stroke-dashoffset, 1.2s)
 - Container: `.score-ring-container` (fade-in + scale, 0.5s)
 - CSS vars: `--ring-circumference`, `--ring-offset`
+- Counter: `useCountUp` hook (ease-out cubic, 1.2s duration, 400ms delay) animates the center number in sync with the ring stroke
+- Colors: HIGH = `#2D6A4F` (dark: `#52B788`), MEDIUM = `#f59e0b` (dark: `#fbbf24`), LOW = `#ef4444` (dark: `#f87171`)
+
+### Dashboard Drawer
+
+Slide-in panel animation for the Provider Dashboard:
+- Uses `animate-slideInPanel` class (translateX 100%→0, 0.35s, cubic-bezier deceleration)
+- Overlay: black 50% opacity with fade-in
 
 ### Toast System
 
@@ -337,6 +362,8 @@ In dark mode, `shadow-card` uses higher-contrast values automatically.
 ## Dark Mode Strategy
 
 Dark mode uses Tailwind's `class` strategy — toggled by adding/removing `dark` on `<html>`.
+
+**Persistence**: User preference is stored in `localStorage('darkMode')`. An inline `<script>` in `index.html` applies the class before first paint to prevent flash-of-wrong-theme. React reads via lazy `useState` initializer.
 
 ### Pattern for dark mode classes:
 
