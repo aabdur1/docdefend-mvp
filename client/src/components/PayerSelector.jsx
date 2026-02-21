@@ -28,11 +28,11 @@ const PAYER_OPTIONS = [
       </svg>
     ),
     colorClasses: {
-      border: 'border-indigo-500',
-      bg: 'bg-indigo-50 dark:bg-indigo-900/20',
-      text: 'text-indigo-700 dark:text-indigo-300',
-      iconBg: 'bg-indigo-100 dark:bg-indigo-900/50',
-      iconText: 'text-indigo-600 dark:text-indigo-400',
+      border: 'border-orange-500',
+      bg: 'bg-orange-50 dark:bg-orange-900/20',
+      text: 'text-orange-700 dark:text-orange-300',
+      iconBg: 'bg-orange-100 dark:bg-orange-900/50',
+      iconText: 'text-orange-600 dark:text-orange-400',
     },
   },
   {
@@ -42,7 +42,7 @@ const PAYER_OPTIONS = [
     description: 'Commercial plans',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-3-3v6m-7 4h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     ),
     colorClasses: {
@@ -60,7 +60,7 @@ const PAYER_OPTIONS = [
     description: 'Blue Cross Blue Shield',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m-8-8h16" />
       </svg>
     ),
     colorClasses: {

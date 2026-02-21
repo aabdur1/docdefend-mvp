@@ -78,9 +78,9 @@ function EmptyState() {
     <div className="animate-fadeIn bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-6 sm:p-10 text-center shadow-card">
       {/* Stethoscope icon */}
       <div className="relative w-24 h-24 mx-auto mb-6">
-        <div className="absolute inset-0 bg-healthcare-500/15 rounded-2xl animate-pulse"></div>
-        <div className="relative w-full h-full bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-2xl flex items-center justify-center">
-          <svg className="w-12 h-12 text-healthcare-500 dark:text-healthcare-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="absolute inset-0 bg-healthcare-500/20 dark:bg-trace/20 rounded-2xl animate-pulse"></div>
+        <div className="relative w-full h-full bg-healthcare-100 dark:bg-healthcare-800/40 rounded-2xl flex items-center justify-center shadow-inner dark:shadow-none dark:border dark:border-healthcare-700/50">
+          <svg className="w-12 h-12 text-healthcare-600 dark:text-trace" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a6 6 0 006 6 6 6 0 006-6V4a2 2 0 00-2-2h-1a.2.2 0 10.3.3" />
             <path d="M8 15v1a6 6 0 006 6 6 6 0 006-6v-4" />
             <circle cx="20" cy="10" r="2" />
@@ -128,7 +128,11 @@ function EmptyState() {
 }
 
 function AppContent() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('darkMode');
+    if (saved !== null) return JSON.parse(saved);
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  });
   const [note, setNote] = useState('');
   const [selectedCptCodes, setSelectedCptCodes] = useState([]);
   const [selectedIcd10Codes, setSelectedIcd10Codes] = useState([]);
@@ -163,15 +167,6 @@ function AppContent() {
       return () => clearTimeout(timer);
     }
   }, [showConfetti]);
-
-  useEffect(() => {
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) {
-      setDarkMode(JSON.parse(saved));
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setDarkMode(true);
-    }
-  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -508,7 +503,7 @@ function AppContent() {
         )}
       </main>
 
-      <footer className="border-t border-[#D6C9A8] dark:border-instrument-border mt-16 py-8 no-print bg-[#F5EFE0]/50 dark:bg-instrument-bg-raised/50">
+      <footer className="border-t border-[#D6C9A8] dark:border-instrument-border mt-16 py-8 no-print bg-[#EDE6D3] dark:bg-instrument-bg-surface">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">

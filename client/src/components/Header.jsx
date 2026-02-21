@@ -5,7 +5,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
   const navBtnIcon = 'p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#EDE6D3] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-surface dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
 
   return (
-    <header className="bg-[#F5EFE0] dark:bg-instrument-bg-raised border-b border-[#D6C9A8] dark:border-instrument-border no-print sticky top-0 z-40">
+    <header className="bg-[#EDE6D3] dark:bg-instrument-bg-surface border-b border-[#D6C9A8] dark:border-instrument-border no-print sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
