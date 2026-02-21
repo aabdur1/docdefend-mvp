@@ -116,8 +116,8 @@ export default function CodeSelector({
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div className="animate-slideInLeft">
-        <h3 className="text-sm font-semibold font-display text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-blue-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-mono font-bold">
             CPT
           </span>
           CPT Codes
@@ -156,8 +156,8 @@ export default function CodeSelector({
       </div>
 
       <div className="animate-slideInRight">
-        <h3 className="text-sm font-semibold font-display text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">
             ICD
           </span>
           ICD-10 Codes
