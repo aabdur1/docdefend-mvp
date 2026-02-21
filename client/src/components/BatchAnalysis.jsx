@@ -32,7 +32,7 @@ function CodePills({ codes, onRemove }) {
       {codes.map(code => (
         <span
           key={code}
-          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300"
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-mono font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300"
         >
           {code}
           <button
@@ -294,31 +294,31 @@ export default function BatchAnalysis() {
               </svg>
             </div>
             <div>
-              <h2 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Batch Analysis</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
+              <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Batch Analysis</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace">
+          <span className="px-3 py-1 rounded-full text-sm font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace">
             {rows.length} note{rows.length !== 1 ? 's' : ''}
           </span>
         </div>
 
         {/* Add notes section */}
         <div className="mb-4">
-          <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-2">Add sample notes:</p>
+          <p className="text-base font-medium text-slate-600 dark:text-slate-400 mb-2">Add sample notes:</p>
           <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
             {sampleNotes.map(sn => (
               <button
                 key={sn.id}
                 onClick={() => addSampleNote(sn)}
-                className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover transition-colors truncate max-w-[160px] sm:max-w-[200px]"
+                className="px-3 py-1.5 text-sm font-medium rounded-lg bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-700 dark:text-slate-300 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover transition-colors truncate max-w-[180px] sm:max-w-[220px]"
               >
                 + {sn.title}
               </button>
             ))}
             <button
               onClick={addBlankRow}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace hover:bg-healthcare-200 dark:hover:bg-healthcare-900/50 transition-colors"
+              className="px-3 py-1.5 text-sm font-medium rounded-lg bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace hover:bg-healthcare-200 dark:hover:bg-healthcare-900/50 transition-colors"
             >
               + Blank Note
             </button>
@@ -334,7 +334,7 @@ export default function BatchAnalysis() {
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadState.isUploading}
-              className="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+              className="px-3 py-1.5 text-sm font-medium rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -353,7 +353,7 @@ export default function BatchAnalysis() {
                 style={{ width: `${(uploadState.current / uploadState.total) * 100}%` }}
               />
             </div>
-            <p className="text-xs text-blue-600 dark:text-blue-300 mt-1 text-center">
+            <p className="text-sm text-blue-600 dark:text-blue-300 mt-1 text-center">
               Uploading file {uploadState.current} of {uploadState.total}...
             </p>
           </div>
@@ -364,8 +364,8 @@ export default function BatchAnalysis() {
           <div className="mb-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-3 animate-fadeIn">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
-                <p className="text-sm font-medium text-red-700 dark:text-red-300 mb-1">Some files failed to upload:</p>
-                <ul className="text-xs text-red-600 dark:text-red-400 space-y-0.5">
+                <p className="text-base font-medium text-red-700 dark:text-red-300 mb-1">Some files failed to upload:</p>
+                <ul className="text-sm text-red-600 dark:text-red-400 space-y-0.5">
                   {uploadState.errors.map((err, i) => (
                     <li key={i}>• {err}</li>
                   ))}
@@ -398,14 +398,14 @@ export default function BatchAnalysis() {
                 {/* Row header */}
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2 flex-1 min-w-0">
-                    <span className="w-6 h-6 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 text-xs flex items-center justify-center font-bold flex-shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 text-sm flex items-center justify-center font-bold flex-shrink-0">
                       {idx + 1}
                     </span>
                     <input
                       type="text"
                       value={row.title}
                       onChange={(e) => updateRow(row.id, { title: e.target.value })}
-                      className="text-sm font-medium text-slate-800 dark:text-white bg-transparent border-none outline-none flex-1 min-w-0"
+                      className="text-base font-medium text-slate-800 dark:text-white bg-transparent border-none outline-none flex-1 min-w-0"
                       placeholder="Note title"
                     />
                     {/* Status badge */}
@@ -413,17 +413,17 @@ export default function BatchAnalysis() {
                       <RiskBadge level={row.analysis.overallScore} />
                     )}
                     {row.status === 'analyzing' && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 animate-pulse">
+                      <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 animate-pulse">
                         Analyzing...
                       </span>
                     )}
                     {row.status === 'error' && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300">
+                      <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300">
                         Error
                       </span>
                     )}
                     {row.status === 'skipped' && (
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-slate-400">
+                      <span className="px-2.5 py-0.5 rounded-full text-sm font-medium bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-slate-400">
                         Skipped
                       </span>
                     )}
@@ -456,19 +456,19 @@ export default function BatchAnalysis() {
                       value={row.note}
                       onChange={(e) => updateRow(row.id, { note: e.target.value })}
                       rows={4}
-                      className="w-full text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-lg p-3 bg-[#F5EFE0] dark:bg-instrument-bg text-slate-800 dark:text-slate-200 resize-y"
+                      className="w-full text-base border border-[#D6C9A8] dark:border-instrument-border rounded-lg p-3 bg-[#F5EFE0] dark:bg-instrument-bg text-slate-800 dark:text-slate-200 resize-y"
                       placeholder="Paste or type clinical note..."
                     />
 
                     {/* CPT Code selection */}
                     <div>
-                      <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">CPT Codes</p>
-                      <div className="flex flex-wrap gap-1 mb-1">
+                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5">CPT Codes</p>
+                      <div className="flex flex-wrap gap-1.5 mb-1.5">
                         {CPT_CODES.map(code => (
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'cpt', code)}
-                            className={`px-2 py-0.5 rounded text-xs font-mono font-medium transition-colors ${
+                            className={`px-2.5 py-1 rounded text-sm font-mono font-medium transition-colors ${
                               row.cptCodes.includes(code)
                                 ? 'bg-healthcare-500 text-white'
                                 : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'
@@ -485,13 +485,13 @@ export default function BatchAnalysis() {
 
                     {/* ICD-10 Code selection */}
                     <div>
-                      <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">ICD-10 Codes</p>
-                      <div className="flex flex-wrap gap-1 mb-1">
+                      <p className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1.5">ICD-10 Codes</p>
+                      <div className="flex flex-wrap gap-1.5 mb-1.5">
                         {ICD10_CODES.map(code => (
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'icd10', code)}
-                            className={`px-2 py-0.5 rounded text-xs font-mono font-medium transition-colors ${
+                            className={`px-2.5 py-1 rounded text-sm font-mono font-medium transition-colors ${
                               row.icd10Codes.includes(code)
                                 ? 'bg-healthcare-500 text-white'
                                 : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'
@@ -513,12 +513,12 @@ export default function BatchAnalysis() {
                           <svg className="w-4 h-4 text-healthcare-500 dark:text-trace" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                           </svg>
-                          <p className="text-xs font-semibold text-slate-600 dark:text-slate-400">AI Code Suggestions</p>
+                          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">AI Code Suggestions</p>
                         </div>
                         <button
                           onClick={() => handleSuggestCodes(row.id)}
                           disabled={!row.note.trim() || row.suggestionsLoading}
-                          className="px-3 py-1 text-xs font-medium rounded-lg bg-healthcare-500 hover:bg-healthcare-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
+                          className="px-3 py-1.5 text-sm font-medium rounded-lg bg-healthcare-500 hover:bg-healthcare-600 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-1.5"
                         >
                           {row.suggestionsLoading ? (
                             <>
@@ -538,7 +538,7 @@ export default function BatchAnalysis() {
 
                       {/* Suggestions error */}
                       {row.suggestionsError && (
-                        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-2 text-xs text-red-700 dark:text-red-300 mb-2">
+                        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-2 text-sm text-red-700 dark:text-red-300 mb-2">
                           {row.suggestionsError}
                         </div>
                       )}
@@ -549,15 +549,15 @@ export default function BatchAnalysis() {
                           {/* CPT suggestions */}
                           {row.suggestions.cptCodes?.length > 0 && (
                             <div>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Suggested CPT</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Suggested CPT</p>
                               <div className="flex flex-wrap gap-1.5">
                                 {row.suggestions.cptCodes.map((s, i) => (
                                   <span
                                     key={i}
-                                    className={`group relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
+                                    className={`group relative inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
                                     title={`${s.description}\n\nRationale: ${s.rationale}`}
                                   >
-                                    <span className={`w-3.5 h-3.5 rounded-full ${confidenceBadge[s.confidence]} text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0`}>
+                                    <span className={`w-4 h-4 rounded-full ${confidenceBadge[s.confidence]} text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0`}>
                                       {s.confidence[0]}
                                     </span>
                                     {s.code}
@@ -570,15 +570,15 @@ export default function BatchAnalysis() {
                           {/* ICD-10 suggestions */}
                           {row.suggestions.icd10Codes?.length > 0 && (
                             <div>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Suggested ICD-10</p>
+                              <p className="text-sm text-slate-500 dark:text-slate-400 mb-1">Suggested ICD-10</p>
                               <div className="flex flex-wrap gap-1.5">
                                 {row.suggestions.icd10Codes.map((s, i) => (
                                   <span
                                     key={i}
-                                    className={`group relative inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
+                                    className={`group relative inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-sm font-mono font-medium cursor-default ${confidenceColors[s.confidence]}`}
                                     title={`${s.description}\n\nRationale: ${s.rationale}`}
                                   >
-                                    <span className={`w-3.5 h-3.5 rounded-full ${confidenceBadge[s.confidence]} text-white text-[9px] font-bold flex items-center justify-center flex-shrink-0`}>
+                                    <span className={`w-4 h-4 rounded-full ${confidenceBadge[s.confidence]} text-white text-[10px] font-bold flex items-center justify-center flex-shrink-0`}>
                                       {s.confidence[0]}
                                     </span>
                                     {s.code}
@@ -591,7 +591,7 @@ export default function BatchAnalysis() {
                           {/* Apply button */}
                           <button
                             onClick={() => handleApplySuggestions(row.id)}
-                            className="px-3 py-1 text-xs font-medium rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
+                            className="px-3 py-1.5 text-sm font-medium rounded-lg bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 transition-colors flex items-center gap-1.5"
                           >
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -602,7 +602,7 @@ export default function BatchAnalysis() {
                       )}
 
                       {!row.suggestions && !row.suggestionsLoading && !row.suggestionsError && (
-                        <p className="text-xs text-slate-400 dark:text-slate-500">
+                        <p className="text-sm text-slate-400 dark:text-slate-500">
                           Click "Suggest Codes" to get AI-powered code recommendations for this note.
                         </p>
                       )}
@@ -666,7 +666,7 @@ export default function BatchAnalysis() {
                 style={{ width: `${(progress.current / progress.total) * 100}%` }}
               />
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 text-center">
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 text-center">
               Processing note {progress.current} of {progress.total}...
             </p>
           </div>
@@ -683,8 +683,8 @@ export default function BatchAnalysis() {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white">Batch Summary</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Batch Summary</h3>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {batchResults.summary.completed} of {batchResults.summary.total} notes analyzed
               </p>
             </div>
@@ -692,20 +692,20 @@ export default function BatchAnalysis() {
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="text-center p-3 rounded-xl bg-[#EDE6D3] dark:bg-instrument-bg-surface/50">
-              <p className="text-2xl font-bold font-mono text-slate-800 dark:text-white">{batchResults.summary.total}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
+              <p className="text-3xl font-bold font-mono text-slate-800 dark:text-white">{batchResults.summary.total}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Total</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-green-50 dark:bg-green-900/20">
-              <p className="text-2xl font-bold font-mono text-green-600 dark:text-green-400">{batchResults.summary.highCount}</p>
-              <p className="text-xs text-green-600 dark:text-green-400">High Score</p>
+              <p className="text-3xl font-bold font-mono text-green-600 dark:text-green-400">{batchResults.summary.highCount}</p>
+              <p className="text-sm text-green-600 dark:text-green-400">High Score</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20">
-              <p className="text-2xl font-bold font-mono text-amber-600 dark:text-amber-400">{batchResults.summary.mediumCount}</p>
-              <p className="text-xs text-amber-600 dark:text-amber-400">Medium Score</p>
+              <p className="text-3xl font-bold font-mono text-amber-600 dark:text-amber-400">{batchResults.summary.mediumCount}</p>
+              <p className="text-sm text-amber-600 dark:text-amber-400">Medium Score</p>
             </div>
             <div className="text-center p-3 rounded-xl bg-red-50 dark:bg-red-900/20">
-              <p className="text-2xl font-bold font-mono text-red-600 dark:text-red-400">{batchResults.summary.lowCount}</p>
-              <p className="text-xs text-red-600 dark:text-red-400">Low Score</p>
+              <p className="text-3xl font-bold font-mono text-red-600 dark:text-red-400">{batchResults.summary.lowCount}</p>
+              <p className="text-sm text-red-600 dark:text-red-400">Low Score</p>
             </div>
           </div>
 
@@ -725,8 +725,8 @@ export default function BatchAnalysis() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold font-display text-slate-800 dark:text-white mb-2">No Notes Added</h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
+          <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">No Notes Added</h3>
+          <p className="text-base text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
             Add sample notes, upload files, or create blank notes to start batch analysis. Select codes for each note, then analyze all at once.
           </p>
         </div>
