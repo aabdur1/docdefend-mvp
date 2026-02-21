@@ -16,7 +16,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
               <h1 className="font-semibold font-display text-2xl sm:text-3xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
                 DocDefend<span className="text-red-500 text-sm">✚</span>
               </h1>
-              <p className="text-sm text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
+              <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
             </div>
           </div>
 
@@ -27,9 +27,9 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
                 <path d="M3 12h4l3-9 4 18 3-9h4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>System Active</span>
-              <span className="relative flex h-1.5 w-1.5">
+              <span className="relative flex h-2 w-2 vitals-pulse">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-trace opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-trace"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-trace shadow-sm shadow-trace/50"></span>
               </span>
             </div>
 

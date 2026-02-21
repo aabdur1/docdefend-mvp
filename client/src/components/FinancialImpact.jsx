@@ -79,8 +79,8 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
         </div>
         <div>
           <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white">Financial Impact</h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            Estimated {selectedPayer && PAYER_DISPLAY_NAMES[selectedPayer] ? PAYER_DISPLAY_NAMES[selectedPayer] : 'Medicare'} reimbursement analysis
+          <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            Estimated {selectedPayer && PAYER_DISPLAY_NAMES[selectedPayer] ? PAYER_DISPLAY_NAMES[selectedPayer] : 'Medicare'} reimbursement
           </p>
         </div>
       </div>

@@ -84,7 +84,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
         </div>
         <div>
           <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Payer</h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Select insurance payer for targeted analysis</p>
+          <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Select insurance payer</p>
         </div>
       </div>
 

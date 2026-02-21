@@ -73,7 +73,7 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
           </div>
           <div>
             <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white">E/M Level Recommendation</h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Based on {methodology === 'TIME' ? 'time-based' : 'MDM-based'} evaluation</p>
+            <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Based on {methodology === 'TIME' ? 'time-based' : 'MDM-based'} evaluation</p>
           </div>
         </div>
         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${config.labelBg}`}>

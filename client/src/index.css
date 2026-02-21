@@ -203,7 +203,7 @@
   right: 0;
   width: 40%;
   height: 100%;
-  background: linear-gradient(to right, transparent, var(--color-bg-raised, #F5EFE0));
+  background: linear-gradient(to right, transparent, var(--color-bg));
   pointer-events: none;
 }
 
@@ -219,8 +219,8 @@
   background: repeating-linear-gradient(
     transparent,
     transparent 27px,
-    var(--color-trace-faint) 27px,
-    var(--color-trace-faint) 28px
+    rgba(82, 183, 136, 0.15) 27px,
+    rgba(82, 183, 136, 0.15) 28px
   );
   background-position: 0 8px;
 }
@@ -628,17 +628,7 @@ body {
   background: rgba(82, 183, 136, 0.25);
 }
 
-/* ─── Analyze button "ready" glow ─── */
-@keyframes readyGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(27, 67, 50, 0.3), 0 0 24px rgba(82, 183, 136, 0.15); }
-  50% { box-shadow: 0 0 16px rgba(27, 67, 50, 0.5), 0 0 40px rgba(82, 183, 136, 0.25); }
-}
-
-.btn-ready-glow {
-  animation: readyGlow 2s ease-in-out infinite;
-}
-
-/* Auto-shimmer sweep on ready button */
+/* ─── Analyze button "ready" glow — hover only ─── */
 @keyframes readySweep {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
@@ -656,14 +646,13 @@ body {
     rgba(255, 255, 255, 0.15) 55%,
     transparent 60%
   );
-  animation: readySweep 3s ease-in-out infinite;
-  animation-delay: 1s;
+  transform: translateX(-100%);
   pointer-events: none;
   z-index: 1;
 }
 
-.dark .btn-ready-glow {
-  animation-name: readyGlowDark;
+.btn-ready-glow:hover::after {
+  animation: readySweep 0.8s ease-in-out;
 }
 
 .dark .btn-ready-glow::after {
@@ -675,11 +664,6 @@ body {
     rgba(82, 183, 136, 0.1) 55%,
     transparent 60%
   );
-}
-
-@keyframes readyGlowDark {
-  0%, 100% { box-shadow: 0 0 8px rgba(82, 183, 136, 0.2), 0 0 24px rgba(82, 183, 136, 0.1); }
-  50% { box-shadow: 0 0 20px rgba(82, 183, 136, 0.4), 0 0 48px rgba(82, 183, 136, 0.2); }
 }
 
 /* ─── Textarea focus ambient glow ─── */

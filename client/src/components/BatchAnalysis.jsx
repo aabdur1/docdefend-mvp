@@ -295,7 +295,7 @@ export default function BatchAnalysis() {
             </div>
             <div>
               <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Batch Analysis</h2>
-              <p className="text-sm text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
+              <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
             </div>
           </div>
           <span className="px-3 py-1 rounded-full text-sm font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace">

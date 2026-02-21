@@ -285,7 +285,7 @@ function AppContent() {
                     </div>
                     <div>
                       <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Clinical Note</h2>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">Patient documentation</p>
+                      <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Patient documentation</p>
                     </div>
                   </div>
                   <button
@@ -318,7 +318,7 @@ function AppContent() {
                   </div>
                   <div>
                     <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Billing Codes</h2>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">CPT & ICD-10 selection</p>
+                    <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">CPT & ICD-10 selection</p>
                   </div>
                 </div>
                 <CodeSelector
@@ -511,11 +511,11 @@ function AppContent() {
                 <p className="font-semibold font-display text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   DocDefend<span className="text-red-500 text-xs">✚</span>
                 </p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Clinical Documentation QA Platform</p>
+                <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Clinical Documentation QA Platform</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <div className="hidden sm:flex items-center gap-2 text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">
                 <span>🏥</span>
                 <span>Built for small medical practices</span>
               </div>
