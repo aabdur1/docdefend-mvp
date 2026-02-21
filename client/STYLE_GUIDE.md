@@ -105,8 +105,8 @@ Note: UHC uses orange (its actual brand color), not indigo. Aetna uses purple wi
 |-------|------|-------|
 | `text-xs` | 12px | Metadata labels, badges, footnotes |
 | `text-sm` | 14px | Body copy, descriptions, rationales |
-| `text-base` | 16px | Button text, primary UI text, small card titles (ApiKeyInput, EMLevelCard, FinancialImpact) |
-| `text-lg` | 18px | Card sub-headings (`font-semibold`, no font-display), mid-size card titles (CodeSuggestions, AddendumGenerator) |
+| `text-base` | 16px | Button text, primary UI text, report section card titles (CodeSuggestions, AddendumGenerator, EMLevelCard, FinancialImpact) |
+| `text-lg` | 18px | Card sub-headings (`font-semibold`, no font-display) |
 | `text-xl` | 20px | Main card titles (with `font-display`): Clinical Note, Billing Codes, Dashboard, TemplateLibrary, PayerSelector |
 | `text-xl sm:text-2xl` | 20–24px | AnalysisReport title (responsive) |
 | `text-2xl` | 24px | Header "DocDefend+" title, stat card values |
@@ -223,6 +223,21 @@ text-healthcare-600 focus:ring-healthcare-500
 dark:bg-instrument-bg-surface
 ```
 
+### SVG Pill Icon (Brand Mark)
+
+Custom inline SVG capsule used across the app instead of the pill emoji. Features red/white gradient halves, gloss highlight, and center seam line.
+
+| Location | Size | Rotation | Gradient ID Prefix |
+|----------|------|----------|-------------------|
+| Header logo | `w-10 h-5` | `-45deg` (matches Apple emoji angle) | `hdr` |
+| Footer logo | `w-8 h-4` | `-45deg` | `ftr` |
+| Loading spinner | `w-20 h-10` | none (`animate-rotatePill`) | `spin` |
+| Favicon | inline SVG data URI | `-45deg` (SVG transform) | `l`, `r`, `g` |
+
+**Important**: Each instance uses namespaced gradient IDs (e.g., `hdrPillLeft`, `ftrPillRight`, `spinGloss`) to avoid DOM ID collisions when multiple SVGs coexist on the page.
+
+Cropped viewBox: `20 10 160 80` (trims dead space so the pill fills the element).
+
 ### Icon Badges (card headers)
 
 ```
@@ -245,9 +260,14 @@ text-xl font-semibold font-display text-slate-800 dark:text-white
 text-lg font-semibold text-slate-800 dark:text-white
 ```
 
-With subtitle:
+**Report section card title** (CodeSuggestions, AddendumGenerator, EMLevelCard, FinancialImpact):
 ```
-text-xs text-slate-500 dark:text-slate-400
+text-base font-semibold font-display text-slate-800 dark:text-white
+```
+
+With uppercase label subtitle:
+```
+text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400
 ```
 
 **Important**: Never use `font-display` on sub-headings, labels, or h4 elements inside a card. Only the primary card title gets the serif font.
@@ -333,7 +353,6 @@ Slide-in panel animation for the Provider Dashboard:
 | `bg-gradient-mesh` | Layered radial gradients using healthcare/trace colors |
 | `grain-texture` | Subtle SVG noise overlay via `::after` pseudo-element |
 | `medical-pattern` | Dot-grid pattern using radial-gradient |
-| `glass` | Frosted glass effect (background blur + transparency) |
 
 ### Shadows
 
@@ -388,7 +407,7 @@ All elements have a 300ms transition on `background-color`, `border-color`, and 
 
 - Cards: `p-4 sm:p-6`
 - Modals: `p-4 sm:p-6`
-- Sections within cards: `p-3` or `p-5`
+- Sections within cards: `p-3` or `p-4`
 - Inline badges: `px-2.5 py-1`
 
 ### Responsive layout
