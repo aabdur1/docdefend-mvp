@@ -504,7 +504,7 @@ function AppContent() {
             </div>
 
             {/* Right Column - Results */}
-            <div className="lg:sticky lg:top-24 lg:self-start min-w-0">
+            <div className="lg:sticky lg:top-28 lg:self-start min-w-0">
               {loading && <LoadingSpinner />}
               {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
               {report && !loading && (
