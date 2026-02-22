@@ -189,11 +189,13 @@
 .rx-pad {
   background: repeating-linear-gradient(
     transparent,
-    transparent 27px,
-    rgba(82, 183, 136, 0.15) 27px,
-    rgba(82, 183, 136, 0.15) 28px
+    transparent 19px,
+    rgba(82, 183, 136, 0.15) 19px,
+    rgba(82, 183, 136, 0.15) 20px
   );
-  background-position: 0 8px;
+  background-position: 0 12px;
+  background-attachment: local;
+  line-height: 20px;
 }
 
 /* Medical cross icon */
