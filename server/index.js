@@ -19,7 +19,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const ANTHROPIC_TIMEOUT = 25000; // 25s — fits within Render's 30s request timeout
+const ANTHROPIC_TIMEOUT = 55000; // 55s — generous for cold-start + API latency
 
 /**
  * Validate that a value is an array of non-empty strings.

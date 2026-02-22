@@ -174,17 +174,8 @@
 .ekg-container {
   position: relative;
   overflow: hidden;
-}
-
-.ekg-container::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(to right, transparent, var(--color-bg));
-  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 60%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 10%, black 60%, transparent 100%);
 }
 
 /* Medical cross pattern background */
