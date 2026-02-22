@@ -488,7 +488,7 @@ export default function BatchAnalysis() {
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'cpt', code)}
-                            className={`px-2.5 py-1 rounded text-sm font-mono font-medium transition-colors ${
+                            className={`px-2.5 py-1.5 sm:py-1 rounded text-sm font-mono font-medium transition-colors ${
                               row.cptCodes.includes(code)
                                 ? 'bg-healthcare-500 text-white'
                                 : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'
@@ -511,7 +511,7 @@ export default function BatchAnalysis() {
                           <button
                             key={code}
                             onClick={() => toggleCode(row.id, 'icd10', code)}
-                            className={`px-2.5 py-1 rounded text-sm font-mono font-medium transition-colors ${
+                            className={`px-2.5 py-1.5 sm:py-1 rounded text-sm font-mono font-medium transition-colors ${
                               row.icd10Codes.includes(code)
                                 ? 'bg-healthcare-500 text-white'
                                 : 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-slate-400 hover:bg-[#E5DBBF] dark:hover:bg-instrument-bg-hover'

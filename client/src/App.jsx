@@ -629,7 +629,7 @@ function AppContent() {
               </div>
               <div className="h-4 w-px bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
               <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800/50">
-                Demo only • Synthetic data • Not for clinical use
+                <span className="sm:hidden">Demo • </span><span className="hidden sm:inline">Demo only • Synthetic data • </span>Not for clinical use
               </p>
             </div>
           </div>
