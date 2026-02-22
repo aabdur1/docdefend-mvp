@@ -1,8 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { API_URL } from '../config';
 import ApiKeyInput from './ApiKeyInput';
+
+function useHealthCheck(intervalMs = 30000) {
+  // 'checking' | 'online' | 'offline'
+  const [status, setStatus] = useState('checking');
+  const timerRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const check = async () => {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        const res = await fetch(API_URL + '/api/health', { signal: controller.signal });
+        clearTimeout(timeout);
+        if (!cancelled) setStatus(res.ok ? 'online' : 'offline');
+      } catch {
+        if (!cancelled) setStatus('offline');
+      }
+    };
+
+    check();
+    timerRef.current = setInterval(check, intervalMs);
+    return () => { cancelled = true; clearInterval(timerRef.current); };
+  }, [intervalMs]);
+
+  return status;
+}
 
 export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, analysisCount = 0, batchMode, onToggleBatchMode }) {
   const [swapKey, setSwapKey] = useState(0);
+  const backendStatus = useHealthCheck(30000);
 
   // Trigger swap animation on mode change
   useEffect(() => {
@@ -10,6 +40,10 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
   }, [darkMode]);
   const navBtn = 'px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
   const navBtnIcon = 'p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+
+  const statusLabel = backendStatus === 'online' ? 'System Online' : backendStatus === 'offline' ? 'System Offline' : 'Connecting...';
+  const dotColor = backendStatus === 'online' ? 'bg-trace' : backendStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400';
+  const dotShadow = backendStatus === 'online' ? 'shadow-trace/50' : backendStatus === 'offline' ? 'shadow-red-500/50' : 'shadow-amber-400/50';
 
   return (
     <header className="bg-[#EDE6D3] dark:bg-instrument-bg-surface border-b border-[#D6C9A8] dark:border-instrument-border no-print sticky top-0 z-40">
@@ -50,16 +84,26 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
-            {/* System Active */}
-            <div className={`hidden md:flex items-center gap-2 ${navBtn}`}>
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap justify-end">
+            {/* Backend Status — full button on md+, dot-only on mobile */}
+            <div className={`hidden md:flex items-center gap-2 ${navBtn}`} title={statusLabel}>
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M3 12h4l3-9 4 18 3-9h4" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>System Active</span>
+              <span>{statusLabel}</span>
               <span className="relative flex h-2 w-2 vitals-pulse">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-trace opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-trace shadow-sm shadow-trace/50"></span>
+                {backendStatus === 'online' && (
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-75`}></span>
+                )}
+                <span className={`relative inline-flex rounded-full h-2 w-2 ${dotColor} shadow-sm ${dotShadow}`}></span>
+              </span>
+            </div>
+            <div className="md:hidden flex items-center" title={statusLabel}>
+              <span className="relative flex h-2.5 w-2.5">
+                {backendStatus === 'online' && (
+                  <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-75`}></span>
+                )}
+                <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${dotColor} shadow-sm ${dotShadow}`}></span>
               </span>
             </div>
 
