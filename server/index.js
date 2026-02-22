@@ -40,6 +40,9 @@ function safeErrorMessage(error) {
   if (msg.includes('Unexpected response format')) return msg;
   if (msg.includes('Failed to parse AI response')) return msg;
   if (msg.includes('Missing required fields')) return msg;
+  if (error?.status === 401) return 'Invalid API key. Please check your Anthropic API key.';
+  if (error?.status === 404) return 'AI model not found. The requested model may be unavailable.';
+  if (error?.status === 400) return `Bad request: ${msg}`;
   return 'An unexpected error occurred. Please try again.';
 }
 
@@ -179,7 +182,6 @@ app.post('/api/analyze', async (req, res) => {
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4096,
-      timeout: ANTHROPIC_TIMEOUT,
       messages: [
         {
           role: 'user',
@@ -187,7 +189,7 @@ app.post('/api/analyze', async (req, res) => {
         },
       ],
       system: payerSystemPrompt,
-    });
+    }, { timeout: ANTHROPIC_TIMEOUT });
 
     const analysis = parseClaudeJSON(message);
     // Attach payer info to response
@@ -237,10 +239,9 @@ app.post('/api/analyze-batch', async (req, res) => {
         const message = await anthropic.messages.create({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 4096,
-          timeout: ANTHROPIC_TIMEOUT,
           messages: [{ role: 'user', content: userPrompt }],
           system: batchSystemPrompt,
-        });
+        }, { timeout: ANTHROPIC_TIMEOUT });
 
         const analysis = parseClaudeJSON(message);
         return { id: id || `note-${index}`, title: title || `Note ${index + 1}`, analysis, status: 'complete' };
@@ -289,7 +290,6 @@ app.post('/api/suggest-codes', async (req, res) => {
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 2048,
-      timeout: ANTHROPIC_TIMEOUT,
       messages: [
         {
           role: 'user',
@@ -297,12 +297,12 @@ app.post('/api/suggest-codes', async (req, res) => {
         },
       ],
       system: codeSuggestionPrompt,
-    });
+    }, { timeout: ANTHROPIC_TIMEOUT });
 
     const suggestions = parseClaudeJSON(message);
     res.json(suggestions);
   } catch (error) {
-    console.error('Code suggestion error:', error.message);
+    console.error('Code suggestion error:', error.message, '| status:', error?.status, '| name:', error?.name);
     res.status(500).json({ error: 'Code suggestion failed', message: safeErrorMessage(error) });
   }
 });
@@ -324,7 +324,6 @@ app.post('/api/generate-addendum', async (req, res) => {
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 2048,
-      timeout: ANTHROPIC_TIMEOUT,
       messages: [
         {
           role: 'user',
@@ -332,7 +331,7 @@ app.post('/api/generate-addendum', async (req, res) => {
         },
       ],
       system: addendumPrompt,
-    });
+    }, { timeout: ANTHROPIC_TIMEOUT });
 
     const addendum = parseClaudeJSON(message);
     res.json(addendum);
