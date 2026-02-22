@@ -124,7 +124,7 @@ function RecentAnalysis({ analysis, index }) {
 
   return (
     <div
-      className={`flex items-center gap-4 p-3 rounded-lg border-l-2 ${borderColors[analysis.score] || ''} hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface/50 transition-colors animate-fadeInUp`}
+      className={`flex items-center gap-4 p-3 rounded-lg border-l-2 hover:border-l-4 ${borderColors[analysis.score] || ''} hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface/50 transition-all duration-200 animate-fadeInUp`}
       style={{ animationDelay: `${index * 50}ms` }}
     >
       <div className="flex-1 min-w-0">

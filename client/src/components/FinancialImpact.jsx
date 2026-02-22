@@ -132,7 +132,7 @@ export default function FinancialImpact({ financialImpact, codeAnalysis, selecte
           <div className="w-full h-2 bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-1000 ${
-                riskPct > 60 ? 'bg-red-500' : riskPct > 30 ? 'bg-amber-500' : 'bg-healthcare-300 dark:bg-trace'
+                riskPct > 60 ? 'bg-gradient-to-r from-red-600 to-red-400' : riskPct > 30 ? 'bg-gradient-to-r from-amber-600 to-amber-400' : 'bg-gradient-to-r from-healthcare-400 to-healthcare-200 dark:from-trace-dim dark:to-trace'
               }`}
               style={{ width: `${riskPct}%` }}
             />
