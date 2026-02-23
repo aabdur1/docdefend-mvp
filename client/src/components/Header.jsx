@@ -38,8 +38,8 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
   useEffect(() => {
     setSwapKey(k => k + 1);
   }, [darkMode]);
-  const navBtn = 'px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
-  const navBtnIcon = 'p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+  const navBtn = 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+  const navBtnIcon = 'p-1.5 sm:p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
 
   const statusLabel = backendStatus === 'online' ? 'System Online' : backendStatus === 'offline' ? 'System Offline' : 'Connecting...';
   const dotColor = backendStatus === 'online' ? 'bg-trace' : backendStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400';
@@ -47,11 +47,11 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
 
   return (
     <header className="bg-[#EDE6D3] dark:bg-instrument-bg-surface border-b border-[#D6C9A8] dark:border-instrument-border no-print sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-14 h-14 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-10 h-5" style={{ transform: 'rotate(-45deg)' }}>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+              <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-7 h-3.5 sm:w-10 sm:h-5" style={{ transform: 'rotate(-45deg)' }}>
                 <defs>
                   <linearGradient id="hdrPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor="#ff6b6b"/>
@@ -77,7 +77,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
               </svg>
             </div>
             <div>
-              <h1 className="font-semibold font-display text-2xl sm:text-3xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
+              <h1 className="font-semibold font-display text-xl sm:text-3xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
                 DocDefend<span className="text-red-500 text-sm">✚</span>
               </h1>
               <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
@@ -115,7 +115,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
               type="button"
               onClick={onToggleBatchMode}
               className={batchMode
-                ? 'px-3 py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-healthcare-500 text-white border-healthcare-600 shadow-inner dark:bg-trace dark:text-instrument-bg dark:border-trace-dim'
+                ? 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-healthcare-500 text-white border-healthcare-600 shadow-inner dark:bg-trace dark:text-instrument-bg dark:border-trace-dim'
                 : navBtn
               }
               aria-label="Toggle batch mode"

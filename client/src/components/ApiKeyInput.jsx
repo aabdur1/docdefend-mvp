@@ -27,7 +27,7 @@ export default function ApiKeyInput() {
           setInputValue(apiKey);
           setIsOpen(!isOpen);
         }}
-        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 hover:scale-105 active:scale-95 border ${
+        className={`flex items-center gap-1.5 px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-xs font-semibold transition-all duration-300 hover:scale-105 active:scale-95 border ${
           apiKey
             ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border-emerald-200/50 dark:border-emerald-800/50'
             : 'bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 border-amber-200/50 dark:border-amber-800/50 animate-pulse'
