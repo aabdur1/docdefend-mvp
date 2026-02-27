@@ -6,7 +6,7 @@ DocDefend+ is a full-stack web app that helps pain management providers validate
 
 **Live Demo:** [docdefend-mvp.vercel.app](https://docdefend-mvp.vercel.app)
 
-> **Demo/MVP** built for IDS 594 at Loyola University Chicago. Uses synthetic patient notes and the Anthropic Claude API. **Never use real patient data.**
+> **Demo/MVP** built for IDS 594 (Entrepreneurship with AI) at UIC. Uses synthetic patient notes and the Anthropic Claude API. **Never use real patient data.**
 
 ## Features
 
@@ -130,4 +130,4 @@ This MVP is for demonstration purposes only. See [HIPAA_COMPLIANCE.md](./HIPAA_C
 
 ## License
 
-This project was built for academic purposes as part of IDS 594 at Loyola University Chicago.
+This project was built for academic purposes as part of IDS 594 (Entrepreneurship with AI) at UIC.
