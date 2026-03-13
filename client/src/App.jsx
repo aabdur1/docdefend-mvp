@@ -74,8 +74,10 @@ function ErrorMessage({ message, onDismiss }) {
   );
 }
 
-function EmptyState({ hasNote, hasCodes }) {
-  const step = hasCodes ? 3 : hasNote ? 2 : 1;
+function EmptyState({ hasNote, hasCodes, coderMode }) {
+  const step = coderMode
+    ? (hasNote ? 3 : 1)
+    : (hasCodes ? 3 : hasNote ? 2 : 1);
 
   const stepClass = (n) => {
     if (n < step) return 'bg-healthcare-500 text-white';
@@ -121,20 +123,29 @@ function EmptyState({ hasNote, hasCodes }) {
           </span>
           <span className={`transition-colors duration-300 ${labelClass(1)}`}>Note</span>
         </div>
-        <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(1)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-        <div className="flex items-center gap-1.5">
-          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(2)}`}>
-            {step > 2 ? (
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
-            ) : '2'}
-          </span>
-          <span className={`transition-colors duration-300 ${labelClass(2)}`}>Codes</span>
-        </div>
-        <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(2)}`} style={{ animationDelay: '0.2s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
+        {!coderMode && (
+          <>
+            <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(1)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+            <div className="flex items-center gap-1.5">
+              <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(2)}`}>
+                {step > 2 ? (
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                ) : '2'}
+              </span>
+              <span className={`transition-colors duration-300 ${labelClass(2)}`}>Codes</span>
+            </div>
+            <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(2)}`} style={{ animationDelay: '0.2s' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </>
+        )}
+        {coderMode && (
+          <svg className={`w-4 h-4 transition-colors duration-300 ${chevronClass(1)}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        )}
         <div className="flex items-center gap-1.5">
           <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(3)}`}>3</span>
           <span className={`transition-colors duration-300 ${labelClass(3)}`}>Report</span>
@@ -338,6 +349,20 @@ function AppContent() {
 
       const data = await response.json();
       setReport({ ...data, isCoderReview: true });
+
+      // Save to history
+      const historyEntry = {
+        id: Date.now(),
+        title: `Code Review — ${data.emLevelRecommendation?.recommendedLevel || 'Analysis'}`,
+        codes: (data.suggestedCptCodes?.length || 0) + (data.suggestedIcd10Codes?.length || 0),
+        date: new Date().toLocaleDateString(),
+        score: data.suggestedCptCodes?.length > 0 ? 'HIGH' : 'MEDIUM',
+        payer: selectedPayer || 'medicare',
+      };
+      const newHistory = [...analysisHistory, historyEntry].slice(-50);
+      setAnalysisHistory(newHistory);
+      localStorage.setItem('analysisHistory', JSON.stringify(newHistory));
+
       toast.success('Code review complete.', 'Analysis Complete');
     } catch (err) {
       const message = err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message;
@@ -374,9 +399,9 @@ function AppContent() {
         onOpenDashboard={() => setDashboardOpen(true)}
         analysisCount={analysisHistory.length}
         batchMode={batchMode}
-        onToggleBatchMode={() => setBatchMode(prev => !prev)}
+        onToggleBatchMode={() => { if (!loading) setBatchMode(prev => !prev); }}
         coderMode={coderMode}
-        onToggleCoderMode={() => setCoderMode(prev => !prev)}
+        onToggleCoderMode={() => { if (!loading) setCoderMode(prev => !prev); }}
       />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -612,7 +637,7 @@ function AppContent() {
                   </div>
                 )}
               </div>
-              {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={coderMode || selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} />}
+              {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} coderMode={coderMode} />}
             </section>
           </div>
         )}
