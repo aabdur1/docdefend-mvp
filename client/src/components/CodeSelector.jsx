@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 const CPT_CODES = [
   { code: '99213', description: 'E/M Level 3, established patient' },
@@ -118,6 +118,15 @@ export default function CodeSelector({
   const [icd10DuplicateError, setIcd10DuplicateError] = useState(false);
   const cptDupTimer = useRef(null);
   const icd10DupTimer = useRef(null);
+
+  // Clear custom codes when parent resets all selections
+  useEffect(() => {
+    if (selectedCptCodes.length === 0) setCustomCptCodes([]);
+  }, [selectedCptCodes.length]);
+
+  useEffect(() => {
+    if (selectedIcd10Codes.length === 0) setCustomIcd10Codes([]);
+  }, [selectedIcd10Codes.length]);
 
   const toggleCode = (code, selected, setSelected) => {
     if (selected.includes(code)) {

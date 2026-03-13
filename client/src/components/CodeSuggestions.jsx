@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
 import { API_URL } from '../config';
 
@@ -15,6 +15,13 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [applied, setApplied] = useState(false);
   const { apiKey } = useApiKey();
+
+  // Clear stale suggestions when the note changes
+  useEffect(() => {
+    setSuggestions(null);
+    setError(null);
+    setApplied(false);
+  }, [note]);
 
   const handleAnalyze = async () => {
     if (!note.trim()) return;
