@@ -5,7 +5,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import helmet from 'helmet';
-import { systemPrompt, buildSystemPrompt, buildUserPrompt } from './prompt.js';
+import { buildSystemPrompt, buildUserPrompt } from './prompt.js';
 import { PAYERS } from './payerRules.js';
 import { parseDocument } from './parsers.js';
 import {
@@ -36,7 +36,7 @@ function isStringArray(val) {
 }
 
 const CPT_REGEX = /^\d{5}$/;
-const ICD10_REGEX = /^[A-Z]\d{2}(\.\d{1,4})?$/i;
+const ICD10_REGEX = /^[A-Z]\d{2}(\.[A-Z0-9]{1,4})?$/i;
 
 function isValidCptCode(code) {
   return typeof code === 'string' && CPT_REGEX.test(code.trim());
@@ -188,11 +188,11 @@ app.post('/api/analyze', async (req, res) => {
     if (!note || typeof note !== 'string' || !note.trim()) {
       return res.status(400).json({ error: 'A clinical note is required.' });
     }
-    if (!isStringArray(cptCodes) || !cptCodes.every(isValidCptCode)) {
-      return res.status(400).json({ error: 'At least one valid CPT code is required (5-digit format).' });
+    if (!isStringArray(cptCodes) || cptCodes.length > 20 || !cptCodes.every(isValidCptCode)) {
+      return res.status(400).json({ error: 'Between 1 and 20 valid CPT codes required (5-digit format).' });
     }
-    if (!isStringArray(icd10Codes) || !icd10Codes.every(isValidIcd10Code)) {
-      return res.status(400).json({ error: 'At least one valid ICD-10 code is required (e.g., M54.5).' });
+    if (!isStringArray(icd10Codes) || icd10Codes.length > 50 || !icd10Codes.every(isValidIcd10Code)) {
+      return res.status(400).json({ error: 'Between 1 and 50 valid ICD-10 codes required (e.g., M54.5).' });
     }
 
     const payerSystemPrompt = buildSystemPrompt(payerId);
