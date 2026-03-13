@@ -10,9 +10,11 @@ import { PAYERS } from './payerRules.js';
 import { parseDocument } from './parsers.js';
 import {
   codeSuggestionPrompt,
+  coderReviewPrompt,
   addendumPrompt,
   templateLibrary,
   buildCodeSuggestionPrompt,
+  buildCoderReviewPrompt,
   buildAddendumPrompt,
 } from './suggestions.js';
 
@@ -137,6 +139,7 @@ app.use('/api/analyze', aiLimiter);
 app.use('/api/analyze-batch', aiLimiter);
 app.use('/api/suggest-codes', aiLimiter);
 app.use('/api/generate-addendum', aiLimiter);
+app.use('/api/code-review', aiLimiter);
 app.use('/api/', generalLimiter);
 
 function getAnthropicClient(req) {
@@ -321,6 +324,37 @@ app.post('/api/suggest-codes', async (req, res) => {
   } catch (error) {
     console.error('Code suggestion error:', error.message, '| status:', error?.status, '| name:', error?.name);
     res.status(500).json({ error: 'Code suggestion failed', message: safeErrorMessage(error) });
+  }
+});
+
+// Code review endpoint — billing company workflow (no pre-selected codes required)
+app.post('/api/code-review', async (req, res) => {
+  try {
+    const { note, payerId } = req.body;
+
+    if (!note || typeof note !== 'string' || !note.trim()) {
+      return res.status(400).json({ error: 'A clinical note is required.' });
+    }
+
+    const anthropic = getAnthropicClient(req);
+
+    const message = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 4096,
+      messages: [
+        {
+          role: 'user',
+          content: buildCoderReviewPrompt(note, payerId),
+        },
+      ],
+      system: coderReviewPrompt,
+    }, { timeout: ANTHROPIC_TIMEOUT });
+
+    const review = parseClaudeJSON(message);
+    res.json(review);
+  } catch (error) {
+    console.error('Code review error:', error.message);
+    res.status(500).json({ error: 'Code review failed', message: safeErrorMessage(error) });
   }
 });
 
