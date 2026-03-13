@@ -4,6 +4,7 @@ function EKGLine({ className = '' }) {
   return (
     <div className={`ekg-container w-full h-8 ${className}`}>
       <svg
+        aria-hidden="true"
         viewBox="0 0 600 40"
         className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"

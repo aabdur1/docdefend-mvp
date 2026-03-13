@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Simple bar chart component
 function BarChart({ data, height = 120 }) {
@@ -17,7 +17,7 @@ function BarChart({ data, height = 120 }) {
                 animationDelay: `${i * 100}ms`,
               }}
             />
-            <span className="text-xs text-slate-500 dark:text-slate-400 truncate w-full text-center">
+            <span className="text-xs text-slate-600 dark:text-slate-400 truncate w-full text-center">
               {item.label}
             </span>
           </div>
@@ -75,7 +75,7 @@ function DonutChart({ data, size = 120 }) {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
           <p className="text-2xl font-bold font-mono text-slate-800 dark:text-white">{total}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">Total</p>
+          <p className="text-xs text-slate-600 dark:text-slate-400">Total</p>
         </div>
       </div>
     </div>
@@ -103,7 +103,7 @@ function StatCard({ icon, label, value, change, color }) {
         )}
       </div>
       <p className="mt-3 text-2xl font-bold font-mono text-slate-800 dark:text-white">{value}</p>
-      <p className="text-sm text-slate-500 dark:text-slate-400">{label}</p>
+      <p className="text-sm text-slate-600 dark:text-slate-400">{label}</p>
     </div>
   );
 }
@@ -129,7 +129,7 @@ function RecentAnalysis({ analysis, index }) {
     >
       <div className="flex-1 min-w-0">
         <p className="font-medium text-slate-800 dark:text-white truncate">{analysis.title}</p>
-        <p className="text-xs text-slate-500 dark:text-slate-400"><span className="font-mono">{analysis.codes}</span> codes • {analysis.date}</p>
+        <p className="text-xs text-slate-600 dark:text-slate-400"><span className="font-mono">{analysis.codes}</span> codes • {analysis.date}</p>
       </div>
       <span className={`px-2.5 py-1 rounded-full text-xs font-medium font-mono ${scoreColors[analysis.score]}`}>
         {analysis.score}
@@ -148,7 +148,7 @@ function EmptyState() {
         </svg>
       </div>
       <h3 className="font-display text-lg text-slate-700 dark:text-slate-300 mb-2">No analyses yet</h3>
-      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xs">
+      <p className="text-sm text-slate-600 dark:text-slate-400 max-w-xs">
         Run your first defensibility analysis to see trends, scores, and insights here.
       </p>
     </div>
@@ -181,6 +181,14 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
     }
   }, [analysisHistory]);
 
+  const panelRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && panelRef.current) {
+      panelRef.current.focus();
+    }
+  }, [isOpen]);
+
   const hasHistory = analysisHistory.length > 0;
 
   // Demo data for visualization
@@ -205,7 +213,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-50 overflow-hidden" role="dialog" aria-modal="true" aria-label="Analysis History Dashboard">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-fadeIn"
@@ -213,7 +221,12 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
       />
 
       {/* Panel */}
-      <div className="absolute inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6EF] dark:bg-instrument-bg shadow-2xl animate-slideInPanel overflow-y-auto">
+      <div
+        className="absolute inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6EF] dark:bg-instrument-bg shadow-2xl animate-slideInPanel overflow-y-auto"
+        ref={panelRef}
+        onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+        tabIndex={-1}
+      >
         {/* Header */}
         <div className="sticky top-0 z-10 bg-[#F5EFE0] dark:bg-instrument-bg-raised border-b border-[#D6C9A8] dark:border-instrument-border px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
@@ -225,11 +238,12 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
               </div>
               <div>
                 <h2 className="text-xl font-bold font-display text-slate-800 dark:text-white">Provider Dashboard</h2>
-                <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Defensibility analytics & trends</p>
+                <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">Defensibility analytics & trends</p>
               </div>
             </div>
             <button
               onClick={onClose}
+              aria-label="Close dashboard"
               className="p-2 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-colors"
             >
               <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -277,13 +291,13 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
             <div className="grid md:grid-cols-2 gap-6">
               {/* Weekly Activity */}
               <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
-                <h3 className="text-[0.65rem] uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300 mb-4">Weekly Activity</h3>
+                <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300 mb-4">Weekly Activity</h3>
                 <BarChart data={weeklyData} height={120} />
               </div>
 
               {/* Risk Distribution */}
               <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
-                <h3 className="text-[0.65rem] uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300 mb-4">Risk Distribution</h3>
+                <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300 mb-4">Risk Distribution</h3>
                 <div className="flex items-center justify-center gap-6">
                   <DonutChart data={riskDistribution} size={120} />
                   <div className="space-y-2">
@@ -303,8 +317,8 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
             {/* Recent Analyses */}
             <div className="bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-xl p-5 border border-[#D6C9A8] dark:border-instrument-border shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[0.65rem] uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300">Recent Analyses</h3>
-                <span className="text-xs text-slate-500 dark:text-slate-400">Last {recentAnalyses.length}</span>
+                <h3 className="text-xs uppercase tracking-wide font-semibold text-slate-700 dark:text-slate-300">Recent Analyses</h3>
+                <span className="text-xs text-slate-600 dark:text-slate-400">Last {recentAnalyses.length}</span>
               </div>
               <div className="space-y-1">
                 {recentAnalyses.map((analysis, i) => (
@@ -322,7 +336,7 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="text-[0.65rem] uppercase tracking-wide font-semibold text-amber-800 dark:text-amber-300">Pro Tip</h4>
+                  <h4 className="text-xs uppercase tracking-wide font-semibold text-amber-800 dark:text-amber-300">Pro Tip</h4>
                   <p className="text-sm text-amber-700 dark:text-amber-300/80 mt-1">
                     Focus on documenting medical decision making (MDM) complexity. This is the most common area where documentation falls short for E/M code support.
                   </p>

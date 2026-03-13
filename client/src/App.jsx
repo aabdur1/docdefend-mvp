@@ -1,21 +1,22 @@
-import { useState, useEffect, Component } from 'react';
+import { useState, useEffect, Component, lazy, Suspense } from 'react';
 import Header from './components/Header';
 import NoteSelector from './components/NoteSelector';
 import CodeSelector from './components/CodeSelector';
 import PayerSelector from './components/PayerSelector';
 import CodeSuggestions from './components/CodeSuggestions';
-import TemplateLibrary from './components/TemplateLibrary';
+const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 import AnalysisReport from './components/AnalysisReport';
 import BatchAnalysis from './components/BatchAnalysis';
 import { ToastProvider, useToast } from './components/Toast';
-import Dashboard from './components/Dashboard';
+const Dashboard = lazy(() => import('./components/Dashboard'));
 import EKGLine from './components/EKGLine';
 import { ApiKeyProvider, useApiKey, getAuthHeaders } from './context/ApiKeyContext';
 import { API_URL } from './config';
+import PillIcon from './components/PillIcon';
 
 function LoadingSpinner() {
   return (
-    <div className="flex flex-col items-center justify-center py-16 animate-fadeIn">
+    <div role="status" aria-label="Analyzing documentation, please wait" className="flex flex-col items-center justify-center py-16 animate-fadeIn">
       {/* Single spinning pill */}
       <div className="relative mb-6">
         {/* Glow effect */}
@@ -25,30 +26,7 @@ function LoadingSpinner() {
 
         {/* Spinning pill */}
         <div className="relative animate-rotatePill drop-shadow-xl pill-trail">
-          <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-20 h-10">
-            <defs>
-              <linearGradient id="spinPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#ff6b6b"/>
-                <stop offset="50%" stopColor="#ee5253"/>
-                <stop offset="100%" stopColor="#d42c2c"/>
-              </linearGradient>
-              <linearGradient id="spinPillRight" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#f0f0f0"/>
-                <stop offset="50%" stopColor="#dcdcdc"/>
-                <stop offset="100%" stopColor="#c2c2c2"/>
-              </linearGradient>
-              <linearGradient id="spinGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="white" stopOpacity="0.45"/>
-                <stop offset="100%" stopColor="white" stopOpacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#spinPillLeft)"/>
-            <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#spinPillRight)"/>
-            <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#spinGloss)"/>
-            <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5"/>
-            <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20"
-                  fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="1.5"/>
-          </svg>
+          <PillIcon className="w-20 h-10" />
         </div>
       </div>
 
@@ -56,14 +34,14 @@ function LoadingSpinner() {
       <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">
         Analyzing Documentation
       </h3>
-      <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+      <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">
         AI is reviewing your clinical note for defensibility
       </p>
 
       {/* EKG Heartbeat Line */}
       <div className="w-full max-w-sm">
         <EKGLine className="opacity-70" />
-        <p className="text-xs text-slate-500 dark:text-slate-400 text-center mt-2">
+        <p className="text-xs text-slate-600 dark:text-slate-400 text-center mt-2">
           This may take a few moments...
         </p>
       </div>
@@ -73,7 +51,7 @@ function LoadingSpinner() {
 
 function ErrorMessage({ message, onDismiss }) {
   return (
-    <div className="animate-scaleIn bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-5 flex items-start gap-4 shadow-lg shadow-red-500/10">
+    <div role="alert" className="animate-scaleIn bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-5 flex items-start gap-4 shadow-lg shadow-red-500/10">
       <div className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50 flex items-center justify-center">
         <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
@@ -85,6 +63,7 @@ function ErrorMessage({ message, onDismiss }) {
       </div>
       <button
         onClick={onDismiss}
+        aria-label="Dismiss error"
         className="flex-shrink-0 p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
       >
         <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
@@ -101,7 +80,7 @@ function EmptyState({ hasNote, hasCodes }) {
   const stepClass = (n) => {
     if (n < step) return 'bg-healthcare-500 text-white';
     if (n === step) return 'bg-healthcare-500 text-white';
-    return 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-500 dark:text-instrument-text-muted';
+    return 'bg-[#EDE6D3] dark:bg-instrument-bg-surface text-slate-600 dark:text-instrument-text-muted';
   };
 
   const chevronClass = (n) =>
@@ -112,7 +91,7 @@ function EmptyState({ hasNote, hasCodes }) {
   const labelClass = (n) =>
     n <= step
       ? 'text-slate-700 dark:text-slate-200 font-medium'
-      : 'text-slate-500 dark:text-slate-400';
+      : 'text-slate-600 dark:text-slate-400';
 
   return (
     <div className="animate-fadeIn bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-6 sm:p-10 text-center shadow-card">
@@ -126,7 +105,7 @@ function EmptyState({ hasNote, hasCodes }) {
       </div>
 
       <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Ready for Analysis</h3>
-      <p className="text-slate-500 dark:text-slate-400 text-sm max-w-xs mx-auto leading-relaxed">
+      <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xs mx-auto leading-relaxed">
         {step === 1 && 'Select a clinical note to get started.'}
         {step === 2 && 'Now select your billing codes.'}
         {step === 3 && 'Ready to analyze. Click the button below.'}
@@ -162,7 +141,7 @@ function EmptyState({ hasNote, hasCodes }) {
         </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-[#D6C9A8] dark:border-instrument-border flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-6 pt-4 border-t border-[#D6C9A8] dark:border-instrument-border flex items-center justify-center gap-2 text-xs text-slate-600 dark:text-slate-400">
         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M4.8 2.3A.3.3 0 105 2H4a2 2 0 00-2 2v5a6 6 0 006 6 6 6 0 006-6V4a2 2 0 00-2-2h-1a.2.2 0 10.3.3" />
           <path d="M8 15v1a6 6 0 006 6 6 6 0 006-6v-4" />
@@ -185,7 +164,9 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ErrorBoundary caught:', error, errorInfo);
+    if (import.meta.env.DEV) {
+      console.error('ErrorBoundary caught:', error, errorInfo);
+    }
   }
 
   render() {
@@ -199,7 +180,7 @@ class ErrorBoundary extends Component {
               </svg>
             </div>
             <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Something went wrong</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">An unexpected error occurred. Please try refreshing the page.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">An unexpected error occurred. Please try refreshing the page.</p>
             <button
               onClick={() => window.location.reload()}
               className="px-6 py-2.5 bg-healthcare-500 hover:bg-healthcare-600 text-white rounded-xl font-medium transition-colors shadow-lg shadow-healthcare-500/30"
@@ -359,7 +340,7 @@ function AppContent() {
         ) : (
           <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 max-w-full">
             {/* Left Column - Input */}
-            <div className="space-y-6 no-print min-w-0">
+            <section aria-label="Analysis inputs" className="space-y-6 no-print min-w-0">
               {/* Clinical Note Card */}
               <div className="animate-fadeInUp stagger-1 bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-4 sm:p-6 shadow-card card-hover">
                 <div className="flex items-center justify-between gap-2 mb-5">
@@ -371,7 +352,7 @@ function AppContent() {
                     </div>
                     <div>
                       <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Clinical Note</h2>
-                      <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Patient documentation</p>
+                      <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">Patient documentation</p>
                     </div>
                   </div>
                   <button
@@ -404,7 +385,7 @@ function AppContent() {
                   </div>
                   <div>
                     <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Billing Codes</h2>
-                    <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">CPT & ICD-10 selection</p>
+                    <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">CPT & ICD-10 selection</p>
                   </div>
                 </div>
                 <CodeSelector
@@ -426,13 +407,13 @@ function AppContent() {
                       Selected Codes
                     </h3>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-slate-500 dark:text-slate-400 bg-[#F5EFE0] dark:bg-instrument-bg-raised px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-mono text-slate-600 dark:text-slate-400 bg-[#F5EFE0] dark:bg-instrument-bg-raised px-2 py-0.5 rounded-full">
                         {selectedCptCodes.length + selectedIcd10Codes.length} total
                       </span>
                       <button
                         type="button"
                         onClick={() => { setSelectedCptCodes([]); setSelectedIcd10Codes([]); }}
-                        className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                        className="text-xs text-slate-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                       >
                         Clear all
                       </button>
@@ -441,11 +422,11 @@ function AppContent() {
                   {selectedCptCodes.length > 0 && (
                     <div className="mb-2">
                       <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-medium">CPT</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide font-medium">CPT</p>
                         <button
                           type="button"
                           onClick={() => setSelectedCptCodes([])}
-                          className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                          className="text-xs text-slate-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                         >
                           Clear
                         </button>
@@ -460,7 +441,7 @@ function AppContent() {
                             <button
                               type="button"
                               onClick={() => setSelectedCptCodes(prev => prev.filter(c => c !== code))}
-                              className="ml-0.5 text-blue-400 hover:text-blue-600 dark:hover:text-blue-200 transition-colors"
+                              className="ml-0.5 p-1 text-blue-400 hover:text-blue-600 dark:hover:text-blue-200 transition-colors"
                             >
                               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -474,11 +455,11 @@ function AppContent() {
                   {selectedIcd10Codes.length > 0 && (
                     <div>
                       <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide font-medium">ICD-10</p>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide font-medium">ICD-10</p>
                         <button
                           type="button"
                           onClick={() => setSelectedIcd10Codes([])}
-                          className="text-xs text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                          className="text-xs text-slate-600 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
                         >
                           Clear
                         </button>
@@ -493,7 +474,7 @@ function AppContent() {
                             <button
                               type="button"
                               onClick={() => setSelectedIcd10Codes(prev => prev.filter(c => c !== code))}
-                              className="ml-0.5 text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-200 transition-colors"
+                              className="ml-0.5 p-1 text-emerald-400 hover:text-emerald-600 dark:hover:text-emerald-200 transition-colors"
                             >
                               <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -555,7 +536,7 @@ function AppContent() {
               </div>
 
               {!canAnalyze && !loading && (
-                <p className="animate-fadeIn text-sm text-slate-500 dark:text-slate-400 text-center bg-[#EDE6D3] dark:bg-instrument-bg-raised/50 rounded-xl py-3 px-4 border border-[#D6C9A8]/50 dark:border-instrument-border/50">
+                <p className="animate-fadeIn text-sm text-slate-600 dark:text-slate-400 text-center bg-[#EDE6D3] dark:bg-instrument-bg-raised/50 rounded-xl py-3 px-4 border border-[#D6C9A8]/50 dark:border-instrument-border/50">
                   <span className="inline-flex items-center gap-2">
                     <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -564,24 +545,26 @@ function AppContent() {
                   </span>
                 </p>
               )}
-            </div>
+            </section>
 
             {/* Right Column - Results */}
-            <div className="lg:sticky lg:top-28 lg:self-start min-w-0">
+            <section aria-label="Analysis results" className="lg:sticky lg:top-28 lg:self-start min-w-0">
               {loading && <LoadingSpinner />}
               {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
-              {report && !loading && (
-                <div className="animate-slideInRight">
-                  <AnalysisReport
-                    report={report}
-                    note={note}
-                    selectedCptCodes={selectedCptCodes}
-                    selectedPayer={selectedPayer}
-                  />
-                </div>
-              )}
+              <div aria-live="polite">
+                {report && !loading && (
+                  <div className="animate-slideInRight">
+                    <AnalysisReport
+                      report={report}
+                      note={note}
+                      selectedCptCodes={selectedCptCodes}
+                      selectedPayer={selectedPayer}
+                    />
+                  </div>
+                )}
+              </div>
               {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} />}
-            </div>
+            </section>
           </div>
         )}
       </main>
@@ -591,40 +574,17 @@ function AppContent() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg">
-                <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-8 h-4" style={{ transform: 'rotate(-45deg)' }}>
-                  <defs>
-                    <linearGradient id="ftrPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#ff6b6b"/>
-                      <stop offset="50%" stopColor="#ee5253"/>
-                      <stop offset="100%" stopColor="#d42c2c"/>
-                    </linearGradient>
-                    <linearGradient id="ftrPillRight" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#f0f0f0"/>
-                      <stop offset="50%" stopColor="#dcdcdc"/>
-                      <stop offset="100%" stopColor="#c2c2c2"/>
-                    </linearGradient>
-                    <linearGradient id="ftrGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="white" stopOpacity="0.45"/>
-                      <stop offset="100%" stopColor="white" stopOpacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#ftrPillLeft)"/>
-                  <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#ftrPillRight)"/>
-                  <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#ftrGloss)"/>
-                  <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5"/>
-                  <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20"
-                        fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="1.5"/>
-                </svg>
+                <PillIcon className="w-8 h-4" rotate />
               </div>
               <div>
                 <p className="font-semibold font-display text-slate-700 dark:text-slate-300 flex items-center gap-1">
                   DocDefend<span className="text-red-500 text-xs">✚</span>
                 </p>
-                <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Clinical Documentation QA</p>
+                <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">Clinical Documentation QA</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2 text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <div className="hidden sm:flex items-center gap-2 text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">
                 <span>Built for small medical practices</span>
               </div>
               <div className="h-4 w-px bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
@@ -636,17 +596,23 @@ function AppContent() {
         </div>
       </footer>
 
-      <TemplateLibrary
-        isOpen={templateLibraryOpen}
-        onClose={() => setTemplateLibraryOpen(false)}
-        onSelectTemplate={handleSelectTemplate}
-      />
+      <Suspense fallback={null}>
+        {templateLibraryOpen && (
+          <TemplateLibrary
+            isOpen={templateLibraryOpen}
+            onClose={() => setTemplateLibraryOpen(false)}
+            onSelectTemplate={handleSelectTemplate}
+          />
+        )}
 
-      <Dashboard
-        isOpen={dashboardOpen}
-        onClose={() => setDashboardOpen(false)}
-        analysisHistory={analysisHistory}
-      />
+        {dashboardOpen && (
+          <Dashboard
+            isOpen={dashboardOpen}
+            onClose={() => setDashboardOpen(false)}
+            analysisHistory={analysisHistory}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
