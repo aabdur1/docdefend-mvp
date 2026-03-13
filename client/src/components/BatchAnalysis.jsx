@@ -119,9 +119,15 @@ export default function BatchAnalysis() {
 
     setUploadState({ isUploading: true, current: 0, total: files.length, errors: [] });
     const errors = [];
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
     for (let i = 0; i < files.length; i++) {
       setUploadState(prev => ({ ...prev, current: i + 1 }));
+
+      if (files[i].size > MAX_FILE_SIZE) {
+        errors.push(`${files[i].name}: File too large (${(files[i].size / 1024 / 1024).toFixed(1)}MB). Maximum is 10MB.`);
+        continue;
+      }
 
       const formData = new FormData();
       formData.append('file', files[i]);
