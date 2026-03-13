@@ -1,4 +1,4 @@
-export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes }) {
+export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes, isCoderReview }) {
   if (!emLevelRecommendation) return null;
 
   const {
@@ -84,30 +84,38 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes })
       {/* Main recommendation */}
       <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 mb-4">
         <div className="flex-1 text-center p-3 rounded-lg bg-[#F5EFE0]/60 dark:bg-instrument-bg-raised/60 border border-[#D6C9A8]/50 dark:border-instrument-border/50">
-          {selectedEM && (
+          {isCoderReview ? (
+            <>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">AI Recommended</p>
+              <p className="text-lg font-bold font-mono text-healthcare-500 dark:text-trace">{documentedLevel}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{documentedLevelDescription}</p>
+            </>
+          ) : selectedEM ? (
             <>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Selected</p>
               <p className="text-lg font-bold font-mono text-slate-700 dark:text-slate-300">{selectedEM}</p>
             </>
-          )}
-          {!selectedEM && (
+          ) : (
             <>
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Selected</p>
               <p className="text-sm text-slate-500 dark:text-slate-400">No E/M code</p>
             </>
           )}
         </div>
-        <div className="flex-shrink-0">
-          <svg className={`w-6 h-6 ${config.icon}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </div>
-        <div className="flex-1 text-center p-3 rounded-lg bg-[#F5EFE0]/80 dark:bg-instrument-bg-raised/80 border-2 border-current/20 shadow-sm">
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Documented Level</p>
-          <p className={`text-lg font-bold font-mono ${config.icon}`}>{documentedLevel}</p>
-
-          <p className="text-xs text-slate-500 dark:text-slate-400">{documentedLevelDescription}</p>
-        </div>
+        {!isCoderReview && (
+          <>
+            <div className="flex-shrink-0">
+              <svg className={`w-6 h-6 ${config.icon}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </div>
+            <div className="flex-1 text-center p-3 rounded-lg bg-[#F5EFE0]/80 dark:bg-instrument-bg-raised/80 border-2 border-current/20 shadow-sm">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">Documented Level</p>
+              <p className={`text-lg font-bold font-mono ${config.icon}`}>{documentedLevel}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{documentedLevelDescription}</p>
+            </div>
+          </>
+        )}
       </div>
 
       {/* MDM Details */}

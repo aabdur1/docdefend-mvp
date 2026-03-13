@@ -313,6 +313,7 @@ export default function AnalysisReport({ report, note, selectedCptCodes, selecte
             <EMLevelCard
               emLevelRecommendation={report.emLevelRecommendation}
               selectedCptCodes={selectedCptCodes}
+              isCoderReview={report.isCoderReview}
             />
           </div>
         )}
