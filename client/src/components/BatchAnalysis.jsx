@@ -122,12 +122,12 @@ export default function BatchAnalysis() {
     const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
     for (let i = 0; i < files.length; i++) {
-      setUploadState(prev => ({ ...prev, current: i + 1 }));
-
       if (files[i].size > MAX_FILE_SIZE) {
         errors.push(`${files[i].name}: File too large (${(files[i].size / 1024 / 1024).toFixed(1)}MB). Maximum is 10MB.`);
         continue;
       }
+
+      setUploadState(prev => ({ ...prev, current: i + 1 }));
 
       const formData = new FormData();
       formData.append('file', files[i]);
@@ -639,7 +639,7 @@ export default function BatchAnalysis() {
                     {/* Show full analysis report if complete */}
                     {row.status === 'complete' && row.analysis && (
                       <div className="mt-4 border-t border-[#D6C9A8] dark:border-instrument-border pt-4">
-                        <AnalysisReport report={row.analysis} note={row.note} />
+                        <AnalysisReport report={row.analysis} note={row.note} selectedCptCodes={row.cptCodes} />
                       </div>
                     )}
 
