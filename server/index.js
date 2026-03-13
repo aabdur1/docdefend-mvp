@@ -111,9 +111,13 @@ const upload = multer({
   },
 });
 
-const corsOrigin = process.env.CORS_ORIGIN || (process.env.NODE_ENV === 'production' ? 'https://docdefend.vercel.app' : '*');
+const corsOrigin = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
+  : (process.env.NODE_ENV === 'production'
+    ? ['https://docdefend.vercel.app', 'https://www.docdefend.health', 'https://docdefend.health']
+    : '*');
 if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGIN) {
-  console.warn('WARNING: CORS_ORIGIN not set — defaulting to https://docdefend.vercel.app');
+  console.warn('WARNING: CORS_ORIGIN not set — defaulting to docdefend.vercel.app + docdefend.health');
 }
 app.use(cors({ origin: corsOrigin }));
 app.use(express.json({ limit: '1mb' }));
