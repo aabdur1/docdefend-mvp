@@ -75,8 +75,9 @@ function ErrorMessage({ message, onDismiss }) {
 }
 
 function EmptyState({ hasNote, hasCodes, coderMode }) {
+  // In coder mode: 1 (Note) → 2 (Report). In provider mode: 1 → 2 → 3.
   const step = coderMode
-    ? (hasNote ? 3 : 1)
+    ? (hasNote ? 2 : 1)
     : (hasCodes ? 3 : hasNote ? 2 : 1);
 
   const stepClass = (n) => {
@@ -109,7 +110,7 @@ function EmptyState({ hasNote, hasCodes, coderMode }) {
       <h3 className="text-xl font-semibold font-display text-slate-800 dark:text-white mb-2">Ready for Analysis</h3>
       <p className="text-slate-600 dark:text-slate-400 text-sm max-w-xs mx-auto leading-relaxed">
         {step === 1 && 'Select a clinical note to get started.'}
-        {step === 2 && 'Now select your billing codes.'}
+        {step === 2 && (coderMode ? 'Ready to analyze. Click the button below.' : 'Now select your billing codes.')}
         {step === 3 && 'Ready to analyze. Click the button below.'}
       </p>
 
@@ -147,8 +148,10 @@ function EmptyState({ hasNote, hasCodes, coderMode }) {
           </svg>
         )}
         <div className="flex items-center gap-1.5">
-          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(3)}`}>3</span>
-          <span className={`transition-colors duration-300 ${labelClass(3)}`}>Report</span>
+          <span className={`w-5 h-5 rounded-full flex items-center justify-center font-bold transition-colors duration-300 ${stepClass(coderMode ? 2 : 3)}`}>
+            {coderMode ? 2 : 3}
+          </span>
+          <span className={`transition-colors duration-300 ${labelClass(coderMode ? 2 : 3)}`}>Report</span>
         </div>
       </div>
 
