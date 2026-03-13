@@ -4,6 +4,7 @@ import rateLimit from 'express-rate-limit';
 import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import multer from 'multer';
+import helmet from 'helmet';
 import { systemPrompt, buildSystemPrompt, buildUserPrompt } from './prompt.js';
 import { PAYERS } from './payerRules.js';
 import { parseDocument } from './parsers.js';
@@ -18,6 +19,10 @@ import {
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
+app.use(helmet());
+app.disable('x-powered-by');
+
 const PORT = process.env.PORT || 3001;
 const ANTHROPIC_TIMEOUT = 55000; // 55s — generous for cold-start + API latency
 
@@ -26,6 +31,17 @@ const ANTHROPIC_TIMEOUT = 55000; // 55s — generous for cold-start + API latenc
  */
 function isStringArray(val) {
   return Array.isArray(val) && val.length > 0 && val.every(item => typeof item === 'string' && item.trim().length > 0);
+}
+
+const CPT_REGEX = /^\d{5}$/;
+const ICD10_REGEX = /^[A-Z]\d{2}(\.\d{1,4})?$/i;
+
+function isValidCptCode(code) {
+  return typeof code === 'string' && CPT_REGEX.test(code.trim());
+}
+
+function isValidIcd10Code(code) {
+  return typeof code === 'string' && ICD10_REGEX.test(code.trim());
 }
 
 /**
@@ -140,7 +156,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 
     const { buffer, originalname, mimetype } = req.file;
 
-    console.log(`Processing file: ${originalname} (${mimetype})`);
+    const ext = originalname.slice(originalname.lastIndexOf('.')).toLowerCase();
+    console.log(`Processing file: *${ext} (${mimetype}, ${buffer.length} bytes)`);
 
     const result = await parseDocument(buffer, originalname, mimetype);
 
@@ -168,11 +185,11 @@ app.post('/api/analyze', async (req, res) => {
     if (!note || typeof note !== 'string' || !note.trim()) {
       return res.status(400).json({ error: 'A clinical note is required.' });
     }
-    if (!isStringArray(cptCodes)) {
-      return res.status(400).json({ error: 'At least one valid CPT code is required.' });
+    if (!isStringArray(cptCodes) || !cptCodes.every(isValidCptCode)) {
+      return res.status(400).json({ error: 'At least one valid CPT code is required (5-digit format).' });
     }
-    if (!isStringArray(icd10Codes)) {
-      return res.status(400).json({ error: 'At least one valid ICD-10 code is required.' });
+    if (!isStringArray(icd10Codes) || !icd10Codes.every(isValidIcd10Code)) {
+      return res.status(400).json({ error: 'At least one valid ICD-10 code is required (e.g., M54.5).' });
     }
 
     const payerSystemPrompt = buildSystemPrompt(payerId);
