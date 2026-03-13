@@ -1,4 +1,4 @@
-import { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import { useState, useEffect, createContext, useContext, useCallback, useMemo } from 'react';
 
 const ToastContext = createContext(null);
 
@@ -10,17 +10,17 @@ export function useToast() {
   return context;
 }
 
-function ToastItem({ toast, onRemove }) {
+function ToastItem({ toast, onRemove, toastId }) {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsExiting(true);
-      setTimeout(onRemove, 300);
+      setTimeout(() => onRemove(toastId), 300);
     }, toast.duration || 4000);
 
     return () => clearTimeout(timer);
-  }, [toast.duration, onRemove]);
+  }, [toast.duration, onRemove, toastId]);
 
   const icons = {
     success: (
@@ -101,7 +101,7 @@ function ToastItem({ toast, onRemove }) {
       <button
         onClick={() => {
           setIsExiting(true);
-          setTimeout(onRemove, 300);
+          setTimeout(() => onRemove(toastId), 300);
         }}
         aria-label="Dismiss notification"
         className="flex-shrink-0 p-2 rounded-lg text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface transition-colors"
@@ -132,12 +132,12 @@ export function ToastProvider({ children }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const toast = useCallback({
+  const toast = useMemo(() => ({
     success: (message, title) => addToast({ type: 'success', message, title }),
     error: (message, title) => addToast({ type: 'error', message, title }),
     info: (message, title) => addToast({ type: 'info', message, title }),
     warning: (message, title) => addToast({ type: 'warning', message, title }),
-  }, [addToast]);
+  }), [addToast]);
 
   return (
     <ToastContext.Provider value={toast}>
@@ -145,7 +145,7 @@ export function ToastProvider({ children }) {
       {/* Toast container */}
       <div role="status" aria-live="polite" aria-atomic="true" className="fixed bottom-4 right-4 z-50 flex flex-col gap-3">
         {toasts.map((t) => (
-          <ToastItem key={t.id} toast={t} onRemove={() => removeToast(t.id)} />
+          <ToastItem key={t.id} toast={t} onRemove={removeToast} toastId={t.id} />
         ))}
       </div>
     </ToastContext.Provider>
