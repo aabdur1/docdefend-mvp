@@ -313,7 +313,7 @@ export default function BatchAnalysis() {
             </div>
             <div>
               <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Batch Analysis</h2>
-              <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
+              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Analyze multiple notes at once</p>
             </div>
           </div>
           <span className="px-3 py-1 rounded-full text-sm font-medium bg-healthcare-100 dark:bg-healthcare-900/30 text-healthcare-600 dark:text-trace">
@@ -425,6 +425,7 @@ export default function BatchAnalysis() {
                       onChange={(e) => updateRow(row.id, { title: e.target.value })}
                       className="text-base font-medium text-slate-800 dark:text-white bg-transparent border-none outline-none flex-1 min-w-0"
                       placeholder="Note title"
+                      aria-label={`Note title for row ${idx + 1}`}
                     />
                     {/* Status badge */}
                     {row.status === 'complete' && row.analysis && (
@@ -478,6 +479,7 @@ export default function BatchAnalysis() {
                       rows={4}
                       className="w-full text-base border border-[#D6C9A8] dark:border-instrument-border rounded-lg p-3 bg-[#F5EFE0] dark:bg-instrument-bg text-slate-800 dark:text-slate-200 resize-y"
                       placeholder="Paste or type clinical note..."
+                      aria-label={`Clinical note for row ${idx + 1}`}
                     />
 
                     {/* CPT Code selection */}

@@ -25,10 +25,18 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
     updateIndicator();
   }, [inputMethod, updateIndicator]);
 
-  // Recalculate on resize
+  // Recalculate on resize (debounced)
   useEffect(() => {
-    window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
+    let timeoutId;
+    const debouncedUpdate = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateIndicator, 300);
+    };
+    window.addEventListener('resize', debouncedUpdate);
+    return () => {
+      window.removeEventListener('resize', debouncedUpdate);
+      clearTimeout(timeoutId);
+    };
   }, [updateIndicator]);
 
   const handleNoteSelect = (e) => {
@@ -118,14 +126,14 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
       {inputMethod === 'sample' && (
         <div className="space-y-4 animate-fadeIn">
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            <label htmlFor="sample-note-select" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
               Select a Sample Note
             </label>
             <div className="relative">
               <select
+                id="sample-note-select"
                 value={selectedNoteId}
                 onChange={handleNoteSelect}
-                aria-label="Select a sample clinical note"
                 className="w-full px-4 py-3 border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm appearance-none cursor-pointer transition-shadow duration-200 hover:shadow-md"
               >
                 <option value="">-- Choose a sample note --</option>
@@ -145,15 +153,15 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
             <div className="bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-xl p-4 text-sm border border-[#D6C9A8]/50 dark:border-instrument-border/50 shadow-sm animate-scaleIn">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-slate-600 dark:text-slate-300">
                 <div className="flex flex-col">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Visit Type</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Visit Type</span>
                   <span className="font-medium">{selectedNote.visitType}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Provider</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Provider</span>
                   <span className="font-medium">{selectedNote.providerType}</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">Summary</span>
+                  <span className="text-xs text-slate-600 dark:text-slate-400 uppercase tracking-wide mb-1">Summary</span>
                   <span className="font-medium">{selectedNote.patientSummary}</span>
                 </div>
               </div>
@@ -166,7 +174,7 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
       {inputMethod === 'upload' && (
         <div className="space-y-4">
           <FileUploader onContentExtracted={handleFileContent} />
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-slate-600 dark:text-slate-400">
             Upload clinical notes exported from your EHR. Supports CCDA/CCD (XML), PDF, and plain text formats.
           </p>
         </div>
@@ -174,14 +182,14 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
 
       {/* Manual Entry Tab */}
       {inputMethod === 'manual' && (
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-slate-600 dark:text-slate-400">
           Paste or type your clinical note directly in the text area below.
         </p>
       )}
 
       {/* Note Text Area (always visible) */}
       <div className="animate-fadeInUp">
-        <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+        <label htmlFor="clinical-note-textarea" className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
           <span className="flex items-center gap-2">
             <svg className="w-4 h-4 text-healthcare-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -189,22 +197,22 @@ export default function NoteSelector({ value, onChange, onNoteSwitch }) {
             Clinical Note
           </span>
           {value && (
-            <span className="text-xs text-slate-500 dark:text-slate-400 font-normal px-2 py-1 bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-full">
+            <span className="text-xs text-slate-600 dark:text-slate-400 font-normal px-2 py-1 bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-full">
               {value.length.toLocaleString()} characters
             </span>
           )}
         </label>
         <div className="relative group focus-glow-wrap">
           <textarea
+            id="clinical-note-textarea"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={6}
-            aria-label="Clinical note text"
             className="relative z-10 w-full px-4 py-3 border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 font-clinical text-sm bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-all duration-300 group-hover:shadow-md focus:shadow-lg focus:shadow-healthcare-500/10 resize-y sm:min-h-[300px] min-h-[160px] rx-pad"
             placeholder="Clinical note content will appear here..."
           />
           <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-            <span className="text-xs text-slate-500 dark:text-slate-400 bg-white/80 dark:bg-instrument-bg-raised/80 px-2 py-1 rounded">
+            <span className="text-xs text-slate-600 dark:text-slate-400 bg-white/80 dark:bg-instrument-bg-raised/80 px-2 py-1 rounded">
               Scroll to view more
             </span>
           </div>

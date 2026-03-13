@@ -54,7 +54,8 @@ export default function ApiKeyInput() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="sk-ant-..."
-                className="w-full px-3 py-2 pr-10 text-sm bg-[#EDE6D3] dark:bg-instrument-bg border border-[#D6C9A8] dark:border-instrument-border rounded-lg focus:ring-2 focus:ring-healthcare-500 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-400"
+                aria-label="Anthropic API key"
+                className="w-full px-3 py-2 pr-10 text-sm bg-[#EDE6D3] dark:bg-instrument-bg border border-[#D6C9A8] dark:border-instrument-border rounded-lg focus:ring-2 focus:ring-healthcare-500 focus:border-transparent outline-none text-slate-800 dark:text-white placeholder-slate-500"
                 onKeyDown={(e) => e.key === 'Enter' && handleSave()}
               />
               <button

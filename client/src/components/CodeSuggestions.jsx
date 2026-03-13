@@ -81,7 +81,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
           </div>
           <div>
             <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white">Smart Code Suggestions</h3>
-            <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">AI-powered code recommendations</p>
+            <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">AI-powered code recommendations</p>
           </div>
         </div>
         <button
@@ -115,6 +115,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
         <div className="space-y-4">
           <button
             onClick={() => setIsExpanded(!isExpanded)}
+            aria-expanded={isExpanded}
             className="flex items-center gap-1 text-sm text-healthcare-600 dark:text-trace hover:text-healthcare-700 dark:hover:text-trace-glow"
           >
             <svg className={`w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`} fill="currentColor" viewBox="0 0 20 20">

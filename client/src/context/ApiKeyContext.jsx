@@ -2,20 +2,36 @@ import { createContext, useContext, useState, useEffect } from 'react';
 
 const ApiKeyContext = createContext();
 
+const API_KEY_STORAGE_KEY = 'anthropic_api_key';
+const API_KEY_TIMESTAMP_KEY = 'anthropic_api_key_ts';
+const API_KEY_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
 export function ApiKeyProvider({ children }) {
   const [apiKey, setApiKey] = useState('');
 
   useEffect(() => {
-    const saved = localStorage.getItem('anthropic_api_key');
-    if (saved) setApiKey(saved);
+    const saved = localStorage.getItem(API_KEY_STORAGE_KEY);
+    const timestamp = localStorage.getItem(API_KEY_TIMESTAMP_KEY);
+
+    if (saved) {
+      // Clear if older than 7 days
+      if (timestamp && Date.now() - Number(timestamp) > API_KEY_MAX_AGE_MS) {
+        localStorage.removeItem(API_KEY_STORAGE_KEY);
+        localStorage.removeItem(API_KEY_TIMESTAMP_KEY);
+        return;
+      }
+      setApiKey(saved);
+    }
   }, []);
 
   const updateApiKey = (key) => {
     setApiKey(key);
     if (key) {
-      localStorage.setItem('anthropic_api_key', key);
+      localStorage.setItem(API_KEY_STORAGE_KEY, key);
+      localStorage.setItem(API_KEY_TIMESTAMP_KEY, String(Date.now()));
     } else {
-      localStorage.removeItem('anthropic_api_key');
+      localStorage.removeItem(API_KEY_STORAGE_KEY);
+      localStorage.removeItem(API_KEY_TIMESTAMP_KEY);
     }
   };
 

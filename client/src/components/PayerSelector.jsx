@@ -84,7 +84,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
         </div>
         <div>
           <h2 className="text-xl font-semibold font-display text-slate-800 dark:text-white">Payer</h2>
-          <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Select insurance payer</p>
+          <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Select insurance payer</p>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
               onClick={() => onPayerChange(payer.id)}
               aria-label={`Select ${payer.name} as payer`}
               aria-pressed={isSelected}
-              className={`relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group ${
+              className={`relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group focus:ring-2 focus:ring-healthcare-500 focus:outline-none ${
                 isSelected
                   ? `${colors.border} ${colors.bg} shadow-md`
                   : 'border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised hover:border-[#C4B48E] dark:hover:border-instrument-border-hover hover:shadow-sm'

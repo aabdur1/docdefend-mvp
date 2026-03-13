@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../config';
 import ApiKeyInput from './ApiKeyInput';
+import PillIcon from './PillIcon';
 
 function useHealthCheck(intervalMs = 30000) {
   // 'checking' | 'online' | 'offline'
@@ -38,8 +39,8 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
   useEffect(() => {
     setSwapKey(k => k + 1);
   }, [darkMode]);
-  const navBtn = 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
-  const navBtnIcon = 'p-1.5 sm:p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift';
+  const navBtn = 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus:ring-2 focus:ring-healthcare-500 focus:outline-none';
+  const navBtnIcon = 'p-1.5 sm:p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus:ring-2 focus:ring-healthcare-500 focus:outline-none';
 
   const statusLabel = backendStatus === 'online' ? 'System Online' : backendStatus === 'offline' ? 'System Offline' : 'Connecting...';
   const dotColor = backendStatus === 'online' ? 'bg-trace' : backendStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400';
@@ -51,36 +52,13 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-10 h-10 sm:w-14 sm:h-14 bg-healthcare-500 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-              <svg width="200" height="100" viewBox="20 10 160 80" xmlns="http://www.w3.org/2000/svg" className="w-7 h-3.5 sm:w-10 sm:h-5" style={{ transform: 'rotate(-45deg)' }}>
-                <defs>
-                  <linearGradient id="hdrPillLeft" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#ff6b6b"/>
-                    <stop offset="50%" stopColor="#ee5253"/>
-                    <stop offset="100%" stopColor="#d42c2c"/>
-                  </linearGradient>
-                  <linearGradient id="hdrPillRight" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="#f0f0f0"/>
-                    <stop offset="50%" stopColor="#dcdcdc"/>
-                    <stop offset="100%" stopColor="#c2c2c2"/>
-                  </linearGradient>
-                  <linearGradient id="hdrGloss" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="white" stopOpacity="0.45"/>
-                    <stop offset="100%" stopColor="white" stopOpacity="0"/>
-                  </linearGradient>
-                </defs>
-                <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#hdrPillLeft)"/>
-                <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#hdrPillRight)"/>
-                <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#hdrGloss)"/>
-                <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5"/>
-                <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20"
-                      fill="none" stroke="rgba(0,0,0,0.15)" strokeWidth="1.5"/>
-              </svg>
+              <PillIcon className="w-7 h-3.5 sm:w-10 sm:h-5" rotate />
             </div>
             <div>
               <h1 className="font-semibold font-display text-xl sm:text-3xl text-slate-800 dark:text-instrument-text leading-none flex items-center gap-1">
                 DocDefend<span className="text-red-500 text-sm">✚</span>
               </h1>
-              <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
+              <p className="text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400 hidden sm:block mt-0.5">Clinical Documentation QA</p>
             </div>
           </div>
 
@@ -98,7 +76,7 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
                 <span className={`relative inline-flex rounded-full h-2 w-2 ${dotColor} shadow-sm ${dotShadow}`}></span>
               </span>
             </div>
-            <div className="md:hidden flex items-center" title={statusLabel}>
+            <div className="md:hidden flex items-center" title={statusLabel} role="status" aria-label={statusLabel}>
               <span className="relative flex h-2.5 w-2.5">
                 {backendStatus === 'online' && (
                   <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${dotColor} opacity-75`}></span>

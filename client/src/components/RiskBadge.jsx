@@ -69,7 +69,7 @@ function RiskBadge({ level, size = 'md' }) {
       `}
     >
       <span className={`${size === 'lg' ? 'text-base' : 'text-xs'} font-bold`}>
-        {config.icon}
+        <span aria-hidden="true">{config.icon}</span>
       </span>
       {config.label}
     </span>

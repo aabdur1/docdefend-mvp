@@ -36,7 +36,14 @@ export default function FileUploader({ onContentExtracted }) {
     }
   };
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+
   const handleFile = async (file) => {
+    if (file.size > MAX_FILE_SIZE) {
+      setError(`File is too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Maximum size is 10MB.`);
+      return;
+    }
+
     setIsUploading(true);
     setError(null);
     setUploadResult(null);
@@ -82,12 +89,16 @@ export default function FileUploader({ onContentExtracted }) {
   return (
     <div className="space-y-3">
       <div
+        role="button"
+        tabIndex={0}
+        aria-label="Upload clinical note file. Drag and drop or click to browse. Accepts PDF, CCDA, CCD, and TXT files."
         onClick={handleClick}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } }}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group
+          relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group focus:ring-2 focus:ring-healthcare-500 focus:outline-none
           ${isDragging
             ? 'border-healthcare-500 bg-[#EDE6D3] dark:bg-healthcare-900/20 scale-[1.02]'
             : 'border-[#D6C9A8] dark:border-instrument-border hover:border-healthcare-400 dark:hover:border-healthcare-500 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface'
@@ -106,6 +117,7 @@ export default function FileUploader({ onContentExtracted }) {
           type="file"
           accept=".pdf,.xml,.ccd,.ccda,.txt"
           onChange={handleFileSelect}
+          aria-label="Select clinical note file"
           className="hidden"
         />
 
@@ -156,7 +168,7 @@ export default function FileUploader({ onContentExtracted }) {
       </div>
 
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
+        <div role="alert" className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg p-3 flex items-start gap-2">
           <svg
             className="w-5 h-5 text-red-500 flex-shrink-0"
             fill="currentColor"
@@ -173,7 +185,7 @@ export default function FileUploader({ onContentExtracted }) {
       )}
 
       {uploadResult && (
-        <div className="bg-healthcare-50 dark:bg-healthcare-900/20 border border-healthcare-200 dark:border-healthcare-800/50 rounded-xl p-4 flex items-start gap-3 animate-scaleIn shadow-sm">
+        <div aria-live="polite" className="bg-healthcare-50 dark:bg-healthcare-900/20 border border-healthcare-200 dark:border-healthcare-800/50 rounded-xl p-4 flex items-start gap-3 animate-scaleIn shadow-sm">
           <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center shadow-lg flex-shrink-0">
             <svg
               className="w-5 h-5 text-white"

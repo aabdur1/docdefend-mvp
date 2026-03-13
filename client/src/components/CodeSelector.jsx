@@ -47,7 +47,7 @@ const ICD10_CODES = [
 
 function CodeCheckbox({ code, description, checked, onChange }) {
   return (
-    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group">
+    <label className="flex items-start gap-2 p-2.5 rounded-lg hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface cursor-pointer transition-all duration-200 hover:-translate-y-0.5 group focus-within:ring-2 focus-within:ring-healthcare-500">
       <input
         type="checkbox"
         checked={checked}
@@ -56,7 +56,7 @@ function CodeCheckbox({ code, description, checked, onChange }) {
       />
       <div className="flex-1">
         <span className="font-mono text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-healthcare-600 dark:group-hover:text-healthcare-400 transition-colors">{code}</span>
-        <span className="text-sm text-slate-500 dark:text-slate-400 ml-2">{description}</span>
+        <span className="text-sm text-slate-600 dark:text-slate-400 ml-2">{description}</span>
       </div>
       {checked && (
         <span className="text-healthcare-500 check-pop">
@@ -78,6 +78,7 @@ function CustomCodeInput({ value, onChange, onAdd, placeholder, duplicateError }
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          aria-label="Enter custom code"
           className="flex-1 px-4 py-2 text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-shadow duration-200 focus:shadow-md"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && value.trim()) {
@@ -158,7 +159,8 @@ export default function CodeSelector({
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="animate-slideInLeft">
+      <fieldset className="border-0 p-0 m-0 animate-slideInLeft">
+        <legend className="sr-only">CPT Codes</legend>
         <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
           <span className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800/50 flex items-center justify-center text-blue-600 dark:text-blue-400 text-xs font-mono font-bold">
             CPT
@@ -197,9 +199,10 @@ export default function CodeSelector({
           placeholder="Add custom CPT code..."
           duplicateError={cptDuplicateError}
         />
-      </div>
+      </fieldset>
 
-      <div className="animate-slideInRight">
+      <fieldset className="border-0 p-0 m-0 animate-slideInRight">
+        <legend className="sr-only">ICD-10 Codes</legend>
         <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3 flex items-center gap-2">
           <span className="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800/50 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-xs font-mono font-bold">
             ICD
@@ -238,7 +241,7 @@ export default function CodeSelector({
           placeholder="Add custom ICD-10 code..."
           duplicateError={icd10DuplicateError}
         />
-      </div>
+      </fieldset>
     </div>
   );
 }

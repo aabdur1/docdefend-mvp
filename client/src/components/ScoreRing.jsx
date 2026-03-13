@@ -78,6 +78,8 @@ export default function ScoreRing({ score, size = 96 }) {
       <svg
         viewBox={`0 0 ${size} ${size}`}
         className="w-full h-full -rotate-90"
+        role="img"
+        aria-label={`Defensibility score: ${score} (${config.pct}%)`}
       >
         {/* Track */}
         <circle

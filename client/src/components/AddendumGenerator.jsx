@@ -67,7 +67,7 @@ export default function AddendumGenerator({ note, gaps }) {
           </div>
           <div>
             <h3 className="text-base font-semibold font-display text-slate-800 dark:text-white">Smart Addendum Generator</h3>
-            <p className="text-[0.65rem] uppercase tracking-wide text-slate-500 dark:text-slate-400">Compliant documentation fixes</p>
+            <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">Compliant documentation fixes</p>
           </div>
         </div>
         {!addendum && (
@@ -119,7 +119,7 @@ export default function AddendumGenerator({ note, gaps }) {
       )}
 
       {addendum && (
-        <div className="space-y-4">
+        <div className="space-y-4" aria-live="polite">
           {/* Addendum Text */}
           <div>
             <div className="flex items-center justify-between mb-2">
