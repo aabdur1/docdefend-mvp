@@ -1,7 +1,7 @@
 node_modules/
 .env
-.env.development
-.env.local
+.env.*
+!.env.example
 dist/
 build/
 *.log
