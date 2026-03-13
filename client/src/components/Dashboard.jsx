@@ -203,9 +203,9 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
   ];
 
   const riskDistribution = [
-    { label: 'High', value: stats.highCount || 12, colorHex: '#2D6A4F' },
-    { label: 'Medium', value: stats.mediumCount || 8, colorHex: '#f59e0b' },
-    { label: 'Low', value: stats.lowCount || 3, colorHex: '#ef4444' },
+    { label: 'High', value: stats.highCount, colorHex: '#2D6A4F' },
+    { label: 'Medium', value: stats.mediumCount, colorHex: '#f59e0b' },
+    { label: 'Low', value: stats.lowCount, colorHex: '#ef4444' },
   ];
 
   const recentAnalyses = analysisHistory.slice(-5).reverse();
@@ -224,7 +224,24 @@ export default function Dashboard({ isOpen, onClose, analysisHistory = [] }) {
       <div
         className="absolute inset-y-0 right-0 w-full max-w-2xl bg-[#FAF6EF] dark:bg-instrument-bg shadow-2xl animate-slideInPanel overflow-y-auto"
         ref={panelRef}
-        onKeyDown={(e) => { if (e.key === 'Escape') onClose(); }}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') { onClose(); return; }
+          if (e.key === 'Tab') {
+            const focusable = panelRef.current?.querySelectorAll(
+              'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            if (!focusable || focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.shiftKey && document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            } else if (!e.shiftKey && document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        }}
         tabIndex={-1}
       >
         {/* Header */}
