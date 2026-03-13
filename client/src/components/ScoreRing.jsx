@@ -39,7 +39,9 @@ function useCountUp(target, duration = 1000, delay = 300) {
 export default function ScoreRing({ score, size = 96 }) {
   const [mounted, setMounted] = useState(false);
   const [showLabel, setShowLabel] = useState(false);
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== 'undefined' && document.documentElement.classList.contains('dark')
+  );
 
   useEffect(() => {
     const root = document.documentElement;
