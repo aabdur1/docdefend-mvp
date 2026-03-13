@@ -14,8 +14,8 @@ export function ApiKeyProvider({ children }) {
     const timestamp = localStorage.getItem(API_KEY_TIMESTAMP_KEY);
 
     if (saved) {
-      // Clear if older than 7 days
-      if (timestamp && Date.now() - Number(timestamp) > API_KEY_MAX_AGE_MS) {
+      // Clear if older than 7 days or missing timestamp
+      if (!timestamp || Date.now() - Number(timestamp) > API_KEY_MAX_AGE_MS) {
         localStorage.removeItem(API_KEY_STORAGE_KEY);
         localStorage.removeItem(API_KEY_TIMESTAMP_KEY);
         return;
