@@ -1,3 +1,5 @@
+import { PAYERS } from './payerRules.js';
+
 // System prompts for smart suggestions features
 
 export const codeSuggestionPrompt = `You are a certified medical coder (CPC, CCS) with expertise in family medicine, pain management, and internal medicine coding. Your task is to analyze a clinical note and suggest the most appropriate CPT and ICD-10 codes based on the documented services and diagnoses.
@@ -406,7 +408,8 @@ Use these approximate Medicare rates: 99213=$92, 99214=$132, 99215=$187, 99203=$
 Return ONLY valid JSON with no other text.`;
 
 export function buildCoderReviewPrompt(note, payerId) {
-  const payerContext = payerId ? `\nPAYER: ${payerId}\nApply payer-specific rules if applicable.\n` : '';
+  const payerName = payerId && PAYERS[payerId] ? PAYERS[payerId].name : null;
+  const payerContext = payerName ? `\nPAYER: ${payerName}\nApply payer-specific rules if applicable.\n` : '';
 
   return `Analyze this clinical note and identify the maximum defensible billing codes.
 
