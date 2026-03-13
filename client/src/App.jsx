@@ -213,6 +213,7 @@ function AppContent() {
   const [dashboardOpen, setDashboardOpen] = useState(false);
   const [analysisHistory, setAnalysisHistory] = useState([]);
   const [batchMode, setBatchMode] = useState(false);
+  const [coderMode, setCoderMode] = useState(false);
   const toast = useToast();
   const { apiKey } = useApiKey();
 
@@ -240,7 +241,9 @@ function AppContent() {
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
-  const canAnalyze = note.trim() && selectedCptCodes.length > 0 && selectedIcd10Codes.length > 0;
+  const canAnalyze = coderMode
+    ? note.trim().length > 0
+    : note.trim() && selectedCptCodes.length > 0 && selectedIcd10Codes.length > 0;
 
   const handleAnalyze = async () => {
     if (!canAnalyze) return;
@@ -305,6 +308,46 @@ function AppContent() {
     }
   };
 
+  const handleCoderAnalyze = async () => {
+    if (!note.trim()) return;
+
+    setLoading(true);
+    setError(null);
+    setReport(null);
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+
+      const response = await fetch(API_URL + '/api/code-review', {
+        method: 'POST',
+        headers: getAuthHeaders(apiKey),
+        signal: controller.signal,
+        body: JSON.stringify({
+          note,
+          payerId: selectedPayer || undefined,
+        }),
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Code review failed');
+      }
+
+      const data = await response.json();
+      setReport({ ...data, isCoderReview: true });
+      toast.success('Code review complete.', 'Analysis Complete');
+    } catch (err) {
+      const message = err.name === 'AbortError' ? 'Request timed out. Please try again.' : err.message;
+      setError(message);
+      toast.error(message, 'Analysis Failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleReset = () => {
     setNote('');
     setSelectedCptCodes([]);
@@ -332,6 +375,8 @@ function AppContent() {
         analysisCount={analysisHistory.length}
         batchMode={batchMode}
         onToggleBatchMode={() => setBatchMode(prev => !prev)}
+        coderMode={coderMode}
+        onToggleCoderMode={() => setCoderMode(prev => !prev)}
       />
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -375,7 +420,8 @@ function AppContent() {
                 </div>
               )}
 
-              {/* Billing Codes Card */}
+              {/* Billing Codes Card — hidden in coder mode */}
+              {!coderMode && (
               <div className="animate-fadeInUp stagger-2 bg-[#F5EFE0] dark:bg-instrument-bg-raised rounded-2xl border border-[#D6C9A8] dark:border-instrument-border p-4 sm:p-6 shadow-card card-hover">
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-10 h-10 rounded-xl bg-healthcare-500 flex items-center justify-center text-white shadow-lg shadow-healthcare-500/30">
@@ -395,9 +441,10 @@ function AppContent() {
                   onIcd10Change={setSelectedIcd10Codes}
                 />
               </div>
+              )}
 
               {/* Selected Codes Summary */}
-              {(selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0) && (
+              {!coderMode && (selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0) && (
                 <div className="animate-fadeIn bg-[#EDE6D3] dark:bg-instrument-bg-surface rounded-xl border border-[#D6C9A8]/50 dark:border-instrument-border/50 p-4">
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-semibold font-display text-slate-700 dark:text-slate-300 flex items-center gap-2">
@@ -499,7 +546,7 @@ function AppContent() {
               {/* Action Buttons */}
               <div className="animate-fadeInUp stagger-4 flex gap-3">
                 <button
-                  onClick={handleAnalyze}
+                  onClick={coderMode ? handleCoderAnalyze : handleAnalyze}
                   disabled={!canAnalyze || loading}
                   aria-label={loading ? 'Analyzing documentation' : 'Analyze documentation'}
                   className={`group relative flex-1 bg-healthcare-500 hover:bg-healthcare-600 text-white py-3 px-6 rounded-xl font-medium text-base disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-lg shadow-healthcare-500/30 hover:shadow-xl hover:shadow-healthcare-500/40 disabled:shadow-none overflow-hidden ${canAnalyze && !loading ? 'btn-ready-glow' : ''}`}
@@ -541,7 +588,9 @@ function AppContent() {
                     <svg className="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    Enter a clinical note and select at least one CPT and ICD-10 code to analyze
+                    {coderMode
+                      ? 'Enter a clinical note to identify maximum defensible codes'
+                      : 'Enter a clinical note and select at least one CPT and ICD-10 code to analyze'}
                   </span>
                 </p>
               )}
@@ -563,7 +612,7 @@ function AppContent() {
                   </div>
                 )}
               </div>
-              {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} />}
+              {!report && !loading && !error && <EmptyState hasNote={!!note.trim()} hasCodes={coderMode || selectedCptCodes.length > 0 || selectedIcd10Codes.length > 0} />}
             </section>
           </div>
         )}
@@ -585,7 +634,7 @@ function AppContent() {
             </div>
             <div className="flex items-center gap-4">
               <div className="hidden sm:flex items-center gap-2 text-xs uppercase tracking-wide text-slate-600 dark:text-slate-400">
-                <span>Built for small medical practices</span>
+                <span>{coderMode ? 'Built for billing companies' : 'Built for small medical practices'}</span>
               </div>
               <div className="h-4 w-px bg-slate-300 dark:bg-slate-600 hidden sm:block"></div>
               <p className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full border border-amber-200 dark:border-amber-800/50">

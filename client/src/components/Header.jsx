@@ -31,7 +31,7 @@ function useHealthCheck(intervalMs = 30000) {
   return status;
 }
 
-export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, analysisCount = 0, batchMode, onToggleBatchMode }) {
+export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, analysisCount = 0, batchMode, onToggleBatchMode, coderMode, onToggleCoderMode }) {
   const [swapKey, setSwapKey] = useState(0);
   const backendStatus = useHealthCheck(30000);
 
@@ -103,6 +103,25 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
                 <span className="hidden sm:inline">Batch</span>
+              </span>
+            </button>
+
+            {/* Coder Mode Toggle */}
+            <button
+              type="button"
+              onClick={onToggleCoderMode}
+              className={coderMode
+                ? 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-amber-500 text-white border-amber-600 shadow-inner dark:bg-amber-600 dark:text-white dark:border-amber-700'
+                : navBtn
+              }
+              aria-label={coderMode ? 'Switch to physician mode' : 'Switch to coder mode'}
+              aria-pressed={coderMode}
+            >
+              <span className="flex items-center gap-1.5">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+                <span className="hidden sm:inline">{coderMode ? 'Coder' : 'Provider'}</span>
               </span>
             </button>
 
