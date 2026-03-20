@@ -402,11 +402,27 @@ at [PRACTICE]. [PROVIDER].
 | Data Use Agreement | **Recommended** | Simple written agreement with the practice covering: what data is shared, how it's used, how it's stored, when it's deleted |
 | IRB approval | **No** | This is quality improvement / product validation, not academic research (unless UIC requires it for IDS 594 — check with professor) |
 
+### Validation Partner Options
+
+Listed in order of strength of evidence:
+
+| Option | Data Source | Outcomes Available? | Dependency | Timeline |
+|--------|-----------|-------------------|------------|----------|
+| **UIC College of Medicine physician** | De-identified notes from UIC clinical faculty | Yes — real claim outcomes | Prof. Brad Sturt introduction + physician agreement | Weeks |
+| **Dr. Abdurrahim's practice (Dallas)** | De-identified notes from FM practice | Yes — real claim outcomes | Aunt's agreement + staff time for de-identification | Weeks |
+| **MTSamples + hired CPC coder** | Public de-identified notes + expert grading | No real outcomes, but expert validation of methodology | Upwork hire (~$500-1,000) | Days |
+| **CMS public utilization data** | Medicare payment data by provider/code | Payment patterns only (no notes) | None — publicly available | Immediate |
+| **AAPC practice exam vignettes** | Clinical scenarios with known correct codes | "Answer key" codes, not real outcomes | AAPC membership or prep materials | Immediate |
+
+**Recommended approach:** Pursue UIC faculty connection (strongest evidence) while simultaneously running MTSamples + CPC coder validation (no dependencies, immediate start). Use the independent validation results when reaching out to potential clinical partners — showing existing accuracy data makes it easier for a physician to say yes.
+
+**Next step:** Email Prof. Brad Sturt (IDS 594) to ask for a connection to UIC College of Medicine faculty and clarification on whether a de-identified data study requires IRB.
+
 ### Pilot Workflow
 
 ```
-Practice staff                          DocDefend team
-─────────────                           ──────────────
+Practice/physician staff                DocDefend team
+────────────────────────                ──────────────
 1. Pull 50-100 recent notes
    with known outcomes
 2. De-identify (strip 18 identifiers)
