@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { useApiKey } from '../context/ApiKeyContext';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 export default function FileUploader({ onContentExtracted }) {
@@ -9,6 +10,7 @@ export default function FileUploader({ onContentExtracted }) {
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
   const { apiKey } = useApiKey();
+  const { token } = useAuth();
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -53,7 +55,11 @@ export default function FileUploader({ onContentExtracted }) {
 
     try {
       const headers = {};
-      if (apiKey) headers['x-api-key'] = apiKey;
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      } else if (apiKey) {
+        headers['x-api-key'] = apiKey;
+      }
 
       const response = await fetch(API_URL + '/api/upload', {
         method: 'POST',

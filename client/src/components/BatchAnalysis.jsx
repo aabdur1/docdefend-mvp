@@ -3,6 +3,7 @@ import sampleNotes from '../data/sampleNotes.json';
 import AnalysisReport from './AnalysisReport';
 import RiskBadge from './RiskBadge';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 const CPT_CODES = [
@@ -66,6 +67,7 @@ export default function BatchAnalysis() {
   const [rows, setRows] = useState([]);
   const [analyzing, setAnalyzing] = useState(false);
   const { apiKey } = useApiKey();
+  const { token } = useAuth();
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [batchResults, setBatchResults] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null);
@@ -134,7 +136,11 @@ export default function BatchAnalysis() {
 
       try {
         const headers = {};
-        if (apiKey) headers['x-api-key'] = apiKey;
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        } else if (apiKey) {
+          headers['x-api-key'] = apiKey;
+        }
 
         const uploadController = new AbortController();
         const uploadTimeout = setTimeout(() => uploadController.abort(), 30000);
@@ -184,7 +190,7 @@ export default function BatchAnalysis() {
 
       const response = await fetch(API_URL + '/api/suggest-codes', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: suggestController.signal,
         body: JSON.stringify({ note: row.note }),
       });
@@ -255,7 +261,7 @@ export default function BatchAnalysis() {
 
       const response = await fetch(API_URL + '/api/analyze-batch', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: batchController.signal,
         body: JSON.stringify({
           notes: validRows.map(r => ({

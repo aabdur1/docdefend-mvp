@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 export default function AddendumGenerator({ note, gaps }) {
@@ -8,6 +9,7 @@ export default function AddendumGenerator({ note, gaps }) {
   const [error, setError] = useState(null);
   const [copied, setCopied] = useState(false);
   const { apiKey } = useApiKey();
+  const { token } = useAuth();
 
   const handleGenerate = async () => {
     if (!gaps?.length) return;
@@ -21,7 +23,7 @@ export default function AddendumGenerator({ note, gaps }) {
 
       const response = await fetch(API_URL + '/api/generate-addendum', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: controller.signal,
         body: JSON.stringify({ note, gaps }),
       });

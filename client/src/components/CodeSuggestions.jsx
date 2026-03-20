@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useApiKey, getAuthHeaders } from '../context/ApiKeyContext';
+import { useAuth } from '../context/AuthContext';
 import { API_URL } from '../config';
 
 const confidenceColors = {
@@ -15,6 +16,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
   const [isExpanded, setIsExpanded] = useState(true);
   const [applied, setApplied] = useState(false);
   const { apiKey } = useApiKey();
+  const { token } = useAuth();
 
   // Clear stale suggestions when the note changes
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function CodeSuggestions({ note, onSelectCodes }) {
 
       const response = await fetch(API_URL + '/api/suggest-codes', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: controller.signal,
         body: JSON.stringify({ note }),
       });
