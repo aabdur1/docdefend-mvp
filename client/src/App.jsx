@@ -11,6 +11,8 @@ import { ToastProvider, useToast } from './components/Toast';
 const Dashboard = lazy(() => import('./components/Dashboard'));
 import EKGLine from './components/EKGLine';
 import { ApiKeyProvider, useApiKey, getAuthHeaders } from './context/ApiKeyContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import LoginPage from './components/LoginPage';
 import { API_URL } from './config';
 import PillIcon from './components/PillIcon';
 
@@ -230,6 +232,7 @@ function AppContent() {
   const [coderMode, setCoderMode] = useState(false);
   const toast = useToast();
   const { apiKey } = useApiKey();
+  const { token, isAuthenticated } = useAuth();
 
   // Load analysis history from localStorage
   useEffect(() => {
@@ -272,7 +275,7 @@ function AppContent() {
 
       const response = await fetch(API_URL + '/api/analyze', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: controller.signal,
         body: JSON.stringify({
           note,
@@ -335,7 +338,7 @@ function AppContent() {
 
       const response = await fetch(API_URL + '/api/code-review', {
         method: 'POST',
-        headers: getAuthHeaders(apiKey),
+        headers: getAuthHeaders(apiKey, token),
         signal: controller.signal,
         body: JSON.stringify({
           note,
@@ -393,6 +396,11 @@ function AppContent() {
   const handleSelectTemplate = (templateText) => {
     setNote(templateText);
   };
+
+  // Show login page if not authenticated and no API key
+  if (!isAuthenticated && !apiKey) {
+    return <LoginPage />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-mesh medical-pattern bg-[#FAF6EF] dark:bg-instrument-bg w-full max-w-full grain-texture">
@@ -697,11 +705,13 @@ function AppContent() {
 export default function App() {
   return (
     <ErrorBoundary>
-      <ApiKeyProvider>
-        <ToastProvider>
-          <AppContent />
-        </ToastProvider>
-      </ApiKeyProvider>
+      <AuthProvider>
+        <ApiKeyProvider>
+          <ToastProvider>
+            <AppContent />
+          </ToastProvider>
+        </ApiKeyProvider>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
