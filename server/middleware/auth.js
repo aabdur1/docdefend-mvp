@@ -1,11 +1,5 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  console.warn('WARNING: JWT_SECRET not set — JWT auth will not work. API-key-only mode.');
-}
-
 /**
  * Express middleware that resolves the Anthropic API key from auth headers.
  *
@@ -24,7 +18,9 @@ export function requireAuth(req, res, next) {
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.slice(7);
 
-    if (!JWT_SECRET) {
+    const jwtSecret = process.env.JWT_SECRET;
+
+    if (!jwtSecret) {
       return res.status(503).json({
         error: 'Authentication service unavailable',
         message: 'Server is not configured for password authentication. Please use an API key.',
@@ -32,7 +28,7 @@ export function requireAuth(req, res, next) {
     }
 
     try {
-      jwt.verify(token, JWT_SECRET);
+      jwt.verify(token, jwtSecret);
     } catch {
       return res.status(401).json({
         error: 'Invalid or expired session',
