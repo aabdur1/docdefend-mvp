@@ -311,23 +311,160 @@ Options for deployment:
 
 ---
 
+## Phase 2: Validation Pilot with De-Identified Data
+
+> **This phase does NOT require AWS Bedrock.** De-identified data is not PHI under HIPAA, so it can legally be processed through the current Anthropic API. This is the fastest path to validating DocDefend's accuracy with real clinical data.
+
+### Why De-Identification First?
+
+Per Shivani Singh (Harvard MBA, founder of t0.ai): DocDefend needs to verify its results with actual patient data and get 10-20 providers to use it before it's VC-fundable. De-identified data achieves validation without the cost and complexity of full HIPAA infrastructure.
+
+### The 18 HIPAA Identifiers to Remove
+
+The practice's staff must strip ALL of the following before sharing notes with DocDefend:
+
+| # | Identifier | Example | Replace With |
+|---|-----------|---------|--------------|
+| 1 | Names | "Jane Smith" | "[PATIENT]" |
+| 2 | Geographic data (smaller than state) | "123 Main St, Dallas TX 75201" | "[ADDRESS]" |
+| 3 | Dates (except year) | "DOB: 03/15/1972" | "DOB: [REDACTED]/1972" or age |
+| 4 | Phone numbers | "(214) 555-1234" | "[PHONE]" |
+| 5 | Fax numbers | "(214) 555-5678" | "[FAX]" |
+| 6 | Email addresses | "jane@email.com" | "[EMAIL]" |
+| 7 | Social Security numbers | "123-45-6789" | "[SSN]" |
+| 8 | Medical record numbers | "MRN: 12345678" | "[MRN]" |
+| 9 | Health plan beneficiary numbers | "BCBS ID: ABC123" | "[PLAN_ID]" |
+| 10 | Account numbers | "Acct: 98765" | "[ACCOUNT]" |
+| 11 | Certificate/license numbers | "DEA: AB1234567" | "[LICENSE]" |
+| 12 | Vehicle identifiers | "License plate ABC-1234" | "[VEHICLE]" |
+| 13 | Device identifiers | "Pacemaker SN: 12345" | "[DEVICE]" |
+| 14 | Web URLs | "patient portal link" | "[URL]" |
+| 15 | IP addresses | N/A for clinical notes | "[IP]" |
+| 16 | Biometric identifiers | Fingerprints, voiceprints | "[BIOMETRIC]" |
+| 17 | Full-face photographs | Photos | Remove entirely |
+| 18 | Any other unique identifier | Custom IDs | "[ID]" |
+
+**What stays in the note:** All clinical content — diagnoses, symptoms, medications, exam findings, procedures, treatment plans. This is what DocDefend analyzes. The defensibility scoring works identically without identifiers.
+
+### De-Identified Note Example
+
+**Before (PHI):**
+```
+Jane Smith (DOB: 03/15/1972, MRN: 12345678) is a 54-year-old female
+presenting for follow-up of Type 2 diabetes with hyperglycemia and
+hypertension. Patient seen at Dallas Family Medicine, 123 Main St.
+Dr. Sarah Johnson, NPI: 1234567890.
+```
+
+**After (de-identified, safe to process):**
+```
+[PATIENT] is a 54-year-old female presenting for follow-up of
+Type 2 diabetes with hyperglycemia and hypertension. Patient seen
+at [PRACTICE]. [PROVIDER].
+```
+
+### Pilot Design
+
+**Target:** 50-100 de-identified notes with known claim outcomes from a single family medicine practice.
+
+**Data needed from the practice (per note):**
+
+| Field | Purpose |
+|-------|---------|
+| De-identified clinical note | Input to DocDefend |
+| CPT codes actually billed | Compare against DocDefend's suggestions |
+| ICD-10 codes actually billed | Compare against DocDefend's suggestions |
+| Payer (Medicare/UHC/Aetna/BCBS/Cigna) | Enable payer-specific analysis |
+| Claim outcome (paid/denied/downcoded) | Ground truth for validation |
+| If denied: denial reason code (CARC) | Validate gap analysis accuracy |
+| If downcoded: original vs. paid E/M level | Validate downcode prediction |
+| Reimbursement amount | Validate financial impact estimates |
+
+**What to measure:**
+
+| Metric | How | Target |
+|--------|-----|--------|
+| **Defensibility score accuracy** | Do HIGH scores correlate with paid claims? LOW with denials? | >80% correlation |
+| **E/M level accuracy** | Does DocDefend's recommended level match what was paid? | >85% match |
+| **Downcode prediction** | Did the downcoding risk engine flag claims that were actually downcoded? | >70% recall |
+| **Code suggestion accuracy** | Do AI-suggested codes match what was actually billed and paid? | >75% overlap |
+| **False positive rate** | How often does DocDefend flag problems that weren't real? | <20% |
+| **Actionability** | Would the fix suggestions have prevented the denial? (provider review) | Qualitative |
+
+### Legal Requirements for De-Identified Data Pilot
+
+| Requirement | Needed? | Notes |
+|-------------|---------|-------|
+| BAA with AWS | **No** | De-identified data is not PHI |
+| BAA with the practice | **No** | You never access PHI — practice staff does the de-identification |
+| AWS Bedrock migration | **No** | Current Anthropic API is fine for non-PHI |
+| Patient consent | **No** | De-identified data falls outside HIPAA's consent requirements |
+| Data Use Agreement | **Recommended** | Simple written agreement with the practice covering: what data is shared, how it's used, how it's stored, when it's deleted |
+| IRB approval | **No** | This is quality improvement / product validation, not academic research (unless UIC requires it for IDS 594 — check with professor) |
+
+### Pilot Workflow
+
+```
+Practice staff                          DocDefend team
+─────────────                           ──────────────
+1. Pull 50-100 recent notes
+   with known outcomes
+2. De-identify (strip 18 identifiers)
+3. Record claim outcomes in
+   a spreadsheet (paid/denied/
+   downcoded, amounts, codes)
+4. Share de-identified notes ──────────► 5. Run through DocDefend
+   + outcomes spreadsheet                  (current MVP, no changes needed)
+   (secure transfer — encrypted        6. Compare DocDefend scores
+    email or shared drive)                 vs actual outcomes
+                                       7. Calculate accuracy metrics
+                                       8. Document results for
+                                          investor pitch / WPU
+```
+
+### Secure Data Transfer
+
+Even though de-identified data is not PHI, treat it with care:
+
+- **Do:** Use encrypted email (Gmail confidential mode), secure shared drive (Google Drive with restricted access), or encrypted USB
+- **Don't:** Send via unencrypted email, Slack, or public file sharing
+- **After validation:** Delete the de-identified notes from your systems. Keep only aggregate results (accuracy metrics, not individual notes)
+
+---
+
+## Phase 3: Production with Real PHI (Future)
+
+> **This phase requires AWS Bedrock, BAA, and full security controls.** Only pursue after validation pilot proves accuracy and 10-20 providers express willingness to pay.
+
+### Additional Legal Requirements (Beyond Phase 2)
+
+| Requirement | Details |
+|-------------|---------|
+| **BAA with AWS** | Sign in AWS Artifact (5 minutes, free) |
+| **BAA with each practice** | DocDefend becomes a Business Associate. Need a BAA template — have a healthcare attorney draft one or use a standard HIPAA BAA template. |
+| **HIPAA Security Risk Assessment** | HHS requires covered entities and BAs to conduct a risk assessment. Use the [HHS SRA Tool](https://www.healthit.gov/topic/privacy-security-and-hipaa/security-risk-assessment-tool) (free). |
+| **HIPAA Privacy Policies** | Written policies for how DocDefend handles PHI — access, storage, breach notification, disposal. |
+| **Breach Notification Plan** | Documented plan for notifying affected individuals and HHS within 60 days of a breach. |
+| **Business entity** | You need a legal entity (LLC or Corp) to sign BAAs. Cannot sign as individuals. |
+| **Cyber liability insurance** | Recommended — covers breach costs. ~$500-2,000/year for a startup. |
+
+### When to Migrate to Bedrock
+
+Trigger: Validation pilot is complete, accuracy is proven, and you have 10+ providers ready to use DocDefend with real patient data. At that point, follow the AWS Bedrock implementation guide above (Steps 1-6).
+
+---
+
 ## Summary
 
-| Phase | Environment | Data Type | API Used |
-|-------|-------------|-----------|----------|
-| **Current (Demo)** | Local development | Synthetic only | Anthropic API |
-| **Testing** | AWS (Bedrock) | De-identified or synthetic | AWS Bedrock |
-| **Production** | AWS (Bedrock + full security) | Real PHI | AWS Bedrock |
+| Phase | Environment | Data Type | API Used | Legal Needs |
+|-------|-------------|-----------|----------|-------------|
+| **Phase 1 (Current — Demo)** | Vercel + Render | Synthetic only | Anthropic API | None |
+| **Phase 2 (Validation Pilot)** | Vercel + Render (no changes) | De-identified real notes | Anthropic API | Data Use Agreement (recommended) |
+| **Phase 3 (Production)** | AWS (Bedrock + full security) | Real PHI | AWS Bedrock | BAA, risk assessment, policies, insurance |
 
-**Key Takeaway:** The transition from demo to production requires:
-1. Signing a BAA with AWS
-2. Deploying infrastructure within AWS
-3. Switching from Anthropic SDK to AWS Bedrock SDK
-4. Implementing comprehensive security controls
-
-The code changes are minimal, but the infrastructure and compliance setup is critical.
+**Key Insight:** Phase 2 is achievable NOW with zero infrastructure changes. The practice handles de-identification, DocDefend processes the notes through the existing MVP, and the team measures accuracy against known outcomes. This is the fastest path to the validation that Shivani Singh identified as a VC-funding prerequisite.
 
 ---
 
 *Document prepared for DocDefend MVP - IDS594*
-*Last updated: February 2025*
+*Last updated: March 2026*
