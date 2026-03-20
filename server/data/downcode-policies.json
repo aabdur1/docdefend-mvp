@@ -1,0 +1,55 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-20T00:00:00Z",
+  "updatedBy": "manual",
+  "policies": {
+    "cigna": {
+      "id": "cigna_r49",
+      "name": "Cigna R49 — E/M Coding Accuracy",
+      "payer": "Cigna",
+      "effectiveDate": "2025-10-01",
+      "status": "active",
+      "targetCodes": ["99204", "99205", "99214", "99215", "99244", "99245"],
+      "mechanism": "one-level-down",
+      "description": "Automatic one-level downcode when claim-based diagnosis codes do not appear to justify the E/M complexity level, compared against specialty peer benchmarks.",
+      "bypassRules": "Provider must accumulate 5+ adjusted claims, then request bypass. 80% of appealed claims must be upheld to grant bypass.",
+      "source": "https://providernewsroom.com/cigna-healthcare/new-reimbursement-policy-for-professional-evaluation-and-management-services-claims-effective-october-1-2025/"
+    },
+    "aetna": {
+      "id": "aetna_ccrp",
+      "name": "Aetna CCRP — Claim & Code Review Program",
+      "payer": "Aetna",
+      "effectiveDate": "2025-03-01",
+      "status": "active",
+      "targetCodes": ["99204", "99205", "99214", "99215"],
+      "mechanism": "one-level-down",
+      "description": "Targets top 3% of in-network providers by coding intensity who submit higher-level E/M codes than CMS/AMA benchmarks. Claims to affect ~3% of providers.",
+      "bypassRules": "Practice can pursue early removal by successfully appealing 75% of downcoded claims. Default inclusion duration: 1 year.",
+      "source": "https://www.revquestrcm.com/post/aetna-ccrp-and-cigna-r49"
+    },
+    "united": {
+      "id": "uhc_downcode",
+      "name": "UHC E/M Level Adjustment",
+      "payer": "United Healthcare",
+      "effectiveDate": "2019-06-01",
+      "status": "active",
+      "targetCodes": ["99204", "99205", "99214", "99215"],
+      "mechanism": "adjust-to-deemed-level",
+      "description": "UHC adjusts E/M claims to the level they deem appropriate based on claim data, rather than issuing outright denials. Shifted from denial to downcoding in Q2 2019.",
+      "bypassRules": "No formal bypass program. Individual claim appeals accepted.",
+      "source": "https://www.aafp.org/pubs/fpm/blogs/gettingpaid/entry/UHC_downcoding.html"
+    },
+    "bcbs": {
+      "id": "anthem_bcbs",
+      "name": "Anthem BCBS E/M Coding Review",
+      "payer": "Blue Cross Blue Shield (Anthem)",
+      "effectiveDate": "2025-11-13",
+      "status": "paused_ca",
+      "targetCodes": ["99204", "99205", "99214", "99215"],
+      "mechanism": "one-level-down",
+      "description": "Targets physicians coding at a higher E/M level compared to peers with similar risk-adjusted members. Policy lacks transparency on selection criteria.",
+      "bypassRules": "No formal bypass published. Paused in California pending DMHC review.",
+      "source": "https://www.beckerspayer.com/payer/anthem-blue-cross-of-california-to-halt-e-m-downcoding-until-march-pending-review/"
+    }
+  }
+}

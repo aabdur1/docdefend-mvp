@@ -174,6 +174,58 @@ export const PAYERS = {
       '96372': 29,
     },
   },
+  cigna: {
+    id: 'cigna',
+    name: 'Cigna',
+    shortName: 'Cigna',
+    description: 'Cigna commercial plans',
+    color: 'teal',
+    rules: [
+      {
+        id: 'cigna-conservative-therapy',
+        applies_to: ['64483', '64490', '64635'],
+        rule: 'Documented conservative therapy trial of 4-8 weeks before interventional procedures',
+        detail: 'Cigna requires documentation of conservative therapy (physical therapy, medications, home exercise) with specific dates and outcomes before approving interventional pain procedures.',
+      },
+      {
+        id: 'cigna-r49-em-accuracy',
+        applies_to: ['99214', '99215', '99204', '99205'],
+        rule: 'E/M Coding Accuracy Policy (R49) — algorithmic downcoding of Level 4-5 E/M codes',
+        detail: 'Cigna R49 automatically downcodes Level 4-5 E/M claims by one level when diagnosis codes do not appear to justify the complexity level, compared against specialty peer benchmarks. Effective October 1, 2025.',
+      },
+      {
+        id: 'cigna-imaging',
+        applies_to: ['64483', '64490', '64635'],
+        rule: 'Imaging within 6 months required before interventional procedures',
+        detail: 'Cigna requires recent imaging (MRI, CT, or X-ray) confirming pathology before approving epidural injections, facet injections, or radiofrequency ablation.',
+      },
+      {
+        id: 'cigna-prior-auth',
+        applies_to: ['64635'],
+        rule: 'Prior authorization required for radiofrequency ablation',
+        detail: 'Cigna requires prior authorization for RFA procedures. Documentation must include positive diagnostic block results with significant pain relief.',
+      },
+    ],
+    policies: [
+      'Cigna uses eviCore for interventional pain management prior authorization.',
+      'R49 policy targets providers whose coding patterns exceed specialty peer benchmarks.',
+      'Providers must accumulate 5+ adjusted claims before requesting R49 bypass; 80% of appealed claims must be upheld.',
+    ],
+    rateOverrides: {
+      '99213': 105,
+      '99214': 152,
+      '99215': 218,
+      '99203': 127,
+      '99204': 193,
+      '99205': 270,
+      '64483': 265,
+      '64490': 247,
+      '20610': 122,
+      '77003': 88,
+      '64635': 530,
+      '96372': 29,
+    },
+  },
 };
 
 // Medicare baseline rates (same as in prompt.js)

@@ -1,0 +1,38 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-03-20T00:00:00Z",
+  "source": "CMS Medicare Physician & Other Practitioners",
+  "dataYear": 2024,
+  "benchmarks": {
+    "family_medicine": {
+      "label": "Family Medicine",
+      "99213": 0.45,
+      "99214": 0.38,
+      "99215": 0.08
+    },
+    "internal_medicine": {
+      "label": "Internal Medicine",
+      "99213": 0.35,
+      "99214": 0.42,
+      "99215": 0.12
+    },
+    "pain_management": {
+      "label": "Pain Management",
+      "99213": 0.25,
+      "99214": 0.45,
+      "99215": 0.20
+    },
+    "emergency_medicine": {
+      "label": "Emergency Medicine",
+      "99213": 0.15,
+      "99214": 0.30,
+      "99215": 0.35
+    },
+    "default": {
+      "label": "All Specialties",
+      "99213": 0.38,
+      "99214": 0.40,
+      "99215": 0.12
+    }
+  }
+}

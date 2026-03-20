@@ -71,6 +71,24 @@ const PAYER_OPTIONS = [
       iconText: 'text-sky-600 dark:text-sky-400',
     },
   },
+  {
+    id: 'cigna',
+    name: 'Cigna',
+    shortName: 'Cigna',
+    description: 'R49 downcoding active',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+    colorClasses: {
+      border: 'border-teal-500',
+      bg: 'bg-teal-50 dark:bg-teal-900/20',
+      text: 'text-teal-700 dark:text-teal-300',
+      iconBg: 'bg-teal-100 dark:bg-teal-900/50',
+      iconText: 'text-teal-600 dark:text-teal-400',
+    },
+  },
 ];
 
 export default function PayerSelector({ selectedPayer, onPayerChange }) {
@@ -88,7 +106,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
         {PAYER_OPTIONS.map((payer) => {
           const isSelected = selectedPayer === payer.id;
           const colors = payer.colorClasses;

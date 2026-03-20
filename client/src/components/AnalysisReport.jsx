@@ -3,6 +3,7 @@ import ScoreRing from './ScoreRing';
 import AddendumGenerator from './AddendumGenerator';
 import EMLevelCard from './EMLevelCard';
 import FinancialImpact from './FinancialImpact';
+import DowncodeWarning from './DowncodeWarning';
 import generatePdfReport from '../utils/generatePdfReport';
 
 // Stethoscope icon component
@@ -336,6 +337,13 @@ export default function AnalysisReport({ report, note, selectedCptCodes, selecte
               findings={report.payerSpecificFindings}
               payerName={report.payerName || PAYER_NAMES[selectedPayer] || selectedPayer}
             />
+          </div>
+        )}
+
+        {/* ── Section: Downcoding Risk Warning ── */}
+        {report.downcodeRisk && report.downcodeRisk.riskLevel !== 'NONE' && (
+          <div className="px-4 sm:px-6 pb-6 animate-fadeInUp" style={{ animationDelay: '350ms', opacity: 0 }}>
+            <DowncodeWarning downcodeRisk={report.downcodeRisk} />
           </div>
         )}
 

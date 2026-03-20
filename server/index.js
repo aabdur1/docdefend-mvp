@@ -9,6 +9,8 @@ import jwt from 'jsonwebtoken';
 import { requireAuth } from './middleware/auth.js';
 import { buildSystemPrompt, buildUserPrompt } from './prompt.js';
 import { PAYERS } from './payerRules.js';
+import { checkDowncodeRisk, getDowncodePolicies, inferSpecialty } from './downcodeRules.js';
+import { loadRules, getLastLoadTime, getRulesStatus } from './rulesLoader.js';
 import { parseDocument } from './parsers.js';
 import {
   codeSuggestionPrompt,
@@ -21,6 +23,10 @@ import {
 } from './suggestions.js';
 
 dotenv.config();
+
+// Load downcoding rules from JSON data files on startup
+// Falls back to hardcoded values if files are missing
+loadRules();
 
 const app = express();
 app.set('trust proxy', 1);
@@ -257,6 +263,13 @@ app.post('/api/analyze', async (req, res) => {
       analysis.payerId = payerId;
       analysis.payerName = PAYERS[payerId].name;
     }
+
+    // Run downcoding risk check if an E/M code is selected
+    const emCode = cptCodes.find(c => /^99\d{3}$/.test(c) && parseInt(c.slice(2)) >= 202);
+    if (emCode && payerId) {
+      analysis.downcodeRisk = checkDowncodeRisk(payerId, emCode, icd10Codes, cptCodes);
+    }
+
     res.json(analysis);
   } catch (error) {
     console.error('Analysis error:', error.message);
@@ -454,8 +467,60 @@ app.get('/api/templates/:id', (req, res) => {
   res.json(template);
 });
 
+// Downcoding risk check endpoint — standalone claim-data analysis (no AI call)
+app.post('/api/downcode-check', (req, res) => {
+  try {
+    const { emCode, icd10Codes, payerId, cptCodes } = req.body;
+
+    if (!emCode || typeof emCode !== 'string') {
+      return res.status(400).json({ error: 'An E/M code is required (e.g., 99214).' });
+    }
+    if (!isStringArray(icd10Codes)) {
+      return res.status(400).json({ error: 'At least one ICD-10 code is required.' });
+    }
+
+    const result = checkDowncodeRisk(payerId || 'medicare', emCode.trim(), icd10Codes, cptCodes || []);
+    res.json(result);
+  } catch (error) {
+    console.error('Downcode check error:', error.message);
+    res.status(500).json({ error: 'Downcode check failed', message: error.message });
+  }
+});
+
+// List known payer downcoding policies
+app.get('/api/downcode-policies', (req, res) => {
+  res.json(getDowncodePolicies());
+});
+
+// Reload downcoding rules from data files (called by n8n after update, or manually)
+app.post('/api/admin/reload-rules', (req, res) => {
+  // Require admin key in production; skip in local dev
+  if (process.env.NODE_ENV === 'production') {
+    const adminKey = req.headers['x-admin-key'];
+    if (!process.env.ADMIN_API_KEY || adminKey !== process.env.ADMIN_API_KEY) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+  }
+
+  const success = loadRules();
+  res.json({
+    success,
+    lastLoadTime: getLastLoadTime(),
+    message: success ? 'Rules reloaded successfully' : 'Failed to reload rules — using previous version',
+  });
+});
+
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
+  const rules = getRulesStatus();
+  res.json({
+    status: 'ok',
+    rules: {
+      loaded: rules.loaded,
+      lastLoadTime: rules.lastLoadTime,
+      dataUpdated: rules.dataUpdated,
+      stale: rules.stale,
+    },
+  });
 });
 
 // Error handling for multer

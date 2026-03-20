@@ -1,0 +1,582 @@
+{
+  "name": "Payer Policy Monitor",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                1
+              ],
+              "triggerAtHour": 5
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -64,
+        112
+      ],
+      "id": "8516593c-bdf5-41a7-b7fb-30f35743bb7b",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "url": "https://providernewsroom.com/cigna-healthcare/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        16
+      ],
+      "id": "9d608388-9410-4c7f-8af8-36302922567b",
+      "name": "Fetch Cigna",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://www.aetna.com/health-care-professionals/clinical-policy-bulletins.html",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        208
+      ],
+      "id": "ce7c068d-bf96-4923-a7b4-88668f18630f",
+      "name": "Fetch Aetna",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://www.uhcprovider.com/",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        400
+      ],
+      "id": "4fe0b4de-c3f9-4831-9246-a98bcc2cc23c",
+      "name": "Fetch UHC",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "url": "https://www.ama-assn.org/practice-management/prior-authorization",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        160,
+        -176
+      ],
+      "id": "db4e0ee1-7c58-4c8a-95fa-0378b7124cef",
+      "name": "Fetch AMA",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        384,
+        80
+      ],
+      "id": "e35ec2d5-e6ea-4ddf-b11e-236f30fa9464",
+      "name": "Merge Pages"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "claude-sonnet-4-6",
+          "mode": "list",
+          "cachedResultName": "claude-sonnet-4-6"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Analyze these web pages for E/M downcoding policy updates:\n\n{{ JSON.stringify($input.all().map(item => item.json.text).filter(t => t.length > 0)) }}"
+            }
+          ]
+        },
+        "options": {
+          "system": "You are a healthcare policy analyst. Extract all E/M downcoding policies from the provided web page content. For each policy found, return structured JSON:    {     \"policies\": [       {         \"payerId\": \"cigna\naetna\nunited\nbcbs\nother\",         \"policyId\": \"short_identifier\",         \"name\": \"Policy display name\",         \"effectiveDate\": \"YYYY-MM-DD\",         \"status\": \"active\npaused\nwithdrawn\nproposed\",         \"targetCodes\": [\"99214\", \"99215\"],         \"mechanism\": \"one-level-down\nadjust-to-deemed-level\nother\",         \"description\": \"What the policy does\",         \"bypassRules\": \"How providers can opt out or appeal\",         \"source\": \"URL where this was found\",         \"changeDetected\": \"What changed (new, modified, paused, etc.)\"       }     ],     \"noChangesDetected\": true,     \"summary\": \"One-line summary of what was found or changed\"   }    If the page content doesn't contain downcoding policy information, return {\"policies\": [], \"noChangesDetected\": true, \"summary\": \"No policy content found\"}.   Return ONLY valid JSON.",
+          "maxTokens": 2048
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.anthropic",
+      "typeVersion": 1,
+      "position": [
+        832,
+        112
+      ],
+      "id": "5134fc45-f685-43fd-94d2-b7b298109323",
+      "name": "Message a model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "jtWhHgko0Y7YVgTX",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "get",
+        "owner": {
+          "__rl": true,
+          "value": "aabdur1",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "docdefend-mvp",
+          "mode": "list",
+          "cachedResultName": "docdefend-mvp",
+          "cachedResultUrl": "https://github.com/aabdur1/docdefend-mvp"
+        },
+        "filePath": "server/data/downcode-policies.json",
+        "additionalParameters": {}
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        112
+      ],
+      "id": "19358f5a-020b-4ce3-9336-2c882a600628",
+      "name": "Read Current Rules",
+      "webhookId": "d3ed16bd-bfbe-411c-a362-82b67e361ca0",
+      "credentials": {
+        "githubApi": {
+          "id": "8JjNBT6k9blrZ4fO",
+          "name": "GitHub account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get Claude's extraction and current rules from GitHub\nconst allItems = $input.all();\n\n// The Claude result comes through as text - parse it\nconst claudeItem = allItems[0];\nlet extracted;\ntry {\n  const text = claudeItem.json.message?.content || claudeItem.json.text || claudeItem.json.data || '';\n  extracted = JSON.parse(text.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim());\n} catch (e) {\n  return [{ json: { hasChanges: false, message: 'Failed to parse Claude response: ' + e.message } }];\n}\n\nconst hasChanges = extracted.policies?.length > 0 && !extracted.noChangesDetected;\n\nif (!hasChanges) {\n  return [{ json: { hasChanges: false, message: extracted.summary || 'No policy changes detected' } }];\n}\n\nreturn [{\n  json: {\n    hasChanges: true,\n    changes: extracted.policies.map(p => `${p.payerId}: ${p.changeDetected || p.name}`),\n    summary: extracted.summary,\n    extractedPolicies: extracted.policies,\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        112
+      ],
+      "id": "ca5037b1-1dea-4326-9bbe-2f9588ae91a8",
+      "name": "Diff Rules"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "45da1263-3002-4943-8bbb-180731808394",
+              "leftValue": "={{ $json.hasChanges }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1632,
+        112
+      ],
+      "id": "d47e53c4-550f-4eb9-b7fe-60325ba25e11",
+      "name": "Has Changes?"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "YOUR_SLACK_WEBHOOK_URL_HERE",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": \"🚨 *Payer Downcoding Policy Update Detected*\\n\\n{{ $json.summary }}\\n\\nChanges:\\n{{ $json.changes.join('\\\\n- ') }}\\n\\nReview the n8n workflow to approve and push updates.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1856,
+        112
+      ],
+      "id": "2670eb31-5b2d-424d-9a94-b8b54801d299",
+      "name": "Slack Alert"
+    },
+    {
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2080,
+        112
+      ],
+      "id": "af0e7048-9c5c-4e40-9e35-db31963ec2c7",
+      "name": "Wait for Approval",
+      "webhookId": "47a6918f-2bcb-4ad0-bc9d-7a656fbfa632"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "edit",
+        "owner": {
+          "__rl": true,
+          "value": "aabdur1",
+          "mode": "name"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "docdefend-mvp",
+          "mode": "list",
+          "cachedResultName": "docdefend-mvp",
+          "cachedResultUrl": "https://github.com/aabdur1/docdefend-mvp"
+        },
+        "filePath": "server/data/downcode-policies.json",
+        "fileContent": "={{ $json.summary }}",
+        "commitMessage": "chore(rules): auto-update payer downcoding policies [n8n]"
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        2304,
+        112
+      ],
+      "id": "9e6797d0-25e9-4e5c-a0b6-e63863f4b462",
+      "name": "Commit Updated Rules",
+      "webhookId": "1cdb3edc-268f-41b4-b1b0-e40d590ce0c3",
+      "credentials": {
+        "githubApi": {
+          "id": "8JjNBT6k9blrZ4fO",
+          "name": "GitHub account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 90
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        112
+      ],
+      "id": "18bebd81-514a-4a28-9163-47edf843ddc2",
+      "name": "Wait for Deploy",
+      "webhookId": "db4b6626-9c0f-4af9-98fe-c2e6e95ed9cb"
+    },
+    {
+      "parameters": {
+        "url": "https://docdefend-mvp.onrender.com/api/health",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2752,
+        112
+      ],
+      "id": "2ae396b4-c89a-499a-aafa-258f349c9372",
+      "name": "Verify Deploy"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "YOUR_SLACK_WEBHOOK_URL_HERE",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"text\": \"✅ Payer rules updated and  deployed successfully.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2976,
+        112
+      ],
+      "id": "8a265cf5-a542-4657-8af5-5c98a7ca2cfa",
+      "name": "Slack Confirmation"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Strip HTML tags, scripts, styles, and excess whitespace\n// Keeps just the text content, truncated to ~8000 chars per page\nconst items = $input.all();\nconst cleaned = items.map(item => {\n  let html = item.json.data || item.json.body || item.json.html || '';\n  \n  // Remove scripts, styles, nav, footer\n  html = html.replace(/<script[\\s\\S]*?<\\/script>/gi, '');\n  html = html.replace(/<style[\\s\\S]*?<\\/style>/gi, '');\n  html = html.replace(/<nav[\\s\\S]*?<\\/nav>/gi, '');\n  html = html.replace(/<footer[\\s\\S]*?<\\/footer>/gi, '');\n  html = html.replace(/<header[\\s\\S]*?<\\/header>/gi, '');\n  \n  // Strip remaining HTML tags\n  html = html.replace(/<[^>]+>/g, ' ');\n  \n  // Clean up whitespace\n  html = html.replace(/\\s+/g, ' ').trim();\n  \n  // Truncate to ~8000 chars\n  if (html.length > 8000) {\n    html = html.substring(0, 8000) + '... [truncated]';\n  }\n  \n  return { json: { text: html, url: item.json.url || 'unknown' } };\n});\n\nreturn cleaned;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        608,
+        112
+      ],
+      "id": "8d4c80b3-3cd1-4876-a344-e57a81f64f97",
+      "name": "Clean HTML"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Cigna",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch Aetna",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch AMA",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch UHC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch AMA": {
+      "main": [
+        [
+          {
+            "node": "Merge Pages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Cigna": {
+      "main": [
+        [
+          {
+            "node": "Merge Pages",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fetch Aetna": {
+      "main": [
+        [
+          {
+            "node": "Merge Pages",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Fetch UHC": {
+      "main": [
+        [
+          {
+            "node": "Merge Pages",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Merge Pages": {
+      "main": [
+        [
+          {
+            "node": "Clean HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Read Current Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Current Rules": {
+      "main": [
+        [
+          {
+            "node": "Diff Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diff Rules": {
+      "main": [
+        [
+          {
+            "node": "Has Changes?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Changes?": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Alert": {
+      "main": [
+        [
+          {
+            "node": "Wait for Approval",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Approval": {
+      "main": [
+        [
+          {
+            "node": "Commit Updated Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commit Updated Rules": {
+      "main": [
+        [
+          {
+            "node": "Wait for Deploy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Deploy": {
+      "main": [
+        [
+          {
+            "node": "Verify Deploy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Deploy": {
+      "main": [
+        [
+          {
+            "node": "Slack Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clean HTML": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "d973ea7b-e8e2-4042-af9e-152766f0f0e1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "113a3d5c6b649ba6db90301c9d0c9d367d503122de2014f9ebe06fc5b85c7127"
+  },
+  "id": "NvH7QLg2Lj9SSMeE",
+  "tags": []
+}
