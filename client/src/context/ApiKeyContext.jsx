@@ -48,8 +48,12 @@ export function useApiKey() {
   return context;
 }
 
-export function getAuthHeaders(apiKey) {
+export function getAuthHeaders(apiKey, token) {
   const headers = { 'Content-Type': 'application/json' };
-  if (apiKey) headers['x-api-key'] = apiKey;
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  } else if (apiKey) {
+    headers['x-api-key'] = apiKey;
+  }
   return headers;
 }
