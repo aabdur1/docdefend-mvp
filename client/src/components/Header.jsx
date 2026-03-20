@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { API_URL } from '../config';
 import ApiKeyInput from './ApiKeyInput';
+import { useAuth } from '../context/AuthContext';
 import PillIcon from './PillIcon';
 
 function useHealthCheck(intervalMs = 30000) {
@@ -34,6 +35,7 @@ function useHealthCheck(intervalMs = 30000) {
 export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, analysisCount = 0, batchMode, onToggleBatchMode, coderMode, onToggleCoderMode }) {
   const [swapKey, setSwapKey] = useState(0);
   const backendStatus = useHealthCheck(30000);
+  const { isAuthenticated, logout } = useAuth();
 
   // Trigger swap animation on mode change
   useEffect(() => {
@@ -85,8 +87,24 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
               </span>
             </div>
 
-            {/* API Key Input */}
-            <ApiKeyInput />
+            {/* Auth: sign out for team login, API key input for key users */}
+            {isAuthenticated ? (
+              <button
+                type="button"
+                onClick={logout}
+                className={`${navBtn} text-xs`}
+                aria-label="Sign out"
+              >
+                <span className="flex items-center gap-1.5">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  <span className="hidden sm:inline">Sign Out</span>
+                </span>
+              </button>
+            ) : (
+              <ApiKeyInput />
+            )}
 
             {/* Batch Mode Toggle */}
             <button
