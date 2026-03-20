@@ -5,6 +5,8 @@ import Anthropic from '@anthropic-ai/sdk';
 import dotenv from 'dotenv';
 import multer from 'multer';
 import helmet from 'helmet';
+import jwt from 'jsonwebtoken';
+import { requireAuth } from './middleware/auth.js';
 import { buildSystemPrompt, buildUserPrompt } from './prompt.js';
 import { PAYERS } from './payerRules.js';
 import { parseDocument } from './parsers.js';
@@ -146,10 +148,44 @@ app.use('/api/generate-addendum', aiLimiter);
 app.use('/api/code-review', aiLimiter);
 app.use('/api/', generalLimiter);
 
+// Auth middleware — applied to routes that consume API credits or server resources.
+// Public routes (health, templates, login) do NOT require auth.
+app.use('/api/analyze', requireAuth);
+app.use('/api/analyze-batch', requireAuth);
+app.use('/api/suggest-codes', requireAuth);
+app.use('/api/generate-addendum', requireAuth);
+app.use('/api/code-review', requireAuth);
+app.use('/api/upload', requireAuth);
+
+// Login endpoint — validates shared team credentials, returns JWT
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  const validUsername = process.env.AUTH_USERNAME;
+  const validPassword = process.env.AUTH_PASSWORD;
+  const jwtSecret = process.env.JWT_SECRET;
+
+  if (!validUsername || !validPassword || !jwtSecret) {
+    return res.status(503).json({
+      error: 'Auth not configured',
+      message: 'Server authentication is not configured. Please use an API key.',
+    });
+  }
+
+  if (username !== validUsername || password !== validPassword) {
+    return res.status(401).json({
+      error: 'Invalid credentials',
+      message: 'Incorrect username or password.',
+    });
+  }
+
+  const token = jwt.sign({ sub: 'team' }, jwtSecret, { expiresIn: '7d' });
+  res.json({ token });
+});
+
 function getAnthropicClient(req) {
-  const apiKey = req.headers['x-api-key'] || process.env.ANTHROPIC_API_KEY;
+  const apiKey = req.anthropicKey || req.headers['x-api-key'] || process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    throw new Error('No API key provided. Please enter your Anthropic API key in the app.');
+    throw new Error('No API key provided. Please sign in or enter your Anthropic API key.');
   }
   return new Anthropic({ apiKey });
 }
