@@ -166,8 +166,8 @@
         "operation": "get",
         "owner": {
           "__rl": true,
-          "value": "aabdur1",
-          "mode": "name"
+          "value": "https://github.com/aabdur1",
+          "mode": "url"
         },
         "repository": {
           "__rl": true,
@@ -193,8 +193,7 @@
           "id": "8JjNBT6k9blrZ4fO",
           "name": "GitHub account"
         }
-      },
-      "disabled": true
+      }
     },
     {
       "parameters": {
@@ -572,7 +571,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "d973ea7b-e8e2-4042-af9e-152766f0f0e1",
+  "versionId": "10629993-9ba2-4e46-9f42-2425a1ce3b88",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "113a3d5c6b649ba6db90301c9d0c9d367d503122de2014f9ebe06fc5b85c7127"
