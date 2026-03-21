@@ -117,7 +117,7 @@ export default function PayerSelector({ selectedPayer, onPayerChange }) {
               onClick={() => onPayerChange(payer.id)}
               aria-label={`Select ${payer.name} as payer`}
               aria-pressed={isSelected}
-              className={`relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group focus:ring-2 focus:ring-healthcare-500 focus:outline-none ${
+              className={`relative flex flex-col items-center gap-2 p-3 sm:p-4 rounded-xl border-2 transition-all duration-200 cursor-pointer group focus-visible:ring-2 focus-visible:ring-healthcare-500 focus:outline-none ${
                 isSelected
                   ? `${colors.border} ${colors.bg} shadow-md`
                   : 'border-[#D6C9A8] dark:border-instrument-border bg-[#F5EFE0] dark:bg-instrument-bg-raised hover:border-[#C4B48E] dark:hover:border-instrument-border-hover hover:shadow-sm'

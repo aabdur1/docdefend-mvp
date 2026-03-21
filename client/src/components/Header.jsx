@@ -41,8 +41,8 @@ export default function Header({ darkMode, onToggleDarkMode, onOpenDashboard, an
   useEffect(() => {
     setSwapKey(k => k + 1);
   }, [darkMode]);
-  const navBtn = 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus:ring-2 focus:ring-healthcare-500 focus:outline-none';
-  const navBtnIcon = 'p-1.5 sm:p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus:ring-2 focus:ring-healthcare-500 focus:outline-none';
+  const navBtn = 'px-2 py-1.5 sm:px-3 sm:py-2 rounded-xl text-sm font-medium border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus-visible:ring-2 focus-visible:ring-healthcare-500 focus:outline-none';
+  const navBtnIcon = 'p-1.5 sm:p-2.5 rounded-xl text-sm border transition-all duration-200 bg-[#F5EFE0] text-slate-700 border-[#C4B48E] hover:bg-[#E5DBBF] dark:bg-instrument-bg-raised dark:text-instrument-text dark:border-instrument-border dark:hover:bg-instrument-bg-hover btn-lift focus-visible:ring-2 focus-visible:ring-healthcare-500 focus:outline-none';
 
   const statusLabel = backendStatus === 'online' ? 'System Online' : backendStatus === 'offline' ? 'System Offline' : 'Connecting...';
   const dotColor = backendStatus === 'online' ? 'bg-trace' : backendStatus === 'offline' ? 'bg-red-500' : 'bg-amber-400';

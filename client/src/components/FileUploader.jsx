@@ -104,7 +104,7 @@ export default function FileUploader({ onContentExtracted }) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group focus:ring-2 focus:ring-healthcare-500 focus:outline-none
+          relative overflow-hidden border-2 border-dashed rounded-xl p-4 sm:p-8 text-center cursor-pointer transition-all duration-300 group focus-visible:ring-2 focus-visible:ring-healthcare-500 focus:outline-none
           ${isDragging
             ? 'border-healthcare-500 bg-[#EDE6D3] dark:bg-healthcare-900/20 scale-[1.02]'
             : 'border-[#D6C9A8] dark:border-instrument-border hover:border-healthcare-400 dark:hover:border-healthcare-500 hover:bg-[#EDE6D3] dark:hover:bg-instrument-bg-surface'
