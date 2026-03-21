@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useApiKey } from '../context/ApiKeyContext';
 import PillIcon from './PillIcon';
@@ -13,6 +13,13 @@ export default function LoginPage() {
   const [showApiKeyMode, setShowApiKeyMode] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState('');
   const [showKey, setShowKey] = useState(false);
+  const [slowLogin, setSlowLogin] = useState(false);
+
+  useEffect(() => {
+    if (!sending) { setSlowLogin(false); return; }
+    const timer = setTimeout(() => setSlowLogin(true), 5000);
+    return () => clearTimeout(timer);
+  }, [sending]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -132,7 +139,7 @@ export default function LoginPage() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="docdefend"
+                placeholder="Enter username"
                 required
                 autoFocus
                 autoComplete="username"
@@ -171,6 +178,12 @@ export default function LoginPage() {
                   'Sign In'
                 )}
               </button>
+
+              {slowLogin && (
+                <p className="text-xs text-slate-400 dark:text-slate-500 text-center mt-3 animate-pulse">
+                  Server is waking up — this can take up to 60 seconds on first visit...
+                </p>
+              )}
             </form>
 
             <div className="text-center mt-4 pt-4 border-t border-[#D6C9A8] dark:border-instrument-border">

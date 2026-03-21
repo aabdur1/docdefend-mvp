@@ -208,7 +208,7 @@ function PayerFindingsSection({ findings, payerName }) {
           )}
           {notMetCount > 0 && (
             <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300">
-              {notMetCount} gaps
+              {notMetCount} {notMetCount === 1 ? 'gap' : 'gaps'}
             </span>
           )}
         </div>
