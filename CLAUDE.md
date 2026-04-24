@@ -6,6 +6,47 @@ DocDefend+ is a full-stack web application that acts as a **pre-claim QA layer**
 
 This is a **demo/MVP** built for IDS 594. It uses synthetic patient notes and the Anthropic Claude API. The goal is to demonstrate the concept to professors, investors, and potential customers. **Never use real patient data.**
 
+## Team Setup (Do This Once After Cloning)
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/aabdur1/docdefend-mvp.git
+cd docdefend-mvp
+
+# 2. Activate the pre-push hook (blocks accidental direct pushes to main)
+git config core.hooksPath .githooks
+
+# 3. Install GitHub CLI — https://cli.github.com
+#    Then authenticate:
+gh auth login
+#    Choose: GitHub.com → HTTPS → Login with a web browser
+
+# 4. Copy env file and fill in credentials (get these from the team)
+cp server/.env.example server/.env
+```
+
+## Git Workflow (All Changes — No Exceptions)
+
+**Never push directly to `main`.** Always use a branch + PR.
+
+```bash
+# Start a change
+git checkout -b feat/your-feature-name   # or fix/, chore/, security/, docs/
+
+# After making changes
+git add <files>
+git commit -m "type: description"
+git push origin feat/your-feature-name
+
+# Open a PR
+gh pr create --title "your title" --base main
+
+# Merge when ready (after review or self-merge)
+gh pr merge <PR#> --merge
+```
+
+**If using Claude Code:** Claude handles all of the above automatically. Just describe the change — Claude will branch, commit, push, open the PR, and ask before merging.
+
 ## Development Commands
 
 ```bash
@@ -177,7 +218,7 @@ AUTH_PASSWORD=...                # Local login credentials
 - Downcoding detection is deterministic (no AI call). Rules load from `server/data/*.json` with hardcoded fallback
 - `safeErrorMessage()` sanitizes all server errors — never exposes SDK internals
 - Input validation: code arrays must be non-empty strings, request bodies capped at 1MB
-- CORS defaults to `https://docdefend.vercel.app` + `docdefend.health` in prod, `*` in dev
+- CORS defaults to `https://docdefend.vercel.app` + `docdefend.health` in prod, `localhost:5173` / `localhost:3000` in dev
 
 ## Design System
 
