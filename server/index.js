@@ -123,7 +123,7 @@ const corsOrigin = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map(s => s.trim())
   : (process.env.NODE_ENV === 'production'
     ? ['https://docdefend.vercel.app', 'https://www.docdefend.health', 'https://docdefend.health']
-    : '*');
+    : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173']);
 if (process.env.NODE_ENV === 'production' && !process.env.CORS_ORIGIN) {
   console.warn('WARNING: CORS_ORIGIN not set — defaulting to docdefend.vercel.app + docdefend.health');
 }
@@ -147,6 +147,15 @@ const generalLimiter = rateLimit({
   message: { error: 'Too many requests. Please slow down.' },
 });
 
+const loginLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please wait a minute before trying again.' },
+});
+
+app.use('/api/login', loginLimiter);
 app.use('/api/analyze', aiLimiter);
 app.use('/api/analyze-batch', aiLimiter);
 app.use('/api/suggest-codes', aiLimiter);
