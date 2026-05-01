@@ -875,7 +875,7 @@
   }
   .lesson{
     display:grid;
-    grid-template-columns:42px 1fr;
+    grid-template-columns:54px 1fr;
     gap:18px;
     padding-top:6px;
   }
@@ -886,6 +886,50 @@
     font-variation-settings:"opsz" 96, "SOFT" 100;
     color:var(--hc-500);
     line-height:1;
+  }
+  .lesson .badge{
+    position:relative;
+    width:44px; height:44px;
+    border:1px solid var(--paper-edge);
+    background:
+      linear-gradient(135deg, rgba(82,183,136,.05) 0%, rgba(82,183,136,.13) 100%),
+      var(--paper-card);
+    border-radius:7px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 1px 2px rgba(40,28,10,.05), inset 0 0 0 1px rgba(255,250,235,.4);
+    transition: transform .25s cubic-bezier(.2,.7,.1,1), border-color .25s ease;
+  }
+  .lesson .badge::after{
+    content:"";
+    position:absolute;
+    bottom:-1px; left:6px; right:6px;
+    height:2px;
+    background: var(--hc-500);
+    transform-origin: center;
+    transform: scaleX(.4);
+    transition: transform .35s cubic-bezier(.2,.7,.1,1);
+    opacity:.65;
+  }
+  .slide.active .lesson .badge::after{ transform: scaleX(1); }
+  .lesson .badge svg{
+    width:24px; height:24px;
+    color: var(--hc-500);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .lesson .badge .roman{
+    position:absolute; top:-7px; right:-7px;
+    background: var(--paper);
+    border:1px solid var(--paper-edge);
+    color: var(--ink-mute);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:8.5px; letter-spacing:.12em;
+    padding: 1.5px 4px; border-radius: 3px;
+    line-height:1;
+    text-transform: uppercase;
   }
   .lesson .h{
     font-family:'Fraunces', serif;
@@ -1216,6 +1260,36 @@
   }
   .overview-grid .thumb-card.active .label .num{ color: var(--trace-glow); }
 
+  /* ===== Interview card hover lift ===== */
+  .interview{
+    transition: transform .25s cubic-bezier(.2,.7,.1,1),
+                border-color .25s ease,
+                box-shadow .25s ease;
+  }
+  .interview:hover{
+    transform: translateY(-3px);
+    border-color: var(--paper-edge-h);
+    box-shadow: 0 14px 28px rgba(40,28,10,.12), 0 4px 8px rgba(40,28,10,.08);
+  }
+  .interview.skeptic:hover{
+    border-color: rgba(212,44,44,.55);
+  }
+
+  /* ===== Score ring afterglow (post-fill pulse) ===== */
+  .slide.active .score-ring::after{
+    content:"";
+    position:absolute; inset:-6px;
+    border-radius:50%;
+    border: 2px solid var(--trace);
+    opacity:0;
+    animation: ringGlow 1.6s ease-out 1.4s 1;
+    pointer-events:none;
+  }
+  @keyframes ringGlow {
+    0%   { opacity:.6; transform: scale(1); }
+    100% { opacity:0;  transform: scale(1.18); }
+  }
+
   /* Stagger reveal */
   .slide.active .reveal{ animation: rise .8s cubic-bezier(.2,.7,.1,1) both; }
   .slide.active .reveal:nth-child(1){animation-delay:.05s}
@@ -1253,6 +1327,70 @@
       <stop offset="0%" stop-color="white" stop-opacity="0.5"/>
       <stop offset="100%" stop-color="white" stop-opacity="0"/>
     </linearGradient>
+
+    <!-- Lesson icons (24x24 viewBox · stroked · use currentColor) -->
+    <symbol id="i-stack" viewBox="0 0 24 24">
+      <line x1="4" y1="7" x2="20" y2="7"/>
+      <line x1="6" y1="12" x2="18" y2="12"/>
+      <line x1="8" y1="17" x2="16" y2="17"/>
+    </symbol>
+    <symbol id="i-stamp" viewBox="0 0 24 24">
+      <circle cx="12" cy="9" r="5"/>
+      <path d="M9 9 L11 11 L15 7"/>
+      <line x1="6" y1="18" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="i-braces" viewBox="0 0 24 24">
+      <path d="M9 4 C 6 4 7 8 6 12 C 7 16 6 20 9 20"/>
+      <path d="M15 4 C 18 4 17 8 18 12 C 17 16 18 20 15 20"/>
+      <circle cx="12" cy="12" r="0.9" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-rings" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="3"/>
+      <circle cx="12" cy="12" r="6"/>
+      <circle cx="12" cy="12" r="9"/>
+    </symbol>
+    <symbol id="i-zero-slash" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="12" rx="6" ry="8"/>
+      <line x1="6" y1="20" x2="18" y2="4"/>
+    </symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24">
+      <path d="M12 4 L21 19 L3 19 Z"/>
+      <line x1="12" y1="10" x2="12" y2="14"/>
+      <circle cx="12" cy="17" r="0.7" fill="currentColor" stroke="none"/>
+    </symbol>
+    <symbol id="i-fork" viewBox="0 0 24 24">
+      <circle cx="6" cy="12" r="1.6" fill="currentColor" stroke="none"/>
+      <line x1="7.5" y1="12" x2="18" y2="6"/>
+      <line x1="7.5" y1="12" x2="20" y2="12"/>
+      <line x1="7.5" y1="12" x2="18" y2="18"/>
+    </symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="6" rx="6" ry="2"/>
+      <path d="M6 6 V11 C 6 12 8 13 12 13 C 16 13 18 12 18 11 V6"/>
+      <path d="M6 11 V16 C 6 17 8 18 12 18 C 16 18 18 17 18 16 V11"/>
+    </symbol>
+    <symbol id="i-spec" viewBox="0 0 24 24">
+      <path d="M6 3 H15 L18 6 V21 H6 Z"/>
+      <line x1="9" y1="10" x2="15" y2="10"/>
+      <line x1="9" y1="14" x2="15" y2="14"/>
+      <line x1="9" y1="18" x2="13" y2="18"/>
+    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24">
+      <circle cx="12" cy="9" r="3.5"/>
+      <path d="M5 21 C 5 16 8 14 12 14 C 16 14 19 16 19 21"/>
+    </symbol>
+    <symbol id="i-wedge" viewBox="0 0 24 24">
+      <path d="M5 5 L19 12 L5 19 Z"/>
+    </symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24">
+      <circle cx="6" cy="12" r="1.8" fill="currentColor" stroke="none"/>
+      <circle cx="18" cy="6" r="1.4"/>
+      <circle cx="18" cy="12" r="1.4"/>
+      <circle cx="18" cy="18" r="1.4"/>
+      <line x1="7.5" y1="12" x2="16.5" y2="6.5"/>
+      <line x1="7.5" y1="12" x2="16.5" y2="12"/>
+      <line x1="7.5" y1="12" x2="16.5" y2="17.5"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -1882,28 +2020,28 @@
 
     <div class="lessons">
       <div class="lesson reveal">
-        <div class="num">i.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-stack"/></svg><span class="roman">i</span></div>
         <div>
           <div class="h">A four-person team shipped a full-stack MVP in 14 weeks.</div>
           <p>Across React, Express, the Anthropic SDK, JWT auth, file upload, PDF export — most of which none of us would have written by hand in time.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">ii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-stamp"/></svg><span class="roman">ii</span></div>
         <div>
           <div class="h">Domain expertise in the prompt beat reaching for a bigger model.</div>
-          <p>The strongest unlock was Amir's hospitalist-scribe knowledge encoded as system prompts and grounding data — not Sonnet 4 vs. 3.5.</p>
+          <p>The unlock wasn't a bigger model — it was the team's clinical knowledge encoded as system prompts and grounding data: Amir's hospitalist-scribe years plus the operating experience the rest of us bring inside healthcare.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-braces"/></svg><span class="roman">iii</span></div>
         <div>
           <div class="h">Structured JSON output turned a chatty model into a reliable API.</div>
           <p>Every engine returns a typed shape the front-end can trust. The model is a function call, not a conversation.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iv.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-rings"/></svg><span class="roman">iv</span></div>
         <div>
           <div class="h">Shipping in rings, not phases.</div>
           <p>Defensibility, downcoding, financial impact, coder mode — each was independently demoable. AI lets you split scope finer than you used to.</p>
@@ -1935,28 +2073,28 @@
 
     <div class="lessons">
       <div class="lesson reveal">
-        <div class="num">i.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-zero-slash"/></svg><span class="roman">i</span></div>
         <div>
           <div class="h">AI couldn't get us a single interview.</div>
           <p>Cold outreach to physicians (15-20) and to billing companies (8) returned zero replies across two semesters of attempts. Personal networks did all the work.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">ii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-warn"/></svg><span class="roman">ii</span></div>
         <div>
           <div class="h">The model was confidently wrong about coding rules.</div>
           <p>Hallucinated CPT requirements with full conviction. Fix: the downcoding engine is deterministic on purpose — rules from CMS / payer policy, no AI in the path.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-fork"/></svg><span class="roman">iii</span></div>
         <div>
           <div class="h">AI couldn't tell us who the customer was.</div>
           <p>Three interviews pointed three different directions (provider · billing co · neither). Synthesis is a human job; the model can't do it for you.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iv.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-coins"/></svg><span class="roman">iv</span></div>
         <div>
           <div class="h">Token economics compound at scale.</div>
           <p>$0.04 per note feels free. At 200 notes / provider / week across a vertical, the API line becomes the COGS conversation. Caching isn't optional.</p>
@@ -1988,28 +2126,28 @@
 
     <div class="lessons">
       <div class="lesson reveal">
-        <div class="num">i.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-spec"/></svg><span class="roman">i</span></div>
         <div>
           <div class="h">Write the spec before asking the model to build it.</div>
           <p>The hours we lost were the hours we hadn't put pen to paper first. The model writes to a spec; without one, you're paying for confident guesses.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">ii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-user"/></svg><span class="roman">ii</span></div>
         <div>
           <div class="h">Talk to a real user in week one.</div>
           <p>AI made building so cheap that validation became the bottleneck. A 30-minute call in week 1 would have saved us two features in week 6.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iii.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-wedge"/></svg><span class="roman">iii</span></div>
         <div>
           <div class="h">Pick a wedge, not a platform.</div>
           <p>AI tempts you to build everything. The discipline is choosing the smallest version that one specific person will pay for, and resisting the rest.</p>
         </div>
       </div>
       <div class="lesson reveal">
-        <div class="num">iv.</div>
+        <div class="badge"><svg aria-hidden="true"><use href="#i-tree"/></svg><span class="roman">iv</span></div>
         <div>
           <div class="h">Distribution is the moat.</div>
           <p>Anyone can ship our app now. The defensible asset is the relationship with 20 clinics and the credibility of having sat in the room.</p>
