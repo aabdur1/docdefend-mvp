@@ -69,14 +69,16 @@
   /* ===== Stage: fixed 16:9 canvas, scaled to viewport ===== */
   .frame{
     position:fixed; inset:0;
-    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
     background: radial-gradient(ellipse 60% 50% at 50% 50%, #211c14 0%, #0c0a07 100%);
   }
   .stage{
-    position:relative;
+    position:absolute;
+    top:50%; left:50%;
     width:1440px; height:810px;
     background: var(--paper);
     transform-origin: center center;
+    transform: translate(-50%,-50%);
     box-shadow:
       0 30px 80px rgba(0,0,0,.55),
       0 8px 24px rgba(0,0,0,.35),
@@ -1290,6 +1292,42 @@
     100% { opacity:0;  transform: scale(1.18); }
   }
 
+  /* ===== Mobile / touch ===== */
+  @media (pointer: coarse), (max-width: 720px) {
+    .help{ display:none; }
+    .ui{ bottom:14px; gap:18px; }
+    .ui .btn{ width:48px; height:48px; font-size:17px; }
+    .ui .counter{ font-size:11px; min-width:96px; color:rgba(239,230,210,.92); }
+    .stage{ box-shadow: 0 14px 40px rgba(0,0,0,.55); }
+  }
+  @media (max-width: 720px) {
+    body.overview-mode .overview-grid{
+      grid-template-columns: 1fr;
+      gap: 14px;
+      padding: 18px 14px 40px;
+    }
+    body.overview-mode .overview-grid .thumb{
+      width:100%; height:auto;
+      aspect-ratio: 16 / 9;
+    }
+    .overview-grid .ov-head{
+      flex-direction:column; align-items:flex-start; gap:6px;
+      padding-bottom: 6px;
+    }
+    .overview-grid .ov-head .t{ font-size:26px; }
+    .overview-grid .ov-head .meta{ font-size:9.5px; letter-spacing:.16em; }
+  }
+  @media (min-width: 481px) and (max-width: 980px) {
+    body.overview-mode .overview-grid{
+      grid-template-columns: 1fr 1fr;
+      padding: 22px 22px 40px;
+    }
+    body.overview-mode .overview-grid .thumb{
+      width:100%; height:auto;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
   /* Stagger reveal */
   .slide.active .reveal{ animation: rise .8s cubic-bezier(.2,.7,.1,1) both; }
   .slide.active .reveal:nth-child(1){animation-delay:.05s}
@@ -2301,9 +2339,10 @@
     const sx = window.innerWidth  / STAGE_W;
     const sy = window.innerHeight / STAGE_H;
     const s  = Math.min(sx, sy) * 0.96;
-    stage.style.transform = `scale(${s})`;
+    stage.style.transform = `translate(-50%,-50%) scale(${s})`;
   }
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', () => setTimeout(fit, 50));
   fit();
 
   const slides = Array.from(document.querySelectorAll('.slide'));
@@ -2418,6 +2457,17 @@
     }
   }
 
+  // Recompute thumbnail scale to fit each thumb's actual rendered width
+  function fitOverviewThumbs(){
+    if(!overviewEl) return;
+    overviewEl.querySelectorAll('.thumb').forEach(t => {
+      const w = t.clientWidth;
+      const inner = t.querySelector('.thumb-inner');
+      if(inner && w > 0) inner.style.transform = `scale(${w / 1440})`;
+    });
+  }
+  window.addEventListener('resize', fitOverviewThumbs);
+
   function toggleOverview(force){
     const on = typeof force === 'boolean'
       ? force
@@ -2426,6 +2476,7 @@
     if(on){
       overviewEl.querySelectorAll('.thumb-card').forEach((c, j) =>
         c.classList.toggle('active', j === i));
+      requestAnimationFrame(fitOverviewThumbs);
     }
   }
 
@@ -2447,10 +2498,36 @@
     else if(e.key === 'End')  { e.preventDefault(); go(slides.length-1); }
   });
 
+  // Track swipe-fired moments so the synthesized click that follows
+  // a touchend doesn't double-advance the slide.
+  let swipeFireTs = 0;
   stage.addEventListener('click', (e) => {
     if(e.target.closest('a, button')) return;
+    if(performance.now() - swipeFireTs < 350) return;
     go(i+1);
   });
+
+  // ==== Touch swipe (mobile) ===================================
+  let tx0 = 0, ty0 = 0, tt0 = 0;
+  document.addEventListener('touchstart', (e) => {
+    if(document.body.classList.contains('overview-mode')) return;
+    if(e.target.closest('a, button')) return;
+    const t = e.touches[0];
+    tx0 = t.clientX; ty0 = t.clientY; tt0 = performance.now();
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    if(document.body.classList.contains('overview-mode')) return;
+    if(!e.changedTouches.length) return;
+    if(e.target.closest('a, button')) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tx0;
+    const dy = t.clientY - ty0;
+    const dt = performance.now() - tt0;
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4 && dt < 700){
+      swipeFireTs = performance.now();
+      if(dx < 0) go(i+1); else go(i-1);
+    }
+  }, { passive: true });
 
   // ==== Cover parallax (subtle pill + EKG drift) ===============
   const coverSlide = slides[0];
