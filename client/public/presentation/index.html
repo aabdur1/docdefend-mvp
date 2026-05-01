@@ -1,0 +1,2317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DocDefend+ — Final Presentation · IDS 594 · Spring 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=Newsreader:opsz,wght,ital@6..72,300..700,0;6..72,300..700,1&family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Parchment palette — pulled from STYLE_GUIDE.md */
+    --paper:        #FAF6EF;
+    --paper-card:   #F5EFE0;
+    --paper-chrome: #EDE6D3;
+    --paper-hover:  #E5DBBF;
+    --paper-edge:   #D6C9A8;
+    --paper-edge-h: #C4B48E;
+
+    /* Ink hierarchy */
+    --ink:          #1c1812;
+    --ink-soft:     #4a3f30;
+    --ink-mute:     #7a6c55;
+    --rule:         #2a2218;
+
+    /* Accents */
+    --hc-500:       #1B4332; /* healthcare green — primary action */
+    --hc-600:       #0d3321;
+    --hc-300:       #40916c;
+    --trace:        #52B788; /* EKG / glow */
+    --trace-glow:   #74C69D;
+
+    /* Pill brand red — sparingly, on the pill icon and warning chrome */
+    --pill-red:     #d42c2c;
+    --pill-red-2:   #ee5253;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;}
+  body{
+    background: #1a160f;
+    color:var(--ink);
+    font-family:'Newsreader', Georgia, serif;
+    font-feature-settings:"liga","dlig","onum","kern";
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== Stage: fixed 16:9 canvas, scaled to viewport ===== */
+  .frame{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, #211c14 0%, #0c0a07 100%);
+  }
+  .stage{
+    position:relative;
+    width:1440px; height:810px;
+    background: var(--paper);
+    transform-origin: center center;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,.55),
+      0 8px 24px rgba(0,0,0,.35),
+      inset 0 0 140px rgba(120,80,30,.10);
+    overflow:hidden;
+  }
+  .stage::before{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.07  0 0 0 0 0.02  0 0 0 0.45 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.55'/></svg>");
+    mix-blend-mode:multiply;
+    opacity:.45;
+  }
+  .stage::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(60,38,10,.18) 100%),
+      linear-gradient(180deg, rgba(255,250,235,.18), rgba(0,0,0,0) 30%);
+  }
+
+  /* ===== Slides ===== */
+  .slide{
+    position:absolute; inset:0;
+    padding:60px 84px;
+    opacity:0;
+    transform: translateY(8px);
+    transition: opacity .55s ease, transform .55s ease;
+    pointer-events:none;
+    display:grid;
+    grid-template-rows: auto 1fr auto;
+  }
+  .slide.active{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+  /* ===== Masthead with hairline EKG trace ===== */
+  .masthead{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    padding-bottom:14px;
+    border-bottom: 1px solid var(--rule);
+    color:var(--ink-soft);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    font-weight:400;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    position:relative;
+  }
+  .masthead .lockup{display:flex;align-items:center;gap:12px;color:var(--ink)}
+  .masthead .lockup .word{font-family:'Fraunces',serif;font-weight:420;font-size:14px;letter-spacing:0;text-transform:none;font-variation-settings:"opsz" 36, "SOFT" 30}
+  .masthead .vol{color:var(--ink-mute)}
+  .masthead .right{display:flex;gap:22px}
+
+  /* tiny ekg under masthead (decoration) */
+  .masthead-ekg{
+    position:absolute;
+    bottom:-1px; left:0; right:0;
+    height:14px;
+    pointer-events:none;
+    overflow:hidden;
+    opacity:.4;
+  }
+
+  .colophon{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:14px;
+    border-top:1px solid var(--rule);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  .colophon .num{color:var(--ink)}
+  .colophon .ornament{letter-spacing:.5em;color:var(--ink-mute)}
+
+  /* ===== Display type — Fraunces ===== */
+  .display{
+    font-family:'Fraunces', serif;
+    font-variation-settings:"opsz" 144, "SOFT" 30;
+    font-weight:380;
+    line-height:.92;
+    letter-spacing:-0.02em;
+    color:var(--ink);
+  }
+  .display em{
+    font-style:italic;
+    font-variation-settings:"opsz" 144, "SOFT" 100;
+    color:var(--hc-500);
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--ink-mute);
+    font-weight:400;
+  }
+  .lede{
+    font-family:'Newsreader', serif;
+    font-size:21px; line-height:1.45;
+    color:var(--ink-soft);
+    max-width:62ch;
+    font-weight:380;
+  }
+  .lede em{font-style:italic;color:var(--hc-500)}
+
+  .head-block{
+    display:flex; flex-direction:column; gap:14px;
+    margin-bottom:8px;
+  }
+  .head-block .eyebrow{display:flex; align-items:center; gap:14px}
+  .head-block .eyebrow .index{color:var(--hc-500)}
+  .head-block h2{
+    font-family:'Fraunces', serif;
+    font-size:72px;
+    line-height:.94;
+    font-variation-settings:"opsz" 144, "SOFT" 50;
+    font-weight:360;
+    letter-spacing:-0.025em;
+    color:var(--ink);
+    max-width:24ch;
+  }
+  .head-block h2 em{font-style:italic;color:var(--hc-500); font-variation-settings:"opsz" 144, "SOFT" 100;}
+
+  /* ===== Pill icon — matches the live favicon ===== */
+  .pill-svg{ display:block; overflow:visible; }
+  .pill-shadow{
+    filter: drop-shadow(0 12px 22px rgba(120,30,30,.18))
+            drop-shadow(0 4px 8px rgba(0,0,0,.10));
+  }
+
+  /* ===== EKG line ===== */
+  .ekg{ display:block; width:100%; height:100%; }
+  .ekg-bg{ stroke:var(--trace); stroke-width:1; fill:none; opacity:.32; stroke-linecap:round; stroke-linejoin:round; }
+  .ekg-pulse{
+    stroke:var(--trace); stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round;
+    filter: drop-shadow(0 0 5px rgba(82,183,136,.7));
+    stroke-dasharray: 110 1690;
+    animation: ekgScan 3.4s linear infinite;
+  }
+  @keyframes ekgScan {
+    from { stroke-dashoffset: 1800; }
+    to   { stroke-dashoffset: -110; }
+  }
+
+  /* ===== COVER ===== */
+  .cover-grid{
+    display:grid;
+    grid-template-columns: 1.55fr 1fr;
+    grid-template-rows: 1fr auto;
+    gap: 30px 36px;
+    height:100%;
+    position:relative;
+  }
+  .cover-left{
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+  }
+  .cover-eyebrow{
+    margin-bottom:14px;
+  }
+  .cover-title{
+    font-family:'Fraunces', serif;
+    font-size:152px;
+    line-height:.9;
+    letter-spacing:-0.04em;
+    font-variation-settings:"opsz" 144, "SOFT" 60;
+    font-weight:340;
+    color:var(--ink);
+    white-space:nowrap;
+    hyphens:none;
+  }
+  .cover-title .plus{
+    color:var(--pill-red);
+    font-style:italic;
+    font-variation-settings:"opsz" 144, "SOFT" 100;
+  }
+  .cover-deck{
+    margin-top:24px;
+    font-family:'Newsreader', serif;
+    font-size:24px;
+    font-style:italic;
+    color:var(--ink-soft);
+    line-height:1.3;
+    max-width:30ch;
+    font-weight:380;
+  }
+  .cover-ekg{
+    margin-top:28px;
+    height:60px; width:520px;
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    background: rgba(82,183,136,0.04);
+    position:relative;
+    overflow:hidden;
+  }
+  .cover-ekg-label{
+    position:absolute; top:6px; left:10px;
+    font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+  .cover-ekg-bpm{
+    position:absolute; top:6px; right:10px;
+    font-family:'IBM Plex Mono', monospace; font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--hc-500);
+  }
+  .cover-right{
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:24px;
+    border-left:1px solid var(--rule);
+    padding:0 12px 0 36px;
+  }
+  .cover-pill-stage{
+    width:280px; height:280px;
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .cover-pill-stage::before{
+    content:""; position:absolute; inset:8%;
+    border:1px dashed rgba(28,24,18,.18);
+    border-radius:50%;
+  }
+  .cover-pill-stage::after{
+    content:""; position:absolute; inset:24%;
+    border:1px solid rgba(28,24,18,.10);
+    border-radius:50%;
+  }
+  .cover-pill-stage svg.pill-mark{
+    width:72%; height:72%;
+  }
+  .cover-pill-caption{
+    font-family:'IBM Plex Mono', monospace; font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--ink-mute);
+    text-align:center;
+    line-height:1.6;
+  }
+  .cover-pill-caption b{ color:var(--ink); font-weight:500 }
+  .cover-stamp{
+    border:1.5px solid var(--hc-500);
+    color:var(--hc-500);
+    padding:12px 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    line-height:1.5;
+    transform:rotate(-3deg);
+    text-align:center;
+    background: rgba(255,250,235,.5);
+  }
+
+  .cover-team{
+    grid-column: 1 / -1;
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    border-top:1px solid var(--rule);
+    padding-top:18px;
+  }
+  .cover-team .member .role{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--ink-mute);
+    margin-bottom:6px;
+  }
+  .cover-team .member .name{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-variation-settings:"opsz" 36, "SOFT" 30;
+    color:var(--ink);
+    line-height:1.15;
+  }
+
+  /* ===== PROBLEM SLIDE — three-actor ===== */
+  .actors{
+    display:grid;
+    grid-template-columns: 1fr 32px 1fr 32px 1fr;
+    gap:0;
+    align-items:stretch;
+    margin-top:18px;
+  }
+  .actor{
+    background: var(--paper-card);
+    border:1px solid var(--paper-edge);
+    padding:24px 22px;
+    display:flex; flex-direction:column; gap:10px;
+    min-height:180px;
+  }
+  .actor .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+  .actor .who{
+    font-family:'Fraunces', serif;
+    font-size:32px;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+    line-height:1.05;
+  }
+  .actor ul{ list-style:none; margin-top:6px; }
+  .actor li{
+    font-size:14px; line-height:1.5; color:var(--ink-soft);
+    padding-left:14px; position:relative;
+  }
+  .actor li::before{
+    content:""; position:absolute; left:0; top:9px;
+    width:6px; height:1px; background:var(--ink-mute);
+  }
+  .actors .arrow{
+    align-self:center;
+    color:var(--hc-500);
+    font-family:'Fraunces', serif;
+    font-size:36px;
+    text-align:center;
+  }
+  .nobody-quote{
+    margin-top:34px;
+    border-left:3px solid var(--hc-500);
+    padding:12px 0 12px 22px;
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    line-height:1.25;
+    font-variation-settings:"opsz" 96, "SOFT" 60;
+    color:var(--ink);
+  }
+  .nobody-quote em{ font-style:italic; color:var(--hc-500); }
+  .nobody-quote-attr{
+    margin-top:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+
+  /* ===== STATS BLOCK ===== */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:24px;
+    margin-top:24px;
+  }
+  .stat{
+    border-top:2px solid var(--ink);
+    padding-top:18px;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .stat .v{
+    font-family:'Share Tech Mono', monospace;
+    font-size:96px;
+    line-height:.85;
+    letter-spacing:-0.02em;
+    color:var(--ink);
+  }
+  .stat .v .sub{ font-size:38px; vertical-align:6px; }
+  .stat .v.green{ color:var(--hc-500) }
+  .stat .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-mute);
+    line-height:1.55;
+  }
+
+  /* ===== THREE STEP (what we built) ===== */
+  .three-col{
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap:36px;
+    align-content:start;
+    padding-top:24px;
+  }
+  .three-col .step{
+    display:flex; flex-direction:column; gap:14px;
+    border-top:2px solid var(--ink);
+    padding-top:18px;
+  }
+  .three-col .step .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase;
+    color:var(--hc-500);
+  }
+  .three-col .step .h{
+    font-family:'Fraunces', serif;
+    font-size:36px; line-height:1;
+    font-variation-settings:"opsz" 96, "SOFT" 50;
+    color:var(--ink);
+  }
+  .three-col .step .h em{font-style:italic;color:var(--hc-500)}
+  .three-col .step p{
+    font-size:16px; line-height:1.5; color:var(--ink-soft);
+    max-width:34ch;
+  }
+
+  /* ===== Browser preview (matches docdefend.health) ===== */
+  .browser{
+    background:var(--paper);
+    border:1px solid var(--paper-edge);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:
+      0 18px 40px rgba(40,28,10,.18),
+      0 4px 12px rgba(40,28,10,.10);
+  }
+  .browser .bar{
+    height:30px;
+    background: var(--paper-chrome);
+    border-bottom:1px solid var(--paper-edge);
+    display:flex; align-items:center; padding:0 12px;
+    gap:6px;
+  }
+  .browser .bar .d{ width:9px;height:9px;border-radius:50%;background:#d3c2a3 }
+  .browser .bar .d.r{background:#b85a44}
+  .browser .bar .d.y{background:#c9a849}
+  .browser .bar .d.g{background:var(--hc-300)}
+  .browser .url{
+    margin-left:14px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    color:var(--ink-mute);
+    letter-spacing:.06em;
+  }
+  .browser .body{
+    padding:14px 16px;
+    background: var(--paper-card);
+  }
+  .browser h4{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    font-variation-settings:"opsz" 36, "SOFT" 50;
+    color:var(--ink);
+    margin-bottom:10px;
+    line-height:1.1;
+  }
+  .browser .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    border:1px solid var(--hc-500);
+    color:var(--hc-500);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.2em; text-transform:uppercase;
+    padding:4px 8px; border-radius:3px;
+    margin-bottom:10px;
+    background: rgba(82,183,136,.06);
+  }
+  .browser .badge .pulse{
+    width:6px;height:6px;border-radius:50%;background:var(--trace);
+    box-shadow:0 0 0 0 rgba(82,183,136,.6);
+    animation: pulseDot 1.6s ease-out infinite;
+  }
+  @keyframes pulseDot {
+    0%{box-shadow:0 0 0 0 rgba(82,183,136,.6)}
+    100%{box-shadow:0 0 0 9px rgba(82,183,136,0)}
+  }
+
+  .scorewrap{
+    display:flex; align-items:center; gap:16px;
+    margin-bottom:10px;
+  }
+  .score-ring{
+    width:68px; height:68px; flex:0 0 auto;
+    position:relative;
+  }
+  .score-ring svg{ width:100%; height:100%; transform:rotate(-90deg) }
+  .score-ring .track{ fill:none; stroke: var(--paper-hover); stroke-width:7 }
+  .score-ring .fill{ fill:none; stroke: var(--hc-500); stroke-width:7; stroke-linecap:round;
+    stroke-dasharray: 226.19; stroke-dashoffset: 50; transition: stroke-dashoffset 1.2s ease; }
+  .score-ring .num{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-family:'Share Tech Mono', monospace;
+    font-size:24px; color:var(--ink);
+  }
+  .scorewrap .meta{ display:flex; flex-direction:column; gap:3px;}
+  .scorewrap .meta .lbl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink-mute);
+  }
+  .scorewrap .meta .val{
+    font-family:'Fraunces', serif; font-size:19px; color:var(--ink);
+    font-variation-settings:"opsz" 36, "SOFT" 40;
+    line-height:1.1;
+  }
+  .scorewrap .meta .em{
+    font-family:'Share Tech Mono', monospace; font-size:12px; color:var(--hc-500);
+    letter-spacing:.04em;
+  }
+
+  .browser .row-doc{
+    display:flex; justify-content:space-between;
+    padding:6px 0;
+    border-top:1px solid var(--paper-edge);
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .browser .row-doc.gap{color:var(--pill-red)}
+  .browser .row-doc.win{color:var(--hc-500)}
+  .browser .row-doc .v{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--ink); letter-spacing:.04em;}
+  .browser .delta{
+    margin-top:10px;
+    background: rgba(82,183,136,.10);
+    padding:10px 12px;
+    border-left:3px solid var(--hc-500);
+    font-size:12.5px;
+    color:var(--ink-soft);
+    border-radius:0 4px 4px 0;
+    line-height:1.4;
+  }
+  .browser .delta b{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--hc-500); margin-bottom:4px; font-weight:500;
+  }
+  .browser .delta .big{
+    font-family:'Share Tech Mono', monospace;
+    font-size:26px; color:var(--ink);
+    line-height:1;
+  }
+  .browser .downcode{
+    margin-top:8px;
+    border:1px solid rgba(212,44,44,.35);
+    background: rgba(212,44,44,.06);
+    padding:7px 10px;
+    border-radius:4px;
+    display:flex; gap:8px; align-items:center;
+    font-size:11.5px; color:var(--pill-red);
+    line-height:1.4;
+  }
+  .browser .downcode .badge-t{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+    background: var(--pill-red); color:white; padding:2px 6px; border-radius:3px;
+    flex:0 0 auto;
+  }
+
+  .stamp-url{
+    margin-top:30px;
+    display:inline-flex; align-items:center; gap:12px;
+    border:1px solid var(--ink);
+    padding:10px 16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink);
+    background:rgba(255,250,235,.4);
+  }
+  .stamp-url .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--trace);
+    box-shadow: 0 0 0 3px rgba(82,183,136,.18);
+    animation: pulseDot 1.6s ease-out infinite;
+  }
+
+  /* ===== TIMELINE ===== */
+  .timeline{
+    position:relative;
+    padding:40px 0 4px;
+    margin-top:18px;
+  }
+  .timeline::before{
+    content:""; position:absolute; left:0; right:0; top:74px;
+    height:1px; background:var(--rule);
+  }
+  .timeline .row{
+    display:grid;
+    grid-template-columns: repeat(10, 1fr);
+    column-gap:8px;
+    align-items:start;
+    position:relative;
+  }
+  .timeline .col{
+    position:relative;
+    padding-top:96px;
+  }
+  .timeline .col::before{
+    content:""; position:absolute; top:67px; left:50%;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--ink);
+    transform:translateX(-50%);
+  }
+  .timeline .col.major::before{
+    background:var(--hc-500); border-color:var(--hc-500);
+    box-shadow:0 0 0 4px rgba(27,67,50,.18);
+  }
+  .timeline .month{
+    position:absolute; top:18px; left:0; right:0; text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-mute);
+    line-height:1.4;
+  }
+  .timeline .col.major .month{color:var(--hc-500)}
+  .timeline .event{
+    text-align:center;
+    font-family:'Fraunces', serif;
+    font-size:13px; line-height:1.3;
+    font-variation-settings:"opsz" 36, "SOFT" 50;
+    color:var(--ink);
+    padding:0 4px;
+  }
+  .timeline .event em{font-style:italic;color:var(--hc-500)}
+  .timeline .event .who{
+    display:block; margin-top:4px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--ink-mute);
+    font-style:normal;
+  }
+
+  /* ===== INTERVIEW QUOTE GRID ===== */
+  .interview-grid{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:14px;
+    margin-top:14px;
+  }
+  .interview{
+    border:1px solid var(--paper-edge);
+    background: var(--paper-card);
+    padding:22px 18px 18px;
+    display:flex; flex-direction:column; gap:12px;
+    position:relative;
+    min-height:300px;
+  }
+  .interview .open{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:54px;
+    color:var(--hc-500);
+    line-height:.6;
+    margin-bottom:-6px;
+  }
+  .interview .quote{
+    font-family:'Fraunces', serif;
+    font-size:17px;
+    line-height:1.32;
+    font-variation-settings:"opsz" 36, "SOFT" 50;
+    color:var(--ink);
+    flex:1;
+  }
+  .interview .quote em{font-style:italic;color:var(--hc-500)}
+  .interview .who{
+    margin-top:auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-mute);
+    border-top:1px solid var(--paper-edge);
+    padding-top:10px;
+    line-height:1.5;
+  }
+  .interview .who b{color:var(--ink); font-weight:500}
+  .interview.skeptic{ border-color: rgba(212,44,44,.4); background: rgba(212,44,44,.03) }
+  .interview.skeptic .quote em, .interview.skeptic .open{ color: var(--pill-red) }
+  .interview.skeptic .who{ border-top-color: rgba(212,44,44,.25) }
+
+  /* ===== PIVOTS ===== */
+  .pivots{
+    margin-top:18px;
+  }
+  .pivots .row{
+    display:grid;
+    grid-template-columns: 170px 1.2fr 32px 1.2fr 32px 1.2fr;
+    gap:18px;
+    align-items:center;
+    padding:22px 0;
+    border-top:1px solid var(--rule);
+  }
+  .pivots .row:last-child{ border-bottom:1px solid var(--rule); }
+  .pivots .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--ink-mute);
+    line-height:1.5;
+  }
+  .pivots .label b{ display:block; color:var(--hc-500); font-weight:500; margin-top:4px; }
+  .pivots .stage1, .pivots .stage2, .pivots .stage3{
+    font-family:'Fraunces', serif;
+    font-size:21px;
+    line-height:1.2;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+  }
+  .pivots .stage1{ color:var(--ink-mute); }
+  .pivots .stage3 em{ font-style:italic; color:var(--hc-500); }
+  .pivots .stage1 .when, .pivots .stage2 .when, .pivots .stage3 .when{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-mute);
+    margin-top:6px;
+    line-height:1.4;
+    font-style:normal;
+  }
+  .pivots .arrow{
+    color:var(--hc-500);
+    font-family:'Fraunces', serif;
+    font-size:32px;
+    text-align:center;
+    line-height:1;
+  }
+
+  /* ===== STACK / WHAT WE BUILT ===== */
+  .stack-grid{
+    display:grid;
+    grid-template-columns:1.05fr 1fr;
+    gap:40px;
+    margin-top:14px;
+  }
+  .stack-list{ display:flex; flex-direction:column; }
+  .stack-list .row{
+    display:grid;
+    grid-template-columns: 36px 1fr;
+    gap:14px;
+    padding:13px 0;
+    border-bottom:1px dashed var(--ink-mute);
+    align-items:baseline;
+  }
+  .stack-list .row .n{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.18em;
+    color:var(--hc-500);
+  }
+  .stack-list .row .name{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+    line-height:1.1;
+  }
+  .stack-list .row .name em{font-style:italic;color:var(--hc-500)}
+  .stack-list .row .desc{
+    font-size:14px;
+    color:var(--ink-mute);
+    margin-top:4px;
+    line-height:1.45;
+  }
+  .stack-foot{
+    margin-top:14px;
+    padding-top:12px;
+    border-top:1px solid var(--paper-edge);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--ink-mute);
+    line-height:1.7;
+  }
+  .stack-foot b{ color:var(--ink); font-weight:500 }
+
+  /* ===== HOW WE USED AI (3-col) ===== */
+  .usedai{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap:30px;
+    margin-top:18px;
+  }
+  .usedai .pane{
+    border:1px solid var(--paper-edge);
+    background: var(--paper-card);
+    padding:24px 22px;
+    display:flex; flex-direction:column; gap:14px;
+    min-height:340px;
+    position:relative;
+  }
+  .usedai .pane::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:3px; background:var(--hc-500);
+  }
+  .usedai .pane .lbl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.28em; text-transform:uppercase;
+    color:var(--ink-mute);
+  }
+  .usedai .pane .h{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    font-variation-settings:"opsz" 96, "SOFT" 50;
+    color:var(--ink); line-height:1;
+  }
+  .usedai .pane .h em{ font-style:italic; color:var(--hc-500) }
+  .usedai .pane ul{ list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .usedai .pane li{
+    font-size:14.5px; line-height:1.45; color:var(--ink-soft);
+    padding-left:14px; position:relative;
+  }
+  .usedai .pane li::before{
+    content:""; position:absolute; left:0; top:9px;
+    width:6px; height:1px; background:var(--hc-500);
+  }
+  .usedai .pane .stat{
+    margin-top:auto;
+    font-family:'Share Tech Mono', monospace;
+    font-size:36px;
+    color:var(--hc-500);
+    line-height:1;
+    border-top:1px solid var(--paper-edge);
+    padding-top:14px;
+  }
+  .usedai .pane .stat .sub{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-mute); margin-top:4px;
+  }
+
+  /* ===== AI lessons ===== */
+  .lessons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:30px 56px;
+    margin-top:14px;
+  }
+  .lesson{
+    display:grid;
+    grid-template-columns:42px 1fr;
+    gap:18px;
+    padding-top:6px;
+  }
+  .lesson .num{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    font-style:italic;
+    font-variation-settings:"opsz" 96, "SOFT" 100;
+    color:var(--hc-500);
+    line-height:1;
+  }
+  .lesson .h{
+    font-family:'Fraunces', serif;
+    font-size:21px;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+    line-height:1.18;
+    margin-bottom:6px;
+  }
+  .lesson .h em{font-style:italic;color:var(--hc-500)}
+  .lesson p{
+    font-size:14.5px; line-height:1.5;
+    color:var(--ink-soft);
+    max-width:42ch;
+  }
+
+  /* ===== entrep list ===== */
+  .lessons-list{
+    margin-top:14px;
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:0 56px;
+  }
+  .lessons-list .item{
+    display:grid;
+    grid-template-columns: 32px 1fr;
+    gap:14px;
+    padding:18px 0;
+    border-top:1px solid var(--rule);
+    align-items:start;
+  }
+  .lessons-list .item .n{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.18em;
+    color:var(--hc-500);
+    padding-top:6px;
+  }
+  .lessons-list .item .t{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+    line-height:1.22;
+  }
+  .lessons-list .item .t em{font-style:italic;color:var(--hc-500)}
+  .lessons-list .item .t .why{
+    display:block;
+    font-family:'Newsreader', serif;
+    font-size:13.5px;
+    font-style:italic;
+    color:var(--ink-mute);
+    margin-top:6px;
+    line-height:1.5;
+  }
+
+  /* ===== NEXT ===== */
+  .next-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr) 1.05fr;
+    gap:0;
+    margin-top:14px;
+    border-top:1px solid var(--rule);
+  }
+  .next-grid .col{
+    padding:24px 22px 0 22px;
+    border-right:1px solid var(--rule);
+    min-height:280px;
+    position:relative;
+  }
+  .next-grid .col:last-child{ border-right:none; padding-right:0 }
+  .next-grid .col:first-child{ padding-left:0 }
+  .next-grid .col .when{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--hc-500);
+    margin-bottom:10px;
+  }
+  .next-grid .col .h{
+    font-family:'Fraunces', serif;
+    font-size:26px;
+    font-variation-settings:"opsz" 60, "SOFT" 40;
+    color:var(--ink);
+    line-height:1.05;
+    margin-bottom:14px;
+  }
+  .next-grid .col .h em{font-style:italic;color:var(--hc-500)}
+  .next-grid .col p{
+    font-size:14px; line-height:1.5;
+    color:var(--ink-soft);
+  }
+  .thanks-line{
+    margin-top:30px; padding-top:20px; border-top:1px solid var(--rule);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .thanks-line .big{
+    font-family:'Fraunces', serif;
+    font-size:84px;
+    line-height:.92; letter-spacing:-0.02em;
+    font-variation-settings:"opsz" 144, "SOFT" 80;
+    font-weight:340;
+    color:var(--ink);
+  }
+  .thanks-line .big em{ font-style:italic; color:var(--hc-500); }
+  .thanks-line .right{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--ink-mute);
+    text-align:right;
+    line-height:1.7;
+  }
+  .thanks-line .right b{ color:var(--ink); font-weight:500 }
+
+  /* ===== Marginalia ===== */
+  .margin{
+    position:absolute;
+    width:200px;
+    font-family:'Newsreader', serif;
+    font-style:italic;
+    font-size:13.5px;
+    line-height:1.45;
+    color:var(--ink-mute);
+  }
+  .margin::before{
+    content:""; display:block; width:24px; height:1px;
+    background:var(--ink-mute);
+    margin-bottom:8px;
+  }
+
+  /* ===== Nav UI ===== */
+  .ui{
+    position:fixed; left:0; right:0; bottom:18px;
+    display:flex; align-items:center; justify-content:center;
+    gap:20px; z-index:50;
+    pointer-events:none;
+  }
+  .ui .btn{
+    pointer-events:auto;
+    width:38px; height:38px;
+    border-radius:50%;
+    background:rgba(239,230,210,.95);
+    color:var(--ink);
+    border:1px solid rgba(28,24,18,.4);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .ui .btn:hover{transform:translateY(-1px); background:#fff}
+  .ui .counter{
+    pointer-events:auto;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:.22em; text-transform:uppercase;
+    color:rgba(239,230,210,.85);
+    min-width:84px; text-align:center;
+  }
+  .progress{
+    position:fixed; left:0; right:0; top:0; height:2px;
+    z-index:60; pointer-events:none;
+  }
+  .progress .bar{
+    height:100%; background:linear-gradient(90deg,var(--hc-500),var(--trace));
+    width:0%; transition:width .4s ease;
+  }
+  .help{
+    position:fixed; right:18px; top:18px; z-index:60;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px; letter-spacing:.22em; text-transform:uppercase;
+    color:rgba(239,230,210,.55);
+    pointer-events:none;
+  }
+
+  /* ===== Clickable demo URL ===== */
+  .url-link{
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    transition: color .2s ease;
+  }
+  .url-link::after{
+    content:""; position:absolute; left:0; right:100%; bottom:-2px;
+    height:1px; background: var(--hc-500);
+    transition: right .35s cubic-bezier(.2,.7,.1,1);
+  }
+  .url-link:hover{ color: var(--hc-500); }
+  .url-link:hover::after{ right: 0; }
+  .stamp-url.url-link:hover{ background: rgba(82,183,136,.14); }
+  .browser .url.url-link:hover{ color: var(--hc-500); }
+  .demo-cta{
+    display:inline-flex; align-items:center; gap:6px;
+    color: var(--hc-500); font-weight:500;
+  }
+  .demo-cta .arrow{
+    display:inline-block;
+    transition: transform .25s cubic-bezier(.2,.7,.1,1);
+  }
+  .url-link:hover .demo-cta .arrow{ transform: translateX(4px); }
+
+  /* ===== Cover signature moment ===== */
+  .slide.active .cover-title .plus{
+    display: inline-block;
+    transform-origin: center;
+    animation: plusSnap 1s cubic-bezier(.34,1.56,.64,1) both;
+    animation-delay: .65s;
+  }
+  @keyframes plusSnap {
+    0%   { opacity:0; transform: scale(.4) rotate(-12deg); }
+    60%  { opacity:1; transform: scale(1.18) rotate(3deg); }
+    80%  { transform: scale(.96) rotate(-1deg); }
+    100% { opacity:1; transform: scale(1) rotate(0); }
+  }
+
+  /* Cover EKG one-time intro draw, then settles into loop */
+  .slide.active .cover-ekg .ekg-bg{
+    stroke-dasharray: 1800;
+    stroke-dashoffset: 1800;
+    animation: ekgIntro 1.6s cubic-bezier(.5,.05,.2,1) .25s forwards;
+  }
+  @keyframes ekgIntro {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Parallax — mouse move on cover shifts pill / EKG slightly */
+  .cover-pill-stage,
+  .cover-ekg svg{
+    will-change: transform;
+    transition: transform .4s cubic-bezier(.2,.7,.1,1);
+  }
+
+  /* ===== Score ring — fills on slide activate ===== */
+  .score-ring .fill{ stroke-dashoffset: 226.19; }
+  .slide.active .score-ring .fill{ stroke-dashoffset: 41; }
+
+  /* ===== Overview grid ===== */
+  .overview-grid{ display:none; }
+  body.overview-mode .frame{ visibility:hidden; pointer-events:none; }
+  body.overview-mode .ui,
+  body.overview-mode .help,
+  body.overview-mode .progress{ display:none; }
+  body.overview-mode .overview-grid{
+    display:grid; position:fixed; inset:0; z-index:80;
+    padding: 38px 40px 60px;
+    grid-template-columns: repeat(4, 288px);
+    gap: 28px 22px;
+    justify-content: center; align-content: flex-start;
+    overflow-y: auto;
+    background:
+      radial-gradient(ellipse at 50% 0%, #2a2218 0%, #0c0a07 65%);
+    animation: ovIn .35s cubic-bezier(.2,.7,.1,1) both;
+  }
+  @keyframes ovIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0);} }
+  .overview-grid .ov-head{
+    grid-column: 1 / -1;
+    display:flex; align-items:baseline; justify-content:space-between;
+    padding: 6px 0 10px;
+    border-bottom: 1px solid rgba(239,230,210,.12);
+    margin-bottom: 4px;
+  }
+  .overview-grid .ov-head .t{
+    font-family:'Fraunces', serif;
+    font-size: 38px;
+    color: rgba(239,230,210,.94);
+    font-variation-settings: "opsz" 144, "SOFT" 80;
+    font-weight: 360;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .overview-grid .ov-head .t em{
+    font-style: italic;
+    color: var(--trace);
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+  }
+  .overview-grid .ov-head .meta{
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing:.22em; text-transform: uppercase;
+    color: rgba(239,230,210,.55);
+  }
+  .overview-grid .ov-head .meta kbd{
+    background: rgba(239,230,210,.10);
+    border: 1px solid rgba(239,230,210,.18);
+    color: rgba(239,230,210,.85);
+    padding: 2px 7px; border-radius: 3px;
+    font-family: inherit; font-size: 10.5px;
+  }
+  .overview-grid .thumb-card{
+    display:flex; flex-direction:column; gap:8px;
+    cursor:pointer;
+    padding:0; margin:0; border:none; background:none;
+    text-align:left;
+    font-family: inherit;
+  }
+  .overview-grid .thumb{
+    position:relative;
+    width:288px; height:162px;
+    border:1px solid rgba(239,230,210,.18);
+    overflow:hidden;
+    background: var(--paper);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+  }
+  .overview-grid .thumb-card:hover .thumb{
+    transform: translateY(-3px);
+    border-color: rgba(184, 137, 58, .65);
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  }
+  .overview-grid .thumb-card.active .thumb{
+    border-color: var(--trace);
+    box-shadow: 0 0 0 1px var(--trace), 0 12px 28px rgba(0,0,0,.4);
+  }
+  .overview-grid .thumb .thumb-inner{
+    position:absolute; top:0; left:0;
+    width:1440px; height:810px;
+    transform: scale(0.2);
+    transform-origin: top left;
+    pointer-events:none;
+  }
+  .overview-grid .thumb .thumb-inner > .slide{
+    opacity:1 !important; transform:none !important;
+  }
+  .overview-grid .thumb .thumb-inner *{ animation: none !important; }
+  .overview-grid .thumb-card .label{
+    display:flex; gap:10px; align-items:baseline;
+    font-family:'IBM Plex Mono', monospace;
+    font-size: 10.5px; letter-spacing:.18em; text-transform: uppercase;
+    color: rgba(239,230,210,.7);
+  }
+  .overview-grid .thumb-card .label .num{
+    color: var(--trace);
+  }
+  .overview-grid .thumb-card.active .label .num{ color: var(--trace-glow); }
+
+  /* Stagger reveal */
+  .slide.active .reveal{ animation: rise .8s cubic-bezier(.2,.7,.1,1) both; }
+  .slide.active .reveal:nth-child(1){animation-delay:.05s}
+  .slide.active .reveal:nth-child(2){animation-delay:.18s}
+  .slide.active .reveal:nth-child(3){animation-delay:.30s}
+  .slide.active .reveal:nth-child(4){animation-delay:.42s}
+  .slide.active .reveal:nth-child(5){animation-delay:.54s}
+  .slide.active .reveal:nth-child(6){animation-delay:.66s}
+  .slide.active .reveal:nth-child(7){animation-delay:.78s}
+  .slide.active .reveal:nth-child(8){animation-delay:.90s}
+  @keyframes rise{
+    from{opacity:0; transform:translateY(14px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+</style>
+</head>
+<body>
+<div class="progress"><div class="bar" id="progressBar"></div></div>
+<div class="help">← / → · space · O = overview · home/end</div>
+
+<!-- ===== Reusable SVG defs ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="pillL" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b6b"/>
+      <stop offset="50%" stop-color="#ee5253"/>
+      <stop offset="100%" stop-color="#d42c2c"/>
+    </linearGradient>
+    <linearGradient id="pillR" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f4f1ea"/>
+      <stop offset="50%" stop-color="#dccfb0"/>
+      <stop offset="100%" stop-color="#bda77f"/>
+    </linearGradient>
+    <linearGradient id="pillG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<div class="frame">
+<div class="stage" id="stage">
+
+<!-- =================== SLIDE 1 — COVER =================== -->
+<section class="slide active">
+  <header class="masthead">
+    <div class="lockup">
+      <svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80" aria-hidden="true">
+        <g transform="rotate(-45 100 50)">
+          <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/>
+          <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/>
+          <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/>
+          <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/>
+          <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/>
+        </g>
+      </svg>
+      <span class="word">DocDefend+</span>
+    </div>
+    <div class="vol">Vol. I — Spring 2026</div>
+    <div class="right">
+      <span>Final Presentation</span>
+      <span>IDS 594</span>
+      <span>May 1, 2026</span>
+    </div>
+    <div class="masthead-ekg">
+      <svg class="ekg" viewBox="0 0 1280 14" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ekg-bg" d="M0,7 L260,7 L300,7 L320,5 L340,9 L350,2 L360,12 L370,7 L420,7 L460,7 L780,7 L820,7 L840,4 L860,10 L870,1 L880,13 L890,7 L940,7 L1280,7"/>
+      </svg>
+    </div>
+  </header>
+
+  <div class="cover-grid">
+    <div class="cover-left">
+      <div class="cover-eyebrow reveal"><div class="eyebrow">An entrepreneurship-with-AI field report</div></div>
+      <h1 class="cover-title reveal">DocDefend<span class="plus">+</span></h1>
+      <p class="cover-deck reveal">Defensible documentation, by design — for the small practices the EMR forgot.</p>
+
+      <div class="cover-ekg reveal" aria-hidden="true">
+        <span class="cover-ekg-label">Live · synthetic data</span>
+        <span class="cover-ekg-bpm">72 bpm</span>
+        <svg class="ekg" viewBox="0 0 1800 64" preserveAspectRatio="none">
+          <path class="ekg-bg" d="M0,32 L260,32 L320,32 L360,30 L380,34 L400,8 L420,56 L440,26 L460,32 L800,32 L860,32 L900,30 L920,34 L940,8 L960,56 L980,26 L1000,32 L1340,32 L1400,32 L1440,30 L1460,34 L1480,8 L1500,56 L1520,26 L1540,32 L1800,32"/>
+          <path class="ekg-pulse" d="M0,32 L260,32 L320,32 L360,30 L380,34 L400,8 L420,56 L440,26 L460,32 L800,32 L860,32 L900,30 L920,34 L940,8 L960,56 L980,26 L1000,32 L1340,32 L1400,32 L1440,30 L1460,34 L1480,8 L1500,56 L1520,26 L1540,32 L1800,32"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="cover-right reveal">
+      <div class="cover-pill-stage" aria-hidden="true">
+        <svg class="pill-svg pill-mark pill-shadow" viewBox="20 10 160 80">
+          <g transform="rotate(-45 100 50)">
+            <path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/>
+            <path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/>
+            <rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/>
+            <line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/>
+            <path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/>
+          </g>
+        </svg>
+      </div>
+      <a class="cover-stamp url-link" href="https://docdefend.health" target="_blank" rel="noopener" aria-label="Open the live DocDefend MVP">
+        Live MVP<br>
+        docdefend.<br>health
+      </a>
+    </div>
+
+    <div class="cover-team reveal">
+      <div class="member"><div class="role">Founder</div><div class="name">Amir<br>Abdur-Rahim</div></div>
+      <div class="member"><div class="role">Founder</div><div class="name">Jake<br>Ash</div></div>
+      <div class="member"><div class="role">Founder</div><div class="name">Lucas<br>Kopec</div></div>
+      <div class="member"><div class="role">Founder</div><div class="name">Parth<br>Patel</div></div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">01 / 15</div>
+    <div class="ornament">University of Illinois Chicago</div>
+    <div>Group 3 · Spring 2026</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 2 — THE PROBLEM =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup">
+      <svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg>
+      <span class="word">DocDefend+</span>
+    </div>
+    <div class="vol">§ I — Problem</div>
+    <div class="right"><span>Three actors, one missing handoff</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">01</span> · The problem</div>
+      <h2>Three people touch the bill. None of them check the note against the code.</h2>
+    </div>
+
+    <div class="actors reveal">
+      <div class="actor">
+        <div class="label">Step 01</div>
+        <div class="who">Physician</div>
+        <ul>
+          <li>Writes the clinical note</li>
+          <li>Often via Doximity / AI scribe</li>
+          <li>Documents for clinical accuracy, not billing</li>
+        </ul>
+      </div>
+      <div class="arrow">▶</div>
+      <div class="actor">
+        <div class="label">Step 02</div>
+        <div class="who">Billing Company</div>
+        <ul>
+          <li>Pulls the note from the EMR</li>
+          <li>Picks the CPT &amp; ICD-10 codes</li>
+          <li>Downcodes when the note is unclear — 5–15% revenue lost</li>
+        </ul>
+      </div>
+      <div class="arrow">▶</div>
+      <div class="actor">
+        <div class="label">Step 03</div>
+        <div class="who">Insurance Payer</div>
+        <ul>
+          <li>71% use AI for utilization mgmt</li>
+          <li>Auto-downcodes E/M levels</li>
+          <li>Only 11.7% of denials are appealed</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nobody-quote reveal">
+      <div>Doximity writes the note. The billing company picks the codes. Payers use AI to deny. <em>Nobody checks whether the note supports the codes.</em></div>
+      <div class="nobody-quote-attr">— Our framing, distilled from interviews · WPU 4-6</div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">02 / 15</div>
+    <div class="ornament">The Problem</div>
+    <div>Sources: AAPC · CMS audit data · provider interviews</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 3 — SCALE =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ I — Problem</div>
+    <div class="right"><span>The size of the gap</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">02</span> · The scale</div>
+      <h2>How big is the gap, and who is paying for it?</h2>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal">
+        <div class="v"><span data-countup="80" data-decimals="0">80</span><span class="sub">%</span></div>
+        <div class="label">Of medical bills<br>contain errors</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v"><span data-countup="42" data-decimals="0">42</span><span class="sub">%</span></div>
+        <div class="label">Of claim denials come from<br>coding mistakes</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v">33-50<span class="sub">%</span></div>
+        <div class="label">Of family-medicine visits coded<br>lower than the note supports</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v green"><span data-countup="29" data-decimals="0" data-prefix="$" data-suffix="K">$29K</span><span class="sub">+</span></div>
+        <div class="label">Lost per physician per year<br>to under-coding alone</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:42px; padding-top:18px; border-top:1px solid var(--rule); display:grid; grid-template-columns: repeat(3, 1fr); gap:24px;">
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:34px;color:var(--ink);line-height:1">1 in 5</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">claims is denied — 80% are preventable</div>
+      </div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:34px;color:var(--ink);line-height:1"><span data-countup="14" data-decimals="0">14</span><span style="font-size:18px">%</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">of providers use AI to fight back against denials</div>
+      </div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:34px;color:var(--ink);line-height:1"><span data-countup="11.7" data-decimals="1">11.7</span><span style="font-size:18px">%</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">of denials are even appealed (despite 80–90% appeal success)</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">03 / 15</div>
+    <div class="ornament">The Scale</div>
+    <div>The size of the gap, and who is paying for it</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 4 — WHAT IT DOES =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ II — Solution</div>
+    <div class="right"><span>What DocDefend+ does</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">03</span> · The product</div>
+      <h2>It catches documentation gaps before the claim goes out.</h2>
+    </div>
+
+    <div class="three-col">
+      <div class="step reveal">
+        <div class="num">Step 01</div>
+        <div class="h">Paste the note.</div>
+        <p>The provider drops a clinical note from the EMR. No integration required for the wedge.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">Step 02</div>
+        <div class="h">Pick (or suggest) the codes.</div>
+        <p>CPT and ICD-10 the provider intended to bill — or have the model propose them with confidence levels.</p>
+      </div>
+      <div class="step reveal">
+        <div class="num">Step 03</div>
+        <div class="h">Get a defensibility report.</div>
+        <p>Score, gap analysis, fix suggestions, E/M level recommendation, and the dollar impact of getting it right.</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:36px"><a class="stamp-url url-link" href="https://docdefend.health" target="_blank" rel="noopener"><span class="dot"></span>Live · docdefend.health · stateless API on Render <span class="demo-cta">· try it <span class="arrow">→</span></span></a></div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">04 / 15</div>
+    <div class="ornament">The Product</div>
+    <div>React 18 · Express · Anthropic Claude Sonnet 4 · synthetic data only</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 5 — TIMELINE =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ III — Progress</div>
+    <div class="right"><span>What actually happened, week by week</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">04</span> · The journey</div>
+      <h2>Fourteen weeks. Two pivots in customer. Two in scope.</h2>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="row">
+        <div class="col">
+          <div class="month">Jan / Feb</div>
+          <div class="event">Idea formation, market sizing<span class="who">WPU 1</span></div>
+        </div>
+        <div class="col">
+          <div class="month">Feb</div>
+          <div class="event">Caruso interview · Ranga skepticism<span class="who">WPU 2</span></div>
+        </div>
+        <div class="col major">
+          <div class="month">Late Feb</div>
+          <div class="event">MVP v1 live<span class="who">vercel.app</span></div>
+        </div>
+        <div class="col">
+          <div class="month">Early Mar</div>
+          <div class="event">Outler interview · expand to FM<span class="who">WPU 3-4</span></div>
+        </div>
+        <div class="col">
+          <div class="month">Mar</div>
+          <div class="event">Abdurrahim interview<span class="who">tool fatigue</span></div>
+        </div>
+        <div class="col major">
+          <div class="month">Mar 20</div>
+          <div class="event">Downcoding engine + n8n monitor<span class="who">deterministic</span></div>
+        </div>
+        <div class="col">
+          <div class="month">Late Mar</div>
+          <div class="event">Coder mode · custom domain<span class="who">docdefend.health</span></div>
+        </div>
+        <div class="col major">
+          <div class="month">Early Apr</div>
+          <div class="event">Auth shipped · Shivani pivot<span class="who">back to providers</span></div>
+        </div>
+        <div class="col">
+          <div class="month">Apr 16</div>
+          <div class="event">Caruso #2 — time-based billing<span class="who">next ship</span></div>
+        </div>
+        <div class="col major">
+          <div class="month">Apr / May</div>
+          <div class="event">Plan B pipeline · MTSamples<span class="who">15-20 providers</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="margin reveal" style="left:84px; bottom:96px;">
+      Pivots happened on specific dates after specific conversations. None of them were our idea alone.
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">05 / 15</div>
+    <div class="ornament">The Journey</div>
+    <div>Spring 2026 · WPU 1 → WPU 8</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 6 — PEOPLE =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ IV — Discovery</div>
+    <div class="right"><span>The people who shaped the product</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">05</span> · The people who shaped this</div>
+      <h2>Five interviews that changed our direction. Not all of them were endorsements.</h2>
+    </div>
+
+    <div class="interview-grid">
+      <div class="interview reveal">
+        <div class="open">"</div>
+        <div class="quote">Absolutely. <em>Physicians already use AI tools — this would be welcome.</em></div>
+        <div class="who"><b>Dr. Deborah Caruso</b><br>VA · PM&amp;R · 15 yrs · WPU 2 + 8</div>
+      </div>
+      <div class="interview reveal">
+        <div class="open">"</div>
+        <div class="quote">Coding is delegated. Family Medicine and Emergency Medicine are <em>better fits</em> than what you're targeting.</div>
+        <div class="who"><b>Dr. Outler</b><br>Stroger · Anesthesia · WPU 3</div>
+      </div>
+      <div class="interview reveal">
+        <div class="open">"</div>
+        <div class="quote">If AI is already writing my notes, <em>why would I need another AI to check them?</em></div>
+        <div class="who"><b>Dr. Abdurrahim</b><br>FM · Dallas private practice · WPU 4</div>
+      </div>
+      <div class="interview reveal skeptic">
+        <div class="open">"</div>
+        <div class="quote">The coding-and-billing space has been <em>beaten to death.</em> Pain mgmt alone is too narrow.</div>
+        <div class="who"><b>Prof. Ranga</b><br>Faculty review · WPU 2</div>
+      </div>
+      <div class="interview reveal">
+        <div class="open">"</div>
+        <div class="quote">Niche down. Verify against real data. Get <em>10–20 providers</em> to commit. Then it's VC-fundable.</div>
+        <div class="who"><b>Shivani Singh</b><br>Guest Speaker · WPU 7</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">06 / 15</div>
+    <div class="ornament">Customer Discovery</div>
+    <div>Quotes paraphrased from team interview notes</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 7 — PIVOTS =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ V — Pivots</div>
+    <div class="right"><span>Three things we changed our mind about</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">06</span> · Pivots</div>
+      <h2>Three pivots, with dates and the names that triggered them.</h2>
+    </div>
+
+    <div class="pivots">
+      <div class="row reveal">
+        <div class="label">01<br><b>Customer</b></div>
+        <div class="stage1">Physicians<span class="when">Jan — original target</span></div>
+        <div class="arrow">→</div>
+        <div class="stage2">Billing companies<span class="when">Mar · Outler &amp; Abdurrahim &amp; Jordan</span></div>
+        <div class="arrow">→</div>
+        <div class="stage3"><em>Back to providers</em><span class="when">Apr · Shivani</span></div>
+      </div>
+      <div class="row reveal">
+        <div class="label">02<br><b>Specialty</b></div>
+        <div class="stage1">Pain management only<span class="when">Jan</span></div>
+        <div class="arrow">→</div>
+        <div class="stage2">Add Family Medicine<span class="when">Mar · after Outler</span></div>
+        <div class="arrow">→</div>
+        <div class="stage3"><em>Re-focus on pain mgmt</em><span class="when">Apr · niche to win</span></div>
+      </div>
+      <div class="row reveal">
+        <div class="label">03<br><b>Strategy</b></div>
+        <div class="stage1">Build, then validate<span class="when">Jan – Mar</span></div>
+        <div class="arrow">→</div>
+        <div class="stage2">"Can we sell to coders?"<span class="when">Mar · WPU 5-6</span></div>
+        <div class="arrow">→</div>
+        <div class="stage3"><em>Demand-first</em><span class="when">Apr 3 · pipeline → raise → HIPAA</span></div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:30px; padding-top:18px; display:flex; align-items:center; gap:18px; max-width:880px;">
+      <div style="flex:0 0 auto; width:36px; height:1px; background:var(--ink-mute);"></div>
+      <div style="font-family:'Newsreader', serif; font-style:italic; font-size:15px; line-height:1.5; color:var(--ink-mute);">
+        A pivot is data, not a failure of conviction. Each of these came from a specific conversation we can name.
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">07 / 15</div>
+    <div class="ornament">Pivots</div>
+    <div>Each pivot has a name attached</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 8 — WHAT WE BUILT =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VI — Build</div>
+    <div class="right"><span>What's actually under the hood</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">07</span> · The MVP</div>
+      <h2>Five engines, one defensibility report.</h2>
+    </div>
+
+    <div class="stack-grid">
+      <div class="reveal">
+        <div class="stack-list">
+          <div class="row"><div class="n">01</div><div><div class="name">Defensibility analysis</div><div class="desc">Compares note evidence to the requirements of the selected CPT / ICD-10 codes. Returns a score, gaps, and fix suggestions.</div></div></div>
+          <div class="row"><div class="n">02</div><div><div class="name">Code suggestion <em>(coder mode)</em></div><div class="desc">Upload a note without pre-selected codes; get the highest defensible CPT &amp; ICD-10 with confidence levels.</div></div></div>
+          <div class="row"><div class="n">03</div><div><div class="name">E/M leveling</div><div class="desc">CMS 2021 MDM rules applied as deterministic logic; AI extracts elements, code decides the level.</div></div></div>
+          <div class="row"><div class="n">04</div><div><div class="name">Financial impact</div><div class="desc">Per-note dollar lift using Medicare PFS rates we manually pulled and labelled; commercial rates flagged separately.</div></div></div>
+          <div class="row"><div class="n">05</div><div><div class="name">Payer downcoding monitor</div><div class="desc">Deterministic rules per payer (Medicare · UHC · Aetna · BCBS · Cigna), refreshed weekly by an n8n workflow.</div></div></div>
+        </div>
+        <div class="stack-foot">
+          JWT auth · custom domain <a class="url-link" href="https://docdefend.health" target="_blank" rel="noopener"><b>docdefend.health</b></a> · Vercel + Render · 10 sample notes (6 PM + 4 FM) · synthetic only
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="browser">
+          <div class="bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><a class="url url-link" href="https://docdefend.health" target="_blank" rel="noopener">docdefend.health/analyze</a></div>
+          <div class="body">
+            <div class="badge"><span class="pulse"></span> Defensibility Report — preview</div>
+            <h4>Visit · 2026-04-22 · 99213 → recommend 99214</h4>
+            <div class="scorewrap">
+              <div class="score-ring">
+                <svg viewBox="0 0 80 80">
+                  <circle class="track" cx="40" cy="40" r="36"/>
+                  <circle class="fill" cx="40" cy="40" r="36"/>
+                </svg>
+                <div class="num" data-countup="82" data-decimals="0">82</div>
+              </div>
+              <div class="meta">
+                <div class="lbl">Defensibility</div>
+                <div class="val">High — fixable</div>
+                <div class="em">3 gaps · 1 upgrade · time-based eligible</div>
+              </div>
+            </div>
+            <div class="row-doc gap"><span>HPI elements documented</span><span class="v">3 / 4 — gap</span></div>
+            <div class="row-doc gap"><span>MDM complexity</span><span class="v">moderate, undocumented</span></div>
+            <div class="row-doc win"><span>Time-based eligibility</span><span class="v">29 min ✓</span></div>
+            <div class="row-doc"><span>ICD-10 specificity</span><span class="v">M54.50 → M54.51</span></div>
+            <div class="delta">
+              <b>Revenue impact · this note</b>
+              <span class="big">+ <span data-countup="42.18" data-decimals="2" data-prefix="$">$42.18</span></span>
+              <div style="margin-top:4px">Estimated annual lift across 18 weekly visits: <b><span data-countup="39.4" data-decimals="1" data-prefix="$" data-suffix="K">$39.4K</span></b></div>
+            </div>
+            <div class="downcode">
+              <span class="badge-t">Cigna risk</span>
+              <span>Auto-downcoding 99214 → 99213 since Oct 2025. Add MDM details to defend.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">08 / 15</div>
+    <div class="ornament">The Stack</div>
+    <div>Stateless API · localStorage history · ESM throughout</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 9 — NUMBERS =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VII — By the Numbers</div>
+    <div class="right"><span>14 weeks, in integers — including the awkward ones</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">08</span> · Where we ended up</div>
+      <h2>The shape of the work — including the parts that didn't go well.</h2>
+    </div>
+
+    <div class="stats">
+      <div class="stat reveal">
+        <div class="v green"><span data-countup="14" data-decimals="0">14</span></div>
+        <div class="label">Weeks · idea<br>to live MVP</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v"><span data-countup="6" data-decimals="0">6</span></div>
+        <div class="label">Provider &amp; advisor<br>interviews completed</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v" style="color:var(--pill-red)">0</div>
+        <div class="label">Replies from cold outreach<br>(35+ practices &amp; billing cos)</div>
+      </div>
+      <div class="stat reveal">
+        <div class="v green"><span style="font-size:80px"><span data-countup="95" data-decimals="0" data-prefix="~">~95</span></span><span class="sub">%</span></div>
+        <div class="label">Of code authored with<br>Claude Code</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:48px; padding-top:18px; border-top:1px solid var(--rule); display:grid; grid-template-columns: repeat(4, 1fr); gap:24px;">
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:30px;color:var(--ink);line-height:1"><span data-countup="5" data-decimals="0">5</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">production engines shipped</div>
+      </div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:30px;color:var(--ink);line-height:1"><span data-countup="1" data-decimals="0">1</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">n8n payer-policy monitor, weekly</div>
+      </div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:30px;color:var(--ink);line-height:1"><span data-countup="10" data-decimals="0">10</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">sample notes (6 pain mgmt + 4 FM)</div>
+      </div>
+      <div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:30px;color:var(--ink);line-height:1; color:var(--hc-500)">15-20</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-mute);margin-top:8px;line-height:1.5">providers in active demo pipeline (Plan B)</div>
+      </div>
+    </div>
+
+    <div class="margin reveal" style="right:84px; bottom:120px;">
+      Zero cold-outreach replies, twice over. Warm intros and personal networks did the work — the same lesson advisors had been telling us all semester.
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">09 / 15</div>
+    <div class="ornament">By the Numbers</div>
+    <div>Stats as of presentation day · April 30, 2026</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 10 — HOW WE USED AI =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VIII — On AI</div>
+    <div class="right"><span>How we used AI · part 1 of 4</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">09</span> · How we used AI</div>
+      <h2>AI showed up as a development partner, a product engine, and a research analyst.</h2>
+    </div>
+
+    <div class="usedai">
+      <div class="pane reveal">
+        <div class="lbl">01 · Building the MVP</div>
+        <div class="h">Claude Code</div>
+        <ul>
+          <li>Full-stack development, AI-assisted, in the terminal</li>
+          <li>The frontend-design skill produced UI components &amp; styling</li>
+          <li>Iterative — describe what you want, AI writes the code, we review &amp; ship</li>
+        </ul>
+        <div class="stat">~95<span style="font-size:18px">%</span><span class="sub">of code authored with Claude</span></div>
+      </div>
+      <div class="pane reveal">
+        <div class="lbl">02 · The product engine</div>
+        <div class="h">Claude API <span style="font-size:14px;color:var(--ink-mute);font-style:italic">(Sonnet 4)</span></div>
+        <ul>
+          <li>Reads notes, evaluates documentation defensibility</li>
+          <li>E/M leveling with MDM-element matching</li>
+          <li>Gap analysis, fix suggestions, financial impact estimates</li>
+        </ul>
+        <div class="stat">4096<span class="sub">max tokens · 55s timeout · structured JSON</span></div>
+      </div>
+      <div class="pane reveal">
+        <div class="lbl">03 · Research &amp; strategy</div>
+        <div class="h">Claude + Web Search</div>
+        <ul>
+          <li>Competitive landscape across 9+ AI coding companies</li>
+          <li>Market sizing &amp; industry trend research</li>
+          <li>Interview prep &amp; customer-discovery strategy</li>
+        </ul>
+        <div class="stat">9+<span class="sub">competitors mapped · 5 payers · CMS guidelines indexed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">10 / 15</div>
+    <div class="ornament">How We Used AI</div>
+    <div>Three roles, one model family</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 11 — AI: WHAT WORKED =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VIII — On AI</div>
+    <div class="right"><span>What worked · part 2 of 4</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">10</span> · What worked</div>
+      <h2>Where AI made us faster than we had any business being.</h2>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson reveal">
+        <div class="num">i.</div>
+        <div>
+          <div class="h">A four-person team shipped a full-stack MVP in 14 weeks.</div>
+          <p>Across React, Express, the Anthropic SDK, JWT auth, file upload, PDF export — most of which none of us would have written by hand in time.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">ii.</div>
+        <div>
+          <div class="h">Domain expertise in the prompt beat reaching for a bigger model.</div>
+          <p>The strongest unlock was Amir's hospitalist-scribe knowledge encoded as system prompts and grounding data — not Sonnet 4 vs. 3.5.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iii.</div>
+        <div>
+          <div class="h">Structured JSON output turned a chatty model into a reliable API.</div>
+          <p>Every engine returns a typed shape the front-end can trust. The model is a function call, not a conversation.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iv.</div>
+        <div>
+          <div class="h">Shipping in rings, not phases.</div>
+          <p>Defensibility, downcoding, financial impact, coder mode — each was independently demoable. AI lets you split scope finer than you used to.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">11 / 15</div>
+    <div class="ornament">What Worked</div>
+    <div>Anthropic Claude Sonnet 4 · prompt caching · structured output</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 12 — AI: WHERE IT BROKE =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VIII — On AI</div>
+    <div class="right"><span>Where it broke · part 3 of 4</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">11</span> · Where it broke</div>
+      <h2>The four cracks we learned to build around.</h2>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson reveal">
+        <div class="num">i.</div>
+        <div>
+          <div class="h">AI couldn't get us a single interview.</div>
+          <p>Cold outreach to physicians (15-20) and to billing companies (8) returned zero replies across two semesters of attempts. Personal networks did all the work.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">ii.</div>
+        <div>
+          <div class="h">The model was confidently wrong about coding rules.</div>
+          <p>Hallucinated CPT requirements with full conviction. Fix: the downcoding engine is deterministic on purpose — rules from CMS / payer policy, no AI in the path.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iii.</div>
+        <div>
+          <div class="h">AI couldn't tell us who the customer was.</div>
+          <p>Three interviews pointed three different directions (provider · billing co · neither). Synthesis is a human job; the model can't do it for you.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iv.</div>
+        <div>
+          <div class="h">Token economics compound at scale.</div>
+          <p>$0.04 per note feels free. At 200 notes / provider / week across a vertical, the API line becomes the COGS conversation. Caching isn't optional.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">12 / 15</div>
+    <div class="ornament">Where It Broke</div>
+    <div>Honest limits, written down so we don't relearn them</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 13 — WHAT WE'D TELL OURSELVES =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ VIII — On AI</div>
+    <div class="right"><span>What we'd tell ourselves on day one · part 4 of 4</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">12</span> · What we wish we'd known in January</div>
+      <h2>The four things we'd put in week one's CLAUDE.md if we did this again.</h2>
+    </div>
+
+    <div class="lessons">
+      <div class="lesson reveal">
+        <div class="num">i.</div>
+        <div>
+          <div class="h">Write the spec before asking the model to build it.</div>
+          <p>The hours we lost were the hours we hadn't put pen to paper first. The model writes to a spec; without one, you're paying for confident guesses.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">ii.</div>
+        <div>
+          <div class="h">Talk to a real user in week one.</div>
+          <p>AI made building so cheap that validation became the bottleneck. A 30-minute call in week 1 would have saved us two features in week 6.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iii.</div>
+        <div>
+          <div class="h">Pick a wedge, not a platform.</div>
+          <p>AI tempts you to build everything. The discipline is choosing the smallest version that one specific person will pay for, and resisting the rest.</p>
+        </div>
+      </div>
+      <div class="lesson reveal">
+        <div class="num">iv.</div>
+        <div>
+          <div class="h">Distribution is the moat.</div>
+          <p>Anyone can ship our app now. The defensible asset is the relationship with 20 clinics and the credibility of having sat in the room.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">13 / 15</div>
+    <div class="ornament">What We'd Tell Ourselves</div>
+    <div>Day-one notes, written from week 14</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 14 — ENTREPRENEURSHIP =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ IX — On Entrepreneurship</div>
+    <div class="right"><span>What doing it taught us</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">13</span> · Entrepreneurship · first-hand</div>
+      <h2>Six lessons that came from doing the thing, not reading about it.</h2>
+    </div>
+
+    <div class="lessons-list">
+      <div class="item reveal">
+        <div class="n">i.</div>
+        <div class="t">
+          The build is the easy part.
+          <span class="why">Selling, validating, picking the right customer — that's where the real semester happened.</span>
+        </div>
+      </div>
+      <div class="item reveal">
+        <div class="n">ii.</div>
+        <div class="t">
+          Cold outreach is brutal. Warm intros are everything.
+          <span class="why">Two rounds of cold outreach (35+ contacts) = zero replies. Every interview we got came through a warm hand-off.</span>
+        </div>
+      </div>
+      <div class="item reveal">
+        <div class="n">iii.</div>
+        <div class="t">
+          Every advisor disagrees with every other advisor.
+          <span class="why">Ranga: pivot. Rodrigo: pricing. Jordan: switch buyers. Shivani: switch back. Synthesis is the founder's job, not theirs.</span>
+        </div>
+      </div>
+      <div class="item reveal">
+        <div class="n">iv.</div>
+        <div class="t">
+          Founder-market fit is the strongest pitch we have.
+          <span class="why">Between Amir's years inside the EMR as a hospitalist scribe and the team's clinical contacts and operating experience in healthcare, we know the workflow we're fixing — and we know the people who use it.</span>
+        </div>
+      </div>
+      <div class="item reveal">
+        <div class="n">v.</div>
+        <div class="t">
+          Tool fatigue is real. The tool that wins fits inside an existing workflow.
+          <span class="why">"If AI is already writing my notes, why would I need another AI to check them?" — and that's the buyer we want.</span>
+        </div>
+      </div>
+      <div class="item reveal">
+        <div class="n">vi.</div>
+        <div class="t">
+          A pivot is data, not a failure of conviction.
+          <span class="why">Each of our four pivots followed a specific conversation we can name. The semester moved when we let the data speak.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">14 / 15</div>
+    <div class="ornament">On Entrepreneurship</div>
+    <div>Lessons earned, not borrowed</div>
+  </footer>
+</section>
+
+<!-- =================== SLIDE 15 — WHAT'S NEXT + THANKS =================== -->
+<section class="slide">
+  <header class="masthead">
+    <div class="lockup"><svg class="pill-svg" width="22" height="11" viewBox="20 10 160 80"><g transform="rotate(-45 100 50)"><path d="M50,20 H100 V80 H50 A30,30 0 0,1 50,20" fill="url(#pillL)"/><path d="M100,20 H150 A30,30 0 0,1 150,80 H100 V20" fill="url(#pillR)"/><rect x="50" y="25" width="100" height="14" rx="7" fill="url(#pillG)"/><line x1="100" y1="20" x2="100" y2="80" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/><path d="M50,20 H150 A30,30 0 0,1 150,80 H50 A30,30 0 0,1 50,20" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="1.5"/></g></svg><span class="word">DocDefend+</span></div>
+    <div class="vol">§ X — Close</div>
+    <div class="right"><span>What's next · Thank you</span></div>
+  </header>
+
+  <div>
+    <div class="head-block reveal" style="padding-top:18px">
+      <div class="eyebrow"><span class="index">14</span> · What's next</div>
+      <h2>Shivani's three conditions, in order. Plus what ships next week.</h2>
+    </div>
+
+    <div class="next-grid">
+      <div class="col reveal">
+        <div class="when">May → June</div>
+        <div class="h">Validate.</div>
+        <p>MTSamples self-validation against CMS MDM guidelines. De-identified pilot with prior contacts (no HIPAA infra needed yet).</p>
+      </div>
+      <div class="col reveal">
+        <div class="when">June → July</div>
+        <div class="h">Build the pipeline.</div>
+        <p>Plan B in earnest: 10–20 pain management providers committed to using the tool and saying they'd pay for it.</p>
+      </div>
+      <div class="col reveal">
+        <div class="when">July → Fall</div>
+        <div class="h">Compliance, then capital.</div>
+        <p>Move to AWS Bedrock under a BAA once demand justifies it. Take the LOIs to Chicago / Boston regional health-tech funds.</p>
+      </div>
+      <div class="col reveal">
+        <div class="when">Next week</div>
+        <div class="h">Ship time-based billing.</div>
+        <p>Caruso flagged it April 16. Time-based E/M is a legitimate path under CMS rules — and a real gap in the current MVP.</p>
+      </div>
+    </div>
+
+    <div class="thanks-line reveal">
+      <div class="big">Thank <em>you.</em></div>
+      <div class="right">
+        Live · <a class="url-link" href="https://docdefend.health" target="_blank" rel="noopener"><b>docdefend.health</b></a><br>
+        Amir · Jake · Lucas · Parth<br>
+        Open for questions
+      </div>
+    </div>
+  </div>
+
+  <footer class="colophon">
+    <div class="num">15 / 15</div>
+    <div class="ornament">Fin.</div>
+    <div>DocDefend+ · IDS 594 · UIC · Spring 2026</div>
+  </footer>
+</section>
+
+</div><!-- /.stage -->
+</div><!-- /.frame -->
+
+<!-- ===== Nav UI ===== -->
+<div class="ui">
+  <button class="btn" id="prev" aria-label="Previous">&larr;</button>
+  <span class="counter" id="counter">01 / 15</span>
+  <button class="btn" id="next" aria-label="Next">&rarr;</button>
+</div>
+
+<script>
+  const STAGE_W = 1440, STAGE_H = 810;
+  const stage = document.getElementById('stage');
+  function fit(){
+    const sx = window.innerWidth  / STAGE_W;
+    const sy = window.innerHeight / STAGE_H;
+    const s  = Math.min(sx, sy) * 0.96;
+    stage.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const counter = document.getElementById('counter');
+  const bar = document.getElementById('progressBar');
+  let i = 0;
+
+  function pad(n){ return n.toString().padStart(2,'0') }
+  function el(tag, cls, text){
+    const e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(text != null) e.textContent = text;
+    return e;
+  }
+
+  // ==== Count-up animation =====================================
+  function animateCountUps(slide){
+    const els = slide.querySelectorAll('[data-countup]');
+    els.forEach((node, idx) => {
+      const end = parseFloat(node.dataset.countup);
+      const dec = parseInt(node.dataset.decimals || '0', 10);
+      const pre = node.dataset.prefix || '';
+      const suf = node.dataset.suffix || '';
+      const delay = 280 + idx * 70;
+      const dur = 1100;
+      const fmt = v => pre + v.toFixed(dec) + suf;
+      node.textContent = fmt(0);
+      const start = performance.now() + delay;
+      function step(now){
+        if(now < start){ requestAnimationFrame(step); return; }
+        const t = Math.min(1, (now - start) / dur);
+        const eased = 1 - Math.pow(1 - t, 3);
+        node.textContent = fmt(end * eased);
+        if(t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  // ==== Overview grid (press O / Esc) ===========================
+  function buildOverview(){
+    const grid = el('div', 'overview-grid');
+
+    const head = el('div', 'ov-head');
+    const headTitle = el('span', 't');
+    headTitle.appendChild(document.createTextNode('Deck '));
+    headTitle.appendChild(el('em', null, 'overview'));
+    const headMeta = el('span', 'meta');
+    headMeta.appendChild(document.createTextNode('click any slide · '));
+    headMeta.appendChild(el('kbd', null, 'Esc'));
+    headMeta.appendChild(document.createTextNode(' or '));
+    headMeta.appendChild(el('kbd', null, 'O'));
+    headMeta.appendChild(document.createTextNode(' to return'));
+    head.appendChild(headTitle);
+    head.appendChild(headMeta);
+    grid.appendChild(head);
+
+    const titles = [
+      'Cover','The Problem','Scale','What it does','Timeline',
+      'People','Pivots','What we built','By the numbers',
+      'How we used AI','AI · what worked','AI · where it broke',
+      'Day-one notes','Entrepreneurship',"What's next · Thanks"
+    ];
+
+    slides.forEach((slide, idx) => {
+      const card = el('button', 'thumb-card');
+      card.dataset.idx = idx;
+      card.type = 'button';
+
+      const thumb = el('div', 'thumb');
+      const inner = el('div', 'thumb-inner');
+      const clone = slide.cloneNode(true);
+      clone.classList.remove('active');
+      inner.appendChild(clone);
+      thumb.appendChild(inner);
+      card.appendChild(thumb);
+
+      const label = el('div', 'label');
+      label.appendChild(el('span', 'num', pad(idx+1)));
+      label.appendChild(el('span', null, titles[idx] || ''));
+      card.appendChild(label);
+
+      card.addEventListener('click', () => {
+        document.body.classList.remove('overview-mode');
+        go(idx);
+      });
+      grid.appendChild(card);
+    });
+    document.body.appendChild(grid);
+    return grid;
+  }
+  const overviewEl = buildOverview();
+
+  // ==== Slide navigation ========================================
+  function go(n){
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    if(n === i) return;
+    slides[i].classList.remove('active');
+    i = n;
+    slides[i].classList.add('active');
+    counter.textContent = `${pad(i+1)} / ${pad(slides.length)}`;
+    bar.style.width = ((i)/(slides.length-1) * 100) + '%';
+    slides[i].querySelectorAll('.reveal').forEach(node => {
+      node.style.animation = 'none';
+      node.offsetHeight;
+      node.style.animation = '';
+    });
+    animateCountUps(slides[i]);
+    if(overviewEl){
+      overviewEl.querySelectorAll('.thumb-card').forEach((c, j) =>
+        c.classList.toggle('active', j === i));
+    }
+  }
+
+  function toggleOverview(force){
+    const on = typeof force === 'boolean'
+      ? force
+      : !document.body.classList.contains('overview-mode');
+    document.body.classList.toggle('overview-mode', on);
+    if(on){
+      overviewEl.querySelectorAll('.thumb-card').forEach((c, j) =>
+        c.classList.toggle('active', j === i));
+    }
+  }
+
+  // ==== Buttons + keyboard =====================================
+  document.getElementById('prev').addEventListener('click', () => go(i-1));
+  document.getElementById('next').addEventListener('click', () => go(i+1));
+
+  document.addEventListener('keydown', (e) => {
+    const inOverview = document.body.classList.contains('overview-mode');
+    if(e.key === 'Escape'){
+      if(inOverview){ e.preventDefault(); toggleOverview(false); }
+      return;
+    }
+    if(e.key === 'o' || e.key === 'O'){ e.preventDefault(); toggleOverview(); return; }
+    if(inOverview) return;
+    if(['ArrowRight','PageDown',' '].includes(e.key)) { e.preventDefault(); go(i+1); }
+    else if(['ArrowLeft','PageUp'].includes(e.key))   { e.preventDefault(); go(i-1); }
+    else if(e.key === 'Home') { e.preventDefault(); go(0); }
+    else if(e.key === 'End')  { e.preventDefault(); go(slides.length-1); }
+  });
+
+  stage.addEventListener('click', (e) => {
+    if(e.target.closest('a, button')) return;
+    go(i+1);
+  });
+
+  // ==== Cover parallax (subtle pill + EKG drift) ===============
+  const coverSlide = slides[0];
+  const coverPill = coverSlide.querySelector('.cover-pill-stage');
+  const coverEkgSvg = coverSlide.querySelector('.cover-ekg svg');
+  document.addEventListener('mousemove', (e) => {
+    if(i !== 0 || document.body.classList.contains('overview-mode')) return;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx;
+    const dy = (e.clientY - cy) / cy;
+    if(coverPill) coverPill.style.transform = `translate(${dx * 8}px, ${dy * 6}px)`;
+    if(coverEkgSvg) coverEkgSvg.style.transform = `translateX(${dx * -4}px)`;
+  });
+
+  counter.textContent = `01 / ${pad(slides.length)}`;
+  bar.style.width = '0%';
+  animateCountUps(slides[0]);
+</script>
+
+</body>
+</html>
