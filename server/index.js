@@ -252,12 +252,16 @@ app.post('/api/analyze', async (req, res) => {
     }
     if (resolvedBillingMethod === 'TIME') {
       if (!Number.isInteger(totalMinutes) || totalMinutes < 1 || totalMinutes > 300) {
-        return res.status(400).json({ error: 'totalMinutes must be an integer between 1 and 300 when using time-based billing.' });
+        return res.status(400).json({ error: 'totalMinutes must be a whole number between 1 and 300 when using time-based billing.' });
       }
     }
 
     const payerSystemPrompt = buildSystemPrompt(payerId, resolvedBillingMethod);
-    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes, payerId, resolvedBillingMethod, totalMinutes);
+    const userPrompt = buildUserPrompt(
+      note, cptCodes, icd10Codes, payerId,
+      resolvedBillingMethod,
+      resolvedBillingMethod === 'TIME' ? totalMinutes : null
+    );
     const anthropic = getAnthropicClient(req);
 
     const message = await anthropic.messages.create({
