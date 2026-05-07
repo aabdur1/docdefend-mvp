@@ -1,4 +1,4 @@
-export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes, isCoderReview }) {
+export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes, isCoderReview, totalMinutes }) {
   if (!emLevelRecommendation) return null;
 
   const {
@@ -117,6 +117,18 @@ export default function EMLevelCard({ emLevelRecommendation, selectedCptCodes, i
           </>
         )}
       </div>
+
+      {/* Time-Based Summary */}
+      {methodology === 'TIME' && totalMinutes && (
+        <div className="flex items-center gap-2 mb-4 p-3 rounded-lg bg-[#F5EFE0]/60 dark:bg-instrument-bg-raised/60 border border-[#D6C9A8]/50 dark:border-instrument-border/50">
+          <svg className="w-4 h-4 text-healthcare-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm text-slate-600 dark:text-slate-300">
+            <span className="font-semibold font-mono text-slate-800 dark:text-white">{totalMinutes} min</span> total time declared on date of encounter
+          </span>
+        </div>
+      )}
 
       {/* MDM Details */}
       {mdmDetails && methodology === 'MDM' && (

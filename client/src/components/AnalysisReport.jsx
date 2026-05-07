@@ -250,7 +250,7 @@ function PayerFindingsSection({ findings, payerName }) {
   );
 }
 
-export default function AnalysisReport({ report, note, selectedCptCodes, selectedPayer }) {
+export default function AnalysisReport({ report, note, selectedCptCodes, selectedPayer, totalMinutes }) {
   if (!report) return null;
 
   // Collect all missing elements and fix suggestions for addendum generation
@@ -315,6 +315,7 @@ export default function AnalysisReport({ report, note, selectedCptCodes, selecte
               emLevelRecommendation={report.emLevelRecommendation}
               selectedCptCodes={selectedCptCodes}
               isCoderReview={report.isCoderReview}
+              totalMinutes={totalMinutes}
             />
           </div>
         )}
