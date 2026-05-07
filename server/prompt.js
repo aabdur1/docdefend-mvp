@@ -72,16 +72,32 @@ export const systemPrompt = baseSystemPrompt;
  * Build a system prompt with optional payer-specific rules appended.
  * If no payerId or payerId is 'medicare', returns the base prompt unchanged.
  */
-export function buildSystemPrompt(payerId) {
+export function buildSystemPrompt(payerId, billingMethod = 'MDM') {
+  let prompt = baseSystemPrompt;
+
+  if (billingMethod === 'TIME') {
+    prompt += `
+
+TIME-BASED BILLING MODE:
+The provider has chosen to select their E/M level based on total time spent on the date of the encounter (CMS 2021+ guidelines), NOT Medical Decision Making. Your evaluation for the E/M code MUST focus entirely on time documentation criteria:
+
+1. REQUIRED: The note must contain an explicit total time statement, e.g., "Total time spent on date of encounter: 45 minutes"
+2. REQUIRED: The note should state or clearly imply that time was used to select the E/M level
+3. RECOMMENDED: The note should list the activities contributing to that time (chart review, history, physical exam, counseling, ordering, documentation, care coordination)
+4. RED FLAG: If the time statement appears generic or copied-forward rather than specific to this encounter, flag it as HIGH risk
+
+Do NOT evaluate MDM criteria (problem complexity, data complexity, risk level) for the E/M code. Set mdmDetails to null. Evaluate only whether the time documentation would survive a CMS audit.`;
+  }
+
   if (!payerId || payerId === 'medicare') {
-    return baseSystemPrompt;
+    return prompt;
   }
 
   const payerRules = getPayerRules(payerId);
   const payerRates = getPayerRateTable(payerId);
   const payer = PAYERS[payerId];
 
-  if (!payer) return baseSystemPrompt;
+  if (!payer) return prompt;
 
   const payerFindingsInstruction = `
 
@@ -100,12 +116,16 @@ Add this field to your JSON response:
 
 If no payer-specific rules apply to the selected codes, return an empty array for payerSpecificFindings.`;
 
-  return baseSystemPrompt + payerRules + payerRates + payerFindingsInstruction;
+  return prompt + payerRules + payerRates + payerFindingsInstruction;
 }
 
-export function buildUserPrompt(note, cptCodes, icd10Codes, payerId) {
+export function buildUserPrompt(note, cptCodes, icd10Codes, payerId, billingMethod = 'MDM', totalMinutes = null) {
   const payerContext = payerId && payerId !== 'medicare' && PAYERS[payerId]
     ? `\nPAYER: ${PAYERS[payerId].name}\n`
+    : '';
+
+  const timeContext = billingMethod === 'TIME' && totalMinutes
+    ? `\nBILLING METHOD: Time-Based\nTotal time on date of encounter declared by provider: ${totalMinutes} minutes\nThe selected E/M code was automatically mapped from this time. Evaluate whether the clinical note defensibly supports time-based billing at this duration.\n`
     : '';
 
   return `CLINICAL NOTE:
@@ -113,6 +133,6 @@ ${note}
 
 BILLING CODES SELECTED:
 CPT: ${cptCodes.join(', ')}
-ICD-10: ${icd10Codes.join(', ')}${payerContext}
+ICD-10: ${icd10Codes.join(', ')}${payerContext}${timeContext}
 Analyze whether this clinical note defensibly supports the selected billing codes.`;
 }
