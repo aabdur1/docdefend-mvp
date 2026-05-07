@@ -75,8 +75,9 @@ export default function BillingMethodSelector({
   }, [updateIndicator]);
 
   const handleMinutesChange = (value) => {
-    onTotalMinutesChange(value);
-    onCodeAutoSelect(buildAutoSelectCodes(value, patientType));
+    const clamped = value === '' ? '' : String(Math.min(300, Math.max(1, parseInt(value, 10) || 1)));
+    onTotalMinutesChange(clamped);
+    onCodeAutoSelect(buildAutoSelectCodes(clamped, patientType));
   };
 
   const handlePatientTypeChange = (type) => {
@@ -113,7 +114,7 @@ export default function BillingMethodSelector({
             aria-checked={billingMethod === method}
             data-active={billingMethod === method}
             onClick={() => onBillingMethodChange(method)}
-            className={`relative z-10 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-300 ${
+            className={`relative z-10 px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-healthcare-500 ${
               billingMethod === method
                 ? 'text-white'
                 : 'text-slate-600 dark:text-instrument-text-muted hover:text-slate-700 dark:hover:text-slate-300'
@@ -143,7 +144,7 @@ export default function BillingMethodSelector({
                 role="radio"
                 aria-checked={patientType === value}
                 onClick={() => handlePatientTypeChange(value)}
-                className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-healthcare-500 ${
                   patientType === value
                     ? 'bg-healthcare-500 text-white shadow-sm'
                     : 'text-slate-600 dark:text-instrument-text-muted hover:text-slate-700 dark:hover:text-slate-300'
@@ -164,12 +165,13 @@ export default function BillingMethodSelector({
               type="number"
               min="1"
               max="300"
+              step="1"
               value={totalMinutes}
               onChange={(e) => handleMinutesChange(e.target.value)}
               placeholder="e.g. 45"
               className="w-24 px-3 py-1.5 text-sm border border-[#D6C9A8] dark:border-instrument-border rounded-xl focus:ring-2 focus:ring-healthcare-500 focus:border-healthcare-500 bg-[#F5EFE0] dark:bg-instrument-bg-surface dark:text-white shadow-sm transition-shadow"
             />
-            <span className="text-sm text-slate-500 dark:text-slate-400">min</span>
+            <span className="text-sm text-slate-500 dark:text-slate-400" aria-hidden="true">min</span>
           </div>
 
           {/* Auto-select hint */}
