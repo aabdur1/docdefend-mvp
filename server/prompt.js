@@ -61,7 +61,7 @@ Respond in this exact JSON format:
 
 IMPORTANT NOTES:
 - Only include emLevelRecommendation if at least one E/M code (starting with 99) is in the selected CPT codes. If no E/M code is selected, set emLevelRecommendation to null.
-- Use these approximate Medicare rates for financial estimates: 99213=$92, 99214=$132, 99215=$187, 99203=$110, 99204=$167, 99205=$232, 64483=$225, 64490=$210, 20610=$105, 77003=$75, 64635=$450, 96372=$25.
+- Use these approximate Medicare rates for financial estimates: 99213=$92, 99214=$132, 99215=$187, 99203=$110, 99204=$167, 99205=$232, 64483=$225, 64490=$210, 20610=$105, 77003=$75, 64635=$450, 96372=$25, 99417=$40.
 - For the financialImpact breakdown, include an entry for each selected CPT code (not ICD-10 codes).
 - Return ONLY valid JSON with no other text, no markdown fences, no explanation outside the JSON.`;
 
@@ -124,7 +124,7 @@ export function buildUserPrompt(note, cptCodes, icd10Codes, payerId, billingMeth
     ? `\nPAYER: ${PAYERS[payerId].name}\n`
     : '';
 
-  const timeContext = billingMethod === 'TIME' && totalMinutes
+  const timeContext = billingMethod === 'TIME' && Number.isInteger(totalMinutes) && totalMinutes > 0
     ? `\nBILLING METHOD: Time-Based\nTotal time on date of encounter declared by provider: ${totalMinutes} minutes\nThe selected E/M code was automatically mapped from this time. Evaluate whether the clinical note defensibly supports time-based billing at this duration.\n`
     : '';
 
