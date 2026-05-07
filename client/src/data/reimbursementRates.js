@@ -27,6 +27,7 @@ export const reimbursementRates = {
   '77003': { rate: 75, description: 'Fluoroscopic guidance' },
   '64635': { rate: 450, description: 'Radiofrequency ablation, lumbar' },
   '96372': { rate: 25, description: 'Therapeutic injection' },
+  '99417': { rate: 40, description: 'Prolonged office visit, each additional 15 min' },
 };
 
 export function getRate(code) {
