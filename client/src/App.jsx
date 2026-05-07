@@ -4,6 +4,7 @@ import NoteSelector from './components/NoteSelector';
 import CodeSelector from './components/CodeSelector';
 import PayerSelector from './components/PayerSelector';
 import CodeSuggestions from './components/CodeSuggestions';
+import BillingMethodSelector from './components/BillingMethodSelector';
 const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 import AnalysisReport from './components/AnalysisReport';
 import BatchAnalysis from './components/BatchAnalysis';
@@ -15,6 +16,12 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import LoginPage from './components/LoginPage';
 import { API_URL } from './config';
 import PillIcon from './components/PillIcon';
+
+const OFFICE_EM_CODES = new Set([
+  '99202', '99203', '99204', '99205',
+  '99212', '99213', '99214', '99215',
+  '99417',
+]);
 
 function LoadingSpinner() {
   return (
@@ -230,6 +237,9 @@ function AppContent() {
   const [analysisHistory, setAnalysisHistory] = useState([]);
   const [batchMode, setBatchMode] = useState(false);
   const [coderMode, setCoderMode] = useState(false);
+  const [billingMethod, setBillingMethod] = useState('MDM'); // 'MDM' | 'TIME'
+  const [totalMinutes, setTotalMinutes] = useState('');
+  const [patientType, setPatientType] = useState('new'); // 'new' | 'established'
   const toast = useToast();
   const { apiKey } = useApiKey();
   const { token, isAuthenticated } = useAuth();
@@ -258,9 +268,25 @@ function AppContent() {
 
   const toggleDarkMode = () => setDarkMode(prev => !prev);
 
+  const handleBillingMethodChange = (method) => {
+    if (method === 'MDM') {
+      setSelectedCptCodes(prev => prev.filter(c => !OFFICE_EM_CODES.has(c)));
+      setTotalMinutes('');
+    }
+    setBillingMethod(method);
+  };
+
+  const handleCodeAutoSelect = (timeCodes) => {
+    setSelectedCptCodes(prev => [
+      ...prev.filter(c => !OFFICE_EM_CODES.has(c)),
+      ...timeCodes,
+    ]);
+  };
+
+  const timeBasedValid = billingMethod !== 'TIME' || (totalMinutes && parseInt(totalMinutes, 10) >= 1);
   const canAnalyze = coderMode
     ? note.trim().length > 0
-    : note.trim() && selectedCptCodes.length > 0 && selectedIcd10Codes.length > 0;
+    : note.trim() && selectedCptCodes.length > 0 && selectedIcd10Codes.length > 0 && timeBasedValid;
 
   const handleAnalyze = async () => {
     if (!canAnalyze) return;
@@ -282,6 +308,10 @@ function AppContent() {
           cptCodes: selectedCptCodes,
           icd10Codes: selectedIcd10Codes,
           payerId: selectedPayer || undefined,
+          ...(billingMethod === 'TIME' && {
+            billingMethod: 'TIME',
+            totalMinutes: parseInt(totalMinutes, 10),
+          }),
         }),
       });
 
@@ -453,6 +483,21 @@ function AppContent() {
               {note.trim() && (
                 <div className="animate-fadeInUp">
                   <CodeSuggestions note={note} onSelectCodes={handleSelectSuggestedCodes} />
+                </div>
+              )}
+
+              {/* Billing Method Selector */}
+              {!coderMode && (
+                <div className="animate-fadeInUp stagger-2">
+                  <BillingMethodSelector
+                    billingMethod={billingMethod}
+                    onBillingMethodChange={handleBillingMethodChange}
+                    totalMinutes={totalMinutes}
+                    onTotalMinutesChange={setTotalMinutes}
+                    patientType={patientType}
+                    onPatientTypeChange={setPatientType}
+                    onCodeAutoSelect={handleCodeAutoSelect}
+                  />
                 </div>
               )}
 
@@ -644,6 +689,7 @@ function AppContent() {
                       note={note}
                       selectedCptCodes={selectedCptCodes}
                       selectedPayer={selectedPayer}
+                      totalMinutes={billingMethod === 'TIME' ? parseInt(totalMinutes, 10) : null}
                     />
                   </div>
                 )}
