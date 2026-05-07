@@ -5,9 +5,9 @@ import CodeSelector from './components/CodeSelector';
 import PayerSelector from './components/PayerSelector';
 import CodeSuggestions from './components/CodeSuggestions';
 import BillingMethodSelector from './components/BillingMethodSelector';
-const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 import AnalysisReport from './components/AnalysisReport';
 import BatchAnalysis from './components/BatchAnalysis';
+const TemplateLibrary = lazy(() => import('./components/TemplateLibrary'));
 import { ToastProvider, useToast } from './components/Toast';
 const Dashboard = lazy(() => import('./components/Dashboard'));
 import EKGLine from './components/EKGLine';
@@ -416,6 +416,9 @@ function AppContent() {
     setSelectedPayer(null);
     setReport(null);
     setError(null);
+    setBillingMethod('MDM');
+    setTotalMinutes('');
+    setPatientType('new');
   };
 
   const handleSelectSuggestedCodes = (cptCodes, icd10Codes) => {
