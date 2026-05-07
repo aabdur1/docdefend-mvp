@@ -238,7 +238,8 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
 // Analysis endpoint
 app.post('/api/analyze', async (req, res) => {
   try {
-    const { note, cptCodes, icd10Codes, payerId } = req.body;
+    const { note, cptCodes, icd10Codes, payerId, billingMethod, totalMinutes } = req.body;
+    const resolvedBillingMethod = billingMethod === 'TIME' ? 'TIME' : 'MDM';
 
     if (!note || typeof note !== 'string' || !note.trim()) {
       return res.status(400).json({ error: 'A clinical note is required.' });
@@ -249,9 +250,14 @@ app.post('/api/analyze', async (req, res) => {
     if (!isStringArray(icd10Codes) || icd10Codes.length > 50 || !icd10Codes.every(isValidIcd10Code)) {
       return res.status(400).json({ error: 'Between 1 and 50 valid ICD-10 codes required (e.g., M54.5).' });
     }
+    if (resolvedBillingMethod === 'TIME') {
+      if (!Number.isInteger(totalMinutes) || totalMinutes < 1 || totalMinutes > 300) {
+        return res.status(400).json({ error: 'totalMinutes must be an integer between 1 and 300 when using time-based billing.' });
+      }
+    }
 
-    const payerSystemPrompt = buildSystemPrompt(payerId);
-    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes, payerId);
+    const payerSystemPrompt = buildSystemPrompt(payerId, resolvedBillingMethod);
+    const userPrompt = buildUserPrompt(note, cptCodes, icd10Codes, payerId, resolvedBillingMethod, totalMinutes);
     const anthropic = getAnthropicClient(req);
 
     const message = await anthropic.messages.create({
