@@ -692,7 +692,7 @@ function AppContent() {
                       note={note}
                       selectedCptCodes={selectedCptCodes}
                       selectedPayer={selectedPayer}
-                      totalMinutes={billingMethod === 'TIME' ? parseInt(totalMinutes, 10) : null}
+                      totalMinutes={billingMethod === 'TIME' && totalMinutes ? parseInt(totalMinutes, 10) : null}
                     />
                   </div>
                 )}
